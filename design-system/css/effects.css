@@ -1,0 +1,544 @@
+/* ============================================================================
+   JD CÂMARAS FRIAS — EFFECTS & CRYOGENIC ENGINEERING FX
+   Efeitos visuais avançados, interatividade física e atmosfera industrial.
+   Ativados pela classe .fx no <body> ou data-fx nos componentes.
+   ============================================================================ */
+
+/* ====================================================================
+   1. VISIBILIDADE CONDICIONAL E TRANSIÇÕES DE ENTRADA
+   ==================================================================== */
+body:not(.fx) .fx-only {
+  display: none !important;
+}
+
+body.fx [data-fx="fade-up"],
+[data-fx="fade-up"] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity var(--jd-duration-enter) var(--jd-ease-smooth),
+    transform var(--jd-duration-enter) var(--jd-ease-smooth);
+}
+
+body.fx [data-fx="fade-up"].is-visible,
+[data-fx="fade-up"].is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+body.fx [data-fx="fade-in"],
+[data-fx="fade-in"] {
+  opacity: 0;
+  transition: opacity var(--jd-duration-enter) var(--jd-ease-smooth);
+}
+
+body.fx [data-fx="fade-in"].is-visible,
+[data-fx="fade-in"].is-visible {
+  opacity: 1;
+}
+
+body.fx [data-fx="fade-left"],
+[data-fx="fade-left"] {
+  opacity: 0;
+  transform: translateX(-24px);
+  transition:
+    opacity var(--jd-duration-enter) var(--jd-ease-smooth),
+    transform var(--jd-duration-enter) var(--jd-ease-smooth);
+}
+
+body.fx [data-fx="fade-left"].is-visible,
+[data-fx="fade-left"].is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+body.fx [data-fx="fade-right"],
+[data-fx="fade-right"] {
+  opacity: 0;
+  transform: translateX(24px);
+  transition:
+    opacity var(--jd-duration-enter) var(--jd-ease-smooth),
+    transform var(--jd-duration-enter) var(--jd-ease-smooth);
+}
+
+body.fx [data-fx="fade-right"].is-visible,
+[data-fx="fade-right"].is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Delays sequenciais */
+[data-fx-delay="1"] { transition-delay: 100ms; }
+[data-fx-delay="2"] { transition-delay: 200ms; }
+[data-fx-delay="3"] { transition-delay: 300ms; }
+[data-fx-delay="4"] { transition-delay: 400ms; }
+[data-fx-delay="5"] { transition-delay: 500ms; }
+[data-fx-delay="6"] { transition-delay: 600ms; }
+
+
+/* ====================================================================
+   2. COUNTER ANIMATION
+   ==================================================================== */
+[data-fx="counter"] {
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity var(--jd-duration-slow) var(--jd-ease-smooth),
+    transform var(--jd-duration-slow) var(--jd-ease-smooth);
+}
+
+[data-fx="counter"].is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+/* ====================================================================
+   3. SPOTLIGHT HOVER EFFECT (Luz Dinâmica com Rastreamento de Mouse)
+   Inspirado em consoles industriais e design aeroespacial de ponta.
+   ==================================================================== */
+.jd-spotlight {
+  position: relative;
+  overflow: hidden;
+  background: var(--jd-noite);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--jd-radius);
+  transition: transform 0.3s var(--jd-ease-out), border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.jd-spotlight::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: radial-gradient(
+    400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(0, 224, 240, 0.6) 0%,
+    rgba(55, 180, 206, 0.2) 30%,
+    transparent 70%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 2;
+}
+
+.jd-spotlight::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    500px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(0, 176, 248, 0.08) 0%,
+    rgba(55, 180, 206, 0.02) 40%,
+    transparent 80%
+  );
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 1;
+}
+
+.jd-spotlight:hover {
+  transform: translateY(-4px);
+  border-color: rgba(55, 180, 206, 0.4);
+  box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.5), 0 0 30px -10px rgba(0, 224, 240, 0.2);
+}
+
+.jd-spotlight:hover::before,
+.jd-spotlight:hover::after {
+  opacity: 1;
+}
+
+
+/* ====================================================================
+   4. THERMAL LASER SHIMMER (Feixe de Luz Criogênica nos Botões e Badges)
+   ==================================================================== */
+.jd-btn--primary {
+  position: relative;
+  overflow: hidden;
+}
+
+.jd-btn--primary::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -150%;
+  width: 60%;
+  height: 200%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.45) 50%,
+    transparent 100%
+  );
+  transform: rotate(25deg);
+  pointer-events: none;
+  animation: jd-laser-sweep 4.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes jd-laser-sweep {
+  0%, 70% { left: -150%; }
+  100%    { left: 250%; }
+}
+
+.jd-btn:hover::after {
+  animation-duration: 1.5s;
+}
+
+/* Efeito de clique tátil de relé */
+.jd-btn:active {
+  transform: scale(0.97) translateY(1px) !important;
+}
+
+
+/* ====================================================================
+   5. RADAR PING WAVE (Status em Tempo Real / WhatsApp Online)
+   ==================================================================== */
+.jd-radar-ping {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.jd-radar-ping::before,
+.jd-radar-ping::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 999px;
+  border: 1.5px solid currentColor;
+  opacity: 0.8;
+  animation: jd-radar-wave 2.4s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+  pointer-events: none;
+}
+
+.jd-radar-ping::after {
+  animation-delay: 1.2s;
+}
+
+@keyframes jd-radar-wave {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+
+/* ====================================================================
+   6. TERMOSTATO DIGITAL HUD (7-Segmentos & Telemetria Industrial)
+   ==================================================================== */
+.jd-thermostat-hud {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 20px;
+  background: #09080F;
+  border: 1px solid rgba(0, 224, 240, 0.3);
+  border-radius: 8px;
+  box-shadow: inset 0 2px 10px rgba(0,0,0,0.8), 0 0 20px rgba(0, 224, 240, 0.15);
+  font-family: 'SF Mono', 'Fira Code', 'Roboto Mono', monospace;
+  position: relative;
+}
+
+.jd-thermostat-hud::before {
+  content: 'DIGITAL CONTROLLER // MOD: JD-PIR-2026';
+  position: absolute;
+  top: -9px;
+  left: 14px;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--jd-ciano);
+  background: #09080F;
+  padding: 0 6px;
+  border: 1px solid rgba(0, 224, 240, 0.3);
+  border-radius: 3px;
+}
+
+.jd-led-digits {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: var(--jd-led-cyan);
+  text-shadow: var(--jd-led-cyan-glow);
+  font-variant-numeric: tabular-nums;
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+}
+
+.jd-led-digits .jd-led-unit {
+  font-size: 14px;
+  color: rgba(0, 224, 240, 0.7);
+  font-weight: 600;
+}
+
+.jd-led-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--jd-led-green);
+  box-shadow: var(--jd-led-green-glow);
+  animation: jd-led-blink 1.4s ease-in-out infinite;
+}
+
+@keyframes jd-led-blink {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.35; transform: scale(0.85); }
+}
+
+
+/* ====================================================================
+   7. ISOMETRIC 3D EXPLODED COLD ROOM VIEWER (Modelo Isométrico)
+   Simulador de corte técnico com camadas interativas.
+   ==================================================================== */
+.jd-iso-container {
+  position: relative;
+  width: 100%;
+  min-height: 440px;
+  background: radial-gradient(circle at 50% 50%, #17162B 0%, #0D0C17 100%);
+  border: 1px solid rgba(55, 180, 206, 0.25);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: inset 0 0 60px rgba(0,0,0,0.6), 0 20px 40px rgba(0,0,0,0.4);
+}
+
+.jd-iso-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  background: rgba(18, 17, 31, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  z-index: 10;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.jd-iso-tabs {
+  display: flex;
+  gap: 6px;
+}
+
+.jd-iso-tab-btn {
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--jd-cinza-aco);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.jd-iso-tab-btn:hover {
+  background: rgba(55, 180, 206, 0.15);
+  color: var(--jd-branco);
+  border-color: var(--jd-ciano);
+}
+
+.jd-iso-tab-btn.is-active {
+  background: var(--jd-azul);
+  color: var(--jd-branco);
+  border-color: var(--jd-ciano-logo-para);
+  box-shadow: 0 0 12px rgba(0, 224, 240, 0.4);
+}
+
+.jd-iso-canvas-area {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  position: relative;
+  perspective: 1000px;
+  padding: 30px;
+}
+
+/* Ventilador do Evaporador Giratório */
+.jd-fan-blade {
+  animation: jd-fan-spin 0.6s linear infinite;
+  transform-origin: center;
+}
+
+.jd-fan-blade--slow {
+  animation-duration: 1.8s;
+}
+
+@keyframes jd-fan-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+
+/* ====================================================================
+   8. CAD BLUEPRINT GRID & RÉGUAS TÉCNICAS DINÂMICAS
+   ==================================================================== */
+.jd-cad-bg {
+  position: relative;
+  background-color: var(--jd-noite);
+  background-image:
+    linear-gradient(to right, rgba(55, 180, 206, 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(55, 180, 206, 0.07) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.jd-cad-dim-line {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'SF Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--jd-ciano);
+  letter-spacing: 0.05em;
+}
+
+.jd-cad-dim-line::before,
+.jd-cad-dim-line::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.6;
+}
+
+.jd-cad-dim-line::before { margin-right: 8px; }
+.jd-cad-dim-line::after  { margin-left: 8px; }
+
+
+/* ====================================================================
+   9. CRYOGENIC FROST PARTICLES (Canvas e Elementos Flutuantes)
+   ==================================================================== */
+#jd-frost-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.75;
+}
+
+
+/* ====================================================================
+   10. FROST GLASS PANEL & REFRACTION BORDER
+   ==================================================================== */
+.jd-glass-panel {
+  background: rgba(18, 17, 31, 0.75);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(55, 180, 206, 0.25);
+  border-radius: var(--jd-radius);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    0 12px 32px rgba(0, 0, 0, 0.35);
+}
+
+.jd-glass-panel:hover {
+  border-color: rgba(0, 224, 240, 0.6);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    0 16px 40px rgba(0, 224, 240, 0.15);
+}
+
+
+/* ====================================================================
+   11. CANTONEIRAS INDUSTRIAIS DE REFORÇO (Chapa Xadrez / Esquadros)
+   ==================================================================== */
+.jd-cantoneira {
+  position: relative;
+}
+
+.jd-cantoneira::before,
+.jd-cantoneira::after {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-color: var(--jd-ciano);
+  pointer-events: none;
+  opacity: 0.7;
+  transition: opacity 0.3s ease, border-color 0.3s ease;
+}
+
+.jd-cantoneira::before {
+  top: -1px;
+  left: -1px;
+  border-top: 2px solid;
+  border-left: 2px solid;
+}
+
+.jd-cantoneira::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 2px solid;
+  border-right: 2px solid;
+}
+
+.jd-cantoneira:hover::before,
+.jd-cantoneira:hover::after {
+  opacity: 1;
+  border-color: var(--jd-ciano-logo-para);
+  box-shadow: 0 0 8px rgba(0, 224, 240, 0.5);
+}
+
+
+/* ====================================================================
+   12. THEME SWITCHING (Dark Industrial Factory vs Clean Chamber)
+   ==================================================================== */
+[data-theme="clean"] {
+  --jd-noite: #FFFFFF;
+  --jd-grafite: #F4F6F9;
+  --jd-preto: #0F172A;
+  --jd-cinza-claro: #F8FAFC;
+  --jd-borda: #E2E8F0;
+  --jd-cinza-texto: #475569;
+  --jd-cad-grid: radial-gradient(rgba(65, 129, 188, 0.18) 1px, transparent 1px);
+}
+
+[data-theme="clean"] .ds-main {
+  background: #F8FAFC !important;
+  color: #0F172A !important;
+}
+
+[data-theme="clean"] .ds-section__title {
+  color: #0F172A !important;
+}
+
+[data-theme="clean"] .jd-spotlight {
+  background: #FFFFFF;
+  border-color: #E2E8F0;
+}
+
+[data-theme="clean"] .jd-spotlight:hover {
+  border-color: var(--jd-azul);
+  box-shadow: 0 16px 36px -10px rgba(65, 129, 188, 0.15);
+}
+
+/* Redução de Movimento */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

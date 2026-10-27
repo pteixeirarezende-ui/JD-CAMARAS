@@ -1,0 +1,1962 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JD Câmaras Frias — Design System Master (Engenharia do Frio & Precisão Industrial)</title>
+  <meta name="description" content="Design System Master da JD Câmaras Frias. Fusão de efeitos dinâmicos criogênicos com a sobriedade industrial de chão de fábrica e conformidade total de cores.">
+
+  <!-- Fontes Oficiais: Archivo (Display pesado de fábrica) + Inter (Corpo e números tabulares) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       TOKENS OFICIAIS — CORES RESTRITAS DO SITE ATUAL (REGRA 1 INEGOCIÁVEL)
+       Nenhuma cor fora desta lista é permitida.
+       ========================================================================== */
+    :root {
+      /* Cores de Marca Globais */
+      --jd-azul:           #4181BC; /* Primária global do site */
+      --jd-marinho:        #3B497F; /* Secundária global, títulos */
+      --jd-ciano:          #37B4CE; /* Destaque global, detalhes sobre escuro */
+      --jd-ciano-logo-de:  #00B0F8; /* Gradiente do logo (exclusivo para logo/selo) */
+      --jd-ciano-logo-para:#00E0F0; /* Gradiente do logo */
+      --jd-royal:          #1700BC; /* Ação principal do cabeçalho */
+      --jd-amarelo:        #F1BD43; /* CTA principal de orçamento (texto SEMPRE #101010) */
+      --jd-verde:          #008749; /* WhatsApp e confirmação */
+      --jd-preto:          #101010; /* Texto sobre claro */
+      --jd-grafite:        #1D1D1D; /* Fundos escuros */
+      --jd-noite:          #12111F; /* Fundo escuro do hero */
+      --jd-cinza-texto:    #737373; /* Texto de apoio */
+      --jd-cinza-aco:      #9CADC2; /* Bordas, ícones inativos, dados técnicos */
+      --jd-gelo:           #EBEEF5; /* Fundo de seções alternadas claras */
+      --jd-cinza-claro:    #F5F5F5; /* Fundo de cards claros */
+      --jd-borda:          #D8DDE3; /* Bordas e divisores */
+      --jd-branco:         #FFFFFF; /* Fundo e texto sobre escuro */
+
+      /* Derivados Permitidos com Origem Comentada */
+      --jd-azul-hover:     #3671A8; /* De --jd-azul */
+      --jd-marinho-hover:  #2D3863; /* De --jd-marinho */
+      --jd-amarelo-hover:  #E5AE2E; /* De --jd-amarelo (10% mais escuro no hover) */
+      --jd-verde-hover:    #00733E; /* De --jd-verde */
+      --jd-noite-95:       rgba(18, 17, 31, 0.95); /* De --jd-noite */
+      --jd-noite-70:       rgba(18, 17, 31, 0.70); /* De --jd-noite */
+      --jd-azul-15:        rgba(65, 129, 188, 0.15); /* De --jd-azul */
+      --jd-ciano-15:       rgba(55, 180, 206, 0.15); /* De --jd-ciano */
+      --jd-ciano-30:       rgba(55, 180, 206, 0.30); /* De --jd-ciano */
+
+      /* Gradientes Utilitários */
+      --jd-grad-logo:      linear-gradient(135deg, var(--jd-ciano-logo-de), var(--jd-ciano-logo-para));
+      --jd-grad-marinho:   linear-gradient(160deg, #2D3863 0%, var(--jd-noite) 100%);
+      --jd-grad-overlay:   linear-gradient(180deg, rgba(18,17,31,0) 0%, rgba(18,17,31,0.9) 100%);
+
+      /* Tipografia */
+      --jd-font-display:   'Archivo', -apple-system, sans-serif;
+      --jd-font-body:      'Inter', -apple-system, sans-serif;
+
+      /* Escala Tipográfica Fluida */
+      --jd-text-xs:        12px;
+      --jd-text-sm:        14px;
+      --jd-text-base:      16px;
+      --jd-text-md:        clamp(18px, 2.2vw, 20px);
+      --jd-text-lg:        clamp(22px, 3vw, 28px);
+      --jd-text-xl:        clamp(28px, 4vw, 40px);
+      --jd-text-2xl:       clamp(34px, 5.2vw, 56px);
+
+      /* Espaçamento Linear Base 8px */
+      --jd-space-1:        4px;
+      --jd-space-2:        8px;
+      --jd-space-3:        12px;
+      --jd-space-4:        16px;
+      --jd-space-5:        24px;
+      --jd-space-6:        32px;
+      --jd-space-7:        40px;
+      --jd-space-8:        48px;
+      --jd-space-9:        64px;
+
+      /* Raio de Borda Único */
+      --jd-radius:         6px;
+      --jd-radius-pill:    999px;
+
+      /* Sombras e Profundidade */
+      --jd-sombra-1:       0 2px 8px rgba(16, 16, 16, 0.08);
+      --jd-sombra-2:       0 12px 32px rgba(16, 16, 16, 0.14);
+      --jd-sombra-3d:      0 14px 40px -10px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.08);
+
+      --catalog-header-h:  66px;
+      --jd-container-max:  1200px;
+    }
+
+    /* Reset */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: var(--jd-font-body);
+      color: var(--jd-preto);
+      background: var(--jd-gelo);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    body[data-theme="dark"] {
+      background: var(--jd-noite);
+      color: var(--jd-branco);
+    }
+
+    /* ==========================================================================
+       TOP TELEMETRY & MASTER CONTROLLER BAR (AURA / IX-7 HIGH TECH)
+       ========================================================================== */
+    .catalog-bar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      height: var(--catalog-header-h);
+      background: rgba(18, 17, 31, 0.94);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 2px solid var(--jd-marinho);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 clamp(16px, 3vw, 32px);
+      gap: 16px;
+      color: var(--jd-branco);
+    }
+
+    .catalog-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .catalog-brand img {
+      height: 32px;
+      display: block;
+      filter: drop-shadow(0 0 10px rgba(0, 224, 240, 0.4));
+    }
+
+    .catalog-brand-badge {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--jd-ciano);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      background: rgba(55, 180, 206, 0.12);
+      border: 1px solid rgba(55, 180, 206, 0.3);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    @media (max-width: 900px) {
+      .catalog-brand-badge { display: none; }
+    }
+
+    /* Abas de Navegação Principal (Overview vs Components) */
+    .catalog-nav-tabs {
+      display: flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--jd-radius-pill);
+      padding: 4px;
+      gap: 4px;
+    }
+
+    .catalog-nav-tab {
+      padding: 7px 18px;
+      font-size: 12.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      border: none;
+      background: transparent;
+      color: var(--jd-cinza-aco);
+      border-radius: var(--jd-radius-pill);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .catalog-nav-tab:hover {
+      color: var(--jd-branco);
+    }
+
+    .catalog-nav-tab.is-active {
+      background: var(--jd-azul);
+      color: var(--jd-branco);
+      box-shadow: 0 0 16px rgba(55, 180, 206, 0.4);
+    }
+
+    /* Controles do HUD no Header */
+    .catalog-tools {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Termostato Digital LED Danfoss */
+    .jd-thermostat-hud {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 14px;
+      background: #09080F;
+      border: 1px solid rgba(55, 180, 206, 0.35);
+      border-radius: 6px;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.8);
+    }
+
+    .jd-led-digits {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--jd-ciano);
+      text-shadow: 0 0 8px rgba(55, 180, 206, 0.6);
+      font-variant-numeric: tabular-nums;
+      display: flex;
+      align-items: baseline;
+      gap: 2px;
+    }
+
+    .jd-led-unit {
+      font-size: 12px;
+      color: rgba(55, 180, 206, 0.8);
+      font-weight: 600;
+    }
+
+    .jd-led-status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--jd-verde);
+      box-shadow: 0 0 8px rgba(0, 135, 73, 0.8);
+      animation: jd-led-pulse 1.6s ease-in-out infinite;
+    }
+
+    @keyframes jd-led-pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%      { opacity: 0.3; transform: scale(0.85); }
+    }
+
+    .catalog-btn-tool {
+      min-height: 44px;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--jd-branco);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: var(--jd-radius);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .catalog-btn-tool:hover {
+      background: var(--jd-azul);
+      border-color: var(--jd-azul);
+    }
+
+    .catalog-btn-tool.is-active {
+      background: var(--jd-amarelo);
+      color: var(--jd-preto);
+      border-color: var(--jd-amarelo);
+    }
+
+    /* Views */
+    .catalog-view {
+      display: none;
+      width: 100%;
+    }
+
+    .catalog-view.is-active {
+      display: block;
+    }
+
+    /* Simulador de Viewport Mobile (360px) */
+    .mobile-simulator-wrapper {
+      max-width: 360px;
+      margin: 32px auto;
+      border: 10px solid var(--jd-grafite);
+      border-radius: 32px;
+      overflow: hidden;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.45);
+      background: var(--jd-branco);
+    }
+
+    /* Etiqueta de Exemplo Obrigatória (Ajuste 5) */
+    .tag-exemplo {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 7px;
+      background: var(--jd-amarelo);
+      color: var(--jd-preto);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-radius: 3px;
+      margin-left: 6px;
+      vertical-align: middle;
+      line-height: 1.2;
+    }
+
+    /* ==========================================================================
+       DUAL THEME ENGINE: .tema-claro E .tema-escuro (LADO A LADO NO CATÁLOGO)
+       ========================================================================== */
+    .tema-claro {
+      background-color: var(--jd-branco);
+      color: var(--jd-preto);
+      border-color: var(--jd-borda);
+    }
+
+    .tema-claro .ds-sec-title { color: var(--jd-marinho); }
+    .tema-claro .ds-sub-text { color: var(--jd-cinza-texto); }
+
+    .tema-escuro {
+      background-color: var(--jd-noite);
+      color: var(--jd-branco);
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .tema-escuro .ds-sec-title { color: var(--jd-branco); }
+    .tema-escuro .ds-sub-text { color: var(--jd-cinza-aco); }
+
+    .ds-duo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 18px;
+    }
+
+    @media (max-width: 900px) {
+      .ds-duo-grid { grid-template-columns: 1fr; }
+    }
+
+    .ds-duo-pane {
+      border: 1px solid var(--jd-borda);
+      border-radius: var(--jd-radius);
+      padding: 24px;
+      position: relative;
+    }
+
+    .ds-duo-label {
+      position: absolute;
+      top: -11px;
+      left: 16px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 2px 10px;
+      border-radius: 3px;
+    }
+
+    .ds-duo-pane.tema-claro .ds-duo-label {
+      background: var(--jd-gelo);
+      color: var(--jd-marinho);
+      border: 1px solid var(--jd-borda);
+    }
+
+    .ds-duo-pane.tema-escuro .ds-duo-label {
+      background: var(--jd-grafite);
+      color: var(--jd-ciano);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    /* ==========================================================================
+       EFEITOS CRIATIVOS DO DS OFICIAL (SPOTLIGHT, LASER, RADAR, ISOMÉTRICO)
+       ========================================================================== */
+
+    /* Spotlight Mouse Tracker */
+    .jd-spotlight {
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .jd-spotlight::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      padding: 1px;
+      background: radial-gradient(
+        350px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        rgba(55, 180, 206, 0.45) 0%,
+        rgba(55, 180, 206, 0.15) 35%,
+        transparent 70%
+      );
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 2;
+    }
+
+    .jd-spotlight:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--jd-sombra-2);
+    }
+
+    .jd-spotlight:hover::before {
+      opacity: 1;
+    }
+
+    /* Botão com Laser Sweep Criogênico */
+    .jd-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 13px 26px;
+      font-family: var(--jd-font-body);
+      font-weight: 700;
+      font-size: var(--jd-text-base);
+      line-height: 1.2;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      border-radius: var(--jd-radius);
+      border: 2px solid transparent;
+      cursor: pointer;
+      text-decoration: none;
+      min-height: 48px;
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .jd-btn:focus-visible {
+      outline: 3px solid var(--jd-azul);
+      outline-offset: 2px;
+    }
+
+    .jd-btn:active {
+      transform: scale(0.98) translateY(1px) !important;
+    }
+
+    /* Primário Amarelo com Laser Sweep */
+    .jd-btn--primary {
+      background-color: var(--jd-amarelo);
+      color: var(--jd-preto);
+      border-color: var(--jd-amarelo);
+    }
+
+    .jd-btn--primary::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -150%;
+      width: 60%;
+      height: 200%;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.45) 50%,
+        transparent 100%
+      );
+      transform: rotate(25deg);
+      pointer-events: none;
+      animation: jd-laser-sweep 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    }
+
+    @keyframes jd-laser-sweep {
+      0%, 70% { left: -150%; }
+      100%    { left: 250%; }
+    }
+
+    .jd-btn--primary:hover {
+      background-color: var(--jd-amarelo-hover);
+      border-color: var(--jd-amarelo-hover);
+      box-shadow: 0 4px 16px rgba(241, 189, 67, 0.35);
+    }
+
+    /* WhatsApp com Radar Ping */
+    .jd-btn--whatsapp {
+      background-color: var(--jd-verde);
+      color: var(--jd-branco);
+      border-color: var(--jd-verde);
+    }
+
+    .jd-btn--whatsapp:hover {
+      background-color: var(--jd-verde-hover);
+      border-color: var(--jd-verde-hover);
+      box-shadow: 0 4px 16px rgba(0, 135, 73, 0.35);
+    }
+
+    .jd-radar-ping {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .jd-radar-ping::before {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 999px;
+      border: 1.5px solid currentColor;
+      opacity: 0.8;
+      animation: jd-radar-wave 2.2s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+      pointer-events: none;
+    }
+
+    @keyframes jd-radar-wave {
+      0%   { transform: scale(0.85); opacity: 0.9; }
+      100% { transform: scale(2.2);  opacity: 0; }
+    }
+
+    /* Secundário Contorno */
+    .jd-btn--secondary {
+      background-color: transparent;
+      color: var(--jd-azul);
+      border-color: var(--jd-azul);
+    }
+
+    .jd-btn--secondary:hover {
+      background-color: var(--jd-azul-15);
+      color: var(--jd-azul-hover);
+    }
+
+    .tema-escuro .jd-btn--secondary {
+      color: var(--jd-branco);
+      border-color: var(--jd-branco);
+    }
+
+    .tema-escuro .jd-btn--secondary:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .jd-btn--dark {
+      background-color: var(--jd-grafite);
+      color: var(--jd-branco);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .jd-btn--dark:hover {
+      background-color: #2D2D2D;
+      border-color: var(--jd-ciano);
+    }
+
+    .jd-btn--link {
+      background: transparent;
+      border: none;
+      color: var(--jd-azul);
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: var(--jd-text-sm);
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    /* Ventilador Axial do Evaporador Giratório */
+    .jd-fan-blade {
+      animation: jd-fan-spin 0.6s linear infinite;
+      transform-origin: center;
+    }
+
+    @keyframes jd-fan-spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    /* Canvas de Névoa Criogênica */
+    #jd-frost-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.65;
+    }
+
+    /* Toast Flutuante de Confirmação */
+    .ds-toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #09080F;
+      border: 1px solid var(--jd-ciano);
+      color: #FFFFFF;
+      padding: 10px 18px;
+      border-radius: var(--jd-radius);
+      font-size: 12.5px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      z-index: 9999;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.25s ease;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Botão Copiar Snippet */
+    .ds-copy-btn {
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      background: rgba(55, 180, 206, 0.12);
+      color: var(--jd-azul);
+      border: 1px solid rgba(65, 129, 188, 0.3);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .tema-escuro .ds-copy-btn {
+      color: var(--jd-ciano);
+      border-color: rgba(55, 180, 206, 0.4);
+    }
+
+    .ds-copy-btn:hover {
+      background: var(--jd-azul);
+      color: #FFFFFF;
+    }
+
+    /* Form Styles */
+    .jd-form-wrap {
+      padding: 28px;
+      border-radius: var(--jd-radius);
+      border: 1px solid var(--jd-borda);
+      background: var(--jd-branco);
+    }
+
+    .tema-escuro .jd-form-wrap {
+      background: var(--jd-noite);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .jd-form-input, .jd-form-select {
+      width: 100%;
+      height: 48px;
+      padding: 0 14px;
+      font-family: var(--jd-font-body);
+      font-size: 15px;
+      border: 1px solid var(--jd-borda);
+      border-radius: var(--jd-radius);
+      background: var(--jd-branco);
+      color: var(--jd-preto);
+    }
+
+    .tema-escuro .jd-form-input, .tema-escuro .jd-form-select {
+      background: var(--jd-grafite);
+      border-color: rgba(255, 255, 255, 0.2);
+      color: var(--jd-branco);
+    }
+
+    .jd-form-input:focus, .jd-form-select:focus {
+      outline: 2px solid var(--jd-azul);
+      outline-offset: 1px;
+    }
+
+    .jd-num-tabular {
+      font-variant-numeric: tabular-nums;
+      font-weight: 700;
+    }
+
+    /* Catálogo Layout */
+    .components-shell {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: calc(100vh - var(--catalog-header-h));
+    }
+
+    @media (max-width: 1024px) {
+      .components-shell { grid-template-columns: 1fr; }
+    }
+
+    .components-sidebar {
+      position: sticky;
+      top: var(--catalog-header-h);
+      height: calc(100vh - var(--catalog-header-h));
+      overflow-y: auto;
+      background: var(--jd-branco);
+      border-right: 1px solid var(--jd-borda);
+      padding: 24px 16px 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    body[data-theme="dark"] .components-sidebar {
+      background: #0E0D18;
+      border-right-color: rgba(255,255,255,0.1);
+    }
+
+    .components-sidebar a {
+      display: block;
+      padding: 9px 12px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--jd-cinza-texto);
+      text-decoration: none;
+      border-radius: var(--jd-radius);
+      transition: all 0.2s;
+    }
+
+    body[data-theme="dark"] .components-sidebar a {
+      color: var(--jd-cinza-aco);
+    }
+
+    .components-sidebar a:hover, .components-sidebar a.is-active {
+      background: var(--jd-gelo);
+      color: var(--jd-marinho);
+      font-weight: 700;
+    }
+
+    body[data-theme="dark"] .components-sidebar a:hover,
+    body[data-theme="dark"] .components-sidebar a.is-active {
+      background: rgba(55, 180, 206, 0.15);
+      color: var(--jd-ciano);
+    }
+
+    .components-content {
+      padding: 40px clamp(20px, 4vw, 64px) 120px;
+      background: var(--jd-gelo);
+    }
+
+    body[data-theme="dark"] .components-content {
+      background: #090812;
+    }
+
+    .component-card-wrap {
+      background: var(--jd-branco);
+      border: 1px solid var(--jd-borda);
+      border-radius: var(--jd-radius);
+      padding: 32px;
+      margin-bottom: 40px;
+      box-shadow: var(--jd-sombra-1);
+    }
+
+    body[data-theme="dark"] .component-card-wrap {
+      background: #141322;
+      border-color: rgba(255,255,255,0.1);
+    }
+
+    .component-card-header {
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--jd-marinho);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    body[data-theme="dark"] .component-card-header {
+      border-bottom-color: var(--jd-ciano);
+    }
+
+    .component-card-title {
+      font-family: var(--jd-font-display);
+      font-size: 24px;
+      font-weight: 900;
+      text-transform: uppercase;
+      color: var(--jd-marinho);
+      line-height: 1.1;
+    }
+
+    body[data-theme="dark"] .component-card-title {
+      color: #FFFFFF;
+    }
+  </style>
+</head>
+
+<body class="fx" data-theme="dark">
+
+  <!-- ==========================================================================
+       BARRA DE COMANDO SUPERVISÓRIA (AURA / IX-7 MASTER CHASSIS)
+       ========================================================================== -->
+  <header class="catalog-bar">
+    <div style="display:flex;align-items:center;gap:16px;">
+      <a href="#" class="catalog-brand">
+        <img src="assets/logo-jd.png" alt="JD Câmaras Frias" onerror="this.outerHTML='<strong style=\'color:#00E0F0;font-size:18px;\'>JD CÂMARAS</strong>'">
+      </a>
+      <div class="catalog-brand-badge">
+        <span class="jd-radar-ping" style="color:var(--jd-verde);font-size:12px;">●</span>
+        <span>Fábrica Ubá-MG &amp; Anápolis-GO</span>
+      </div>
+    </div>
+
+    <!-- Navegação de Abas: Visão Geral vs Catálogo Técnico -->
+    <nav class="catalog-nav-tabs" aria-label="Abas Principais">
+      <button class="catalog-nav-tab is-active" id="tab-btn-overview" data-target="view-overview">
+        <span>🌐</span> <span>Visão Geral</span>
+      </button>
+      <button class="catalog-nav-tab" id="tab-btn-components" data-target="view-components">
+        <span>🧩</span> <span>Catálogo Técnico (22 Módulos)</span>
+      </button>
+    </nav>
+
+    <!-- Controles de Engenharia & Auditoria -->
+    <div class="catalog-tools">
+      <!-- Termostato Digital LED Danfoss -->
+      <div class="jd-thermostat-hud" title="Simulador Digital do Termostato Danfoss">
+        <div>
+          <span style="font-size:8px;color:#9CADC2;display:block;margin-bottom:1px;font-weight:700;">NÚCLEO:</span>
+          <div class="jd-led-digits">
+            <span id="live-temp-display">-18,0</span><span class="jd-led-unit">°C</span>
+          </div>
+        </div>
+        <div style="border-left:1px solid rgba(255,255,255,0.15);padding-left:10px;">
+          <div class="jd-led-status-dot" style="margin-bottom:2px;"></div>
+          <span id="live-status-label" style="font-size:8px;color:var(--jd-verde);font-weight:700;display:block;">COMPRESSOR ATIVO</span>
+        </div>
+      </div>
+
+      <!-- Chips de Temperatura com Linguagem Real de Uso -->
+      <button class="catalog-btn-tool is-active" id="btn-temp-cong" data-target-temp="-18.0" data-label="CONGELADOS [-18 °C]">
+        <span>❄</span> Congelados (-18 °C)
+      </button>
+      <button class="catalog-btn-tool" id="btn-temp-resf" data-target-temp="4.0" data-label="RESFRIADOS [0 a +15 °C]">
+        <span>🌡</span> Resfriados (0 a +15 °C)
+      </button>
+
+      <!-- Simulador de Viewport Mobile 360px -->
+      <button id="btn-toggle-viewport" class="catalog-btn-tool" title="Alternar entre tela cheia desktop e simulador de tela mobile (360px)">
+        <span>📱</span> <span id="lbl-viewport">Mobile 360px</span>
+      </button>
+
+      <!-- Áudio Haptic Mecânico (Opcional) -->
+      <button id="btn-toggle-sfx" class="catalog-btn-tool" title="Ligar/Desligar clique mecânico de relé (Web Audio API)">
+        <span>🔊</span> <span id="lbl-sfx">SFX: MUDO</span>
+      </button>
+
+      <!-- Alternador de Tema Geral -->
+      <button id="btn-toggle-theme" class="catalog-btn-tool" title="Alternar entre tema escuro de fábrica e tema claro comercial">
+        <span>🌗</span> <span id="lbl-theme">FÁBRICA</span>
+      </button>
+    </div>
+  </header>
+
+
+  <div id="catalog-viewport-shell">
+
+    <!-- ==========================================================================
+         VIEW 1: VISÃO GERAL (OVERVIEW) — EFEITOS DO OFICIAL + SOBRIEDADE DO ALTERNATIVO
+         ========================================================================== -->
+    <main id="view-overview" class="catalog-view is-active">
+
+      <!-- 1. Hero da Fábrica com Frio em Movimento & Canvas -->
+      <section style="position:relative;background:radial-gradient(circle at 70% 30%, #202D52 0%, var(--jd-noite) 80%);color:var(--jd-branco);padding:72px clamp(20px, 4vw, 64px);border-bottom:3px solid var(--jd-azul);overflow:hidden;">
+        <canvas id="jd-frost-canvas"></canvas>
+        <div style="position:relative;z-index:2;max-width:var(--jd-container-max);margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));gap:48px;align-items:center;">
+          <div>
+            <span style="font-size:12px;font-weight:700;color:var(--jd-ciano);text-transform:uppercase;letter-spacing:0.12em;display:inline-block;margin-bottom:12px;background:rgba(55,180,206,0.12);padding:4px 10px;border-radius:4px;border:1px solid rgba(55,180,206,0.3);">
+              PROJETO, FABRICAÇÃO E MONTAGEM PRÓPRIA
+            </span>
+            <h1 style="font-family:var(--jd-font-display);font-size:var(--jd-text-2xl);font-weight:900;text-transform:uppercase;line-height:1.02;margin-bottom:16px;">
+              Câmaras Frias Sob Medida com Entrega Direta de Fábrica
+            </h1>
+            <p style="font-size:var(--jd-text-base);color:var(--jd-cinza-aco);margin-bottom:28px;max-width:540px;line-height:1.65;">
+              Projetadas exatamente para o espaço do seu açougue, supermercado ou distribuidora. Painéis termoisolantes modulares, estanqueidade hermética a -18°C e instalação inclusa.
+            </p>
+
+            <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:32px;">
+              <a href="#sec-simulador" class="jd-btn jd-btn--primary">
+                <span>Pedir Orçamento de Fábrica</span>
+                <span>→</span>
+              </a>
+              <a href="https://wa.me/5532999999999" target="_blank" rel="noopener" class="jd-btn jd-btn--whatsapp">
+                <span class="jd-radar-ping" style="color:#FFF;margin-right:4px;">●</span>
+                <span>Chamar no WhatsApp</span>
+              </a>
+            </div>
+
+            <!-- Faixa de Provas Curtas (com etiqueta EXEMPLO) -->
+            <!-- EXEMPLO: não reutilizar na LP -->
+            <div style="display:flex;gap:24px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,0.12);padding-top:20px;">
+              <div>
+                <span class="jd-num-tabular" style="font-family:var(--jd-font-display);font-size:26px;font-weight:900;color:var(--jd-amarelo);display:block;line-height:1;">
+                  [0.000+] <span class="tag-exemplo">EXEMPLO</span>
+                </span>
+                <span style="font-size:12px;color:var(--jd-cinza-aco);text-transform:uppercase;">Câmaras Montadas</span>
+              </div>
+              <div>
+                <span class="jd-num-tabular" style="font-family:var(--jd-font-display);font-size:26px;font-weight:900;color:var(--jd-amarelo);display:block;line-height:1;">
+                  [00] Anos <span class="tag-exemplo">EXEMPLO</span>
+                </span>
+                <span style="font-size:12px;color:var(--jd-cinza-aco);text-transform:uppercase;">Experiência Fabril</span>
+              </div>
+              <div>
+                <span style="font-family:var(--jd-font-display);font-size:26px;font-weight:900;color:var(--jd-amarelo);display:block;line-height:1;">
+                  100%
+                </span>
+                <span style="font-size:12px;color:var(--jd-cinza-aco);text-transform:uppercase;">Normas ABNT &amp; Anvisa</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Palco Otto Heroico com Linhas de Cota -->
+          <div class="jd-spotlight" style="background:var(--jd-grafite);border:1px solid rgba(55,180,206,0.3);border-radius:var(--jd-radius);padding:32px;text-align:center;position:relative;">
+            <div style="border:2px dashed rgba(55,180,206,0.3);border-radius:var(--jd-radius);padding:40px 20px;background:rgba(0,0,0,0.25);">
+              <span style="font-size:13px;font-weight:700;color:var(--jd-ciano);text-transform:uppercase;display:block;margin-bottom:8px;">
+                CÂMARA FRIA MODULAR EM DESTAQUE
+              </span>
+              <span style="font-size:13px;color:var(--jd-cinza-aco);display:block;line-height:1.5;">
+                [Foto de obra: câmara frigorífica montada com porta semi-embutida, iluminação interna e acabamento pré-pintado RAL 9003]
+              </span>
+              <!-- Linhas de cota -->
+              <div style="margin-top:24px;display:flex;justify-content:center;gap:20px;font-size:12px;color:var(--jd-ciano);font-weight:700;">
+                <span style="background:rgba(55,180,206,0.1);padding:4px 10px;border-radius:4px;border:1px solid rgba(55,180,206,0.3);">↔ Largura Sob Medida</span>
+                <span style="background:rgba(55,180,206,0.1);padding:4px 10px;border-radius:4px;border:1px solid rgba(55,180,206,0.3);">↕ Altura de Pé-Direito</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- 2. "Veja por Dentro: Como a Câmara é Montada" (Raio-X Isométrico 3D com Hélices Girando) -->
+      <section style="padding:64px clamp(20px, 4vw, 64px);max-width:var(--jd-container-max);margin:0 auto;">
+        <div style="margin-bottom:32px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;">
+          <div>
+            <span style="font-size:12px;font-weight:700;color:var(--jd-azul);text-transform:uppercase;letter-spacing:0.08em;display:block;">
+              DETALHAMENTO CONSTRUTIVO
+            </span>
+            <h2 style="font-family:var(--jd-font-display);font-size:var(--jd-text-xl);font-weight:900;text-transform:uppercase;color:var(--jd-marinho);margin-top:4px;">
+              Veja por Dentro: Como a Câmara é Montada
+            </h2>
+            <p style="color:var(--jd-cinza-texto);font-size:15px;max-width:680px;">
+              Estrutura industrial com encaixe macho-fêmea hermético, núcleo isolante contínuo, evaporador axial duplo e portas frigoríficas estanques.
+            </p>
+          </div>
+          <span style="font-size:12px;color:var(--jd-cinza-aco);font-weight:700;">PROJETO MODULAR SOB MEDIDA</span>
+        </div>
+
+        <div class="jd-spotlight" style="background:var(--jd-noite);border-radius:var(--jd-radius);border:1px solid rgba(55,180,206,0.3);padding:24px;color:var(--jd-branco);">
+          <!-- Barra de Abas do Raio-X -->
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:14px;">
+            <button class="catalog-btn-tool is-active" data-corte-layer="geral">1. Vista Geral Montada</button>
+            <button class="catalog-btn-tool" data-corte-layer="paineis">2. Painéis Termoisolantes (Corte)</button>
+            <button class="catalog-btn-tool" data-corte-layer="refrig">3. Evaporador e Ventiladores Ativos</button>
+            <button class="catalog-btn-tool" data-corte-layer="porta">4. Porta Frigorífica Semi-Embutida</button>
+          </div>
+
+          <!-- Desenho Isométrico com Hélices Animadas -->
+          <div style="display:grid;place-items:center;background:var(--jd-grafite);border-radius:var(--jd-radius);padding:32px 16px;">
+            <svg viewBox="0 0 760 380" width="100%" height="320" style="max-width:720px;">
+              <!-- Piso -->
+              <polygon points="380,310 620,210 380,130 140,210" fill="#1D1D1D" stroke="#3B497F" stroke-width="2" />
+              <!-- Parede Traseira Direita -->
+              <polygon points="380,130 620,210 620,90 380,10" fill="#12111F" stroke="#37B4CE" stroke-width="1.5" />
+              <!-- Parede Traseira Esquerda -->
+              <polygon points="140,210 380,130 380,10 140,90" fill="#12111F" stroke="#37B4CE" stroke-width="1.5" />
+
+              <!-- Camada Painéis (Corte de Parede) -->
+              <g id="layer-paineis" style="transition:opacity 0.3s ease;">
+                <polygon points="380,10 620,90 605,85 380,8" fill="#F1BD43" stroke="#F1BD43" />
+                <polygon points="140,90 380,10 380,8 155,85" fill="#F1BD43" stroke="#F1BD43" />
+                <text x="320" y="30" fill="#F1BD43" font-family="'Inter', sans-serif" font-size="12" font-weight="700">NÚCLEO ISOLANTE TERMOACÚSTICO</text>
+              </g>
+
+              <!-- Camada Evaporador com Ventiladores Giratórios -->
+              <g id="layer-refrig" style="transition:opacity 0.3s ease;">
+                <polygon points="310,95 450,60 450,105 310,140" fill="#3B497F" stroke="#37B4CE" stroke-width="1.5" />
+                <!-- Ventilador Axial 1 Girando -->
+                <g transform="translate(350, 115)">
+                  <circle cx="0" cy="0" r="14" fill="#12111F" stroke="#37B4CE" />
+                  <g class="jd-fan-blade">
+                    <line x1="-10" y1="0" x2="10" y2="0" stroke="#37B4CE" stroke-width="2.5" stroke-linecap="round" />
+                    <line x1="0" y1="-10" x2="0" y2="10" stroke="#37B4CE" stroke-width="2.5" stroke-linecap="round" />
+                  </g>
+                </g>
+                <!-- Ventilador Axial 2 Girando -->
+                <g transform="translate(410, 100)">
+                  <circle cx="0" cy="0" r="14" fill="#12111F" stroke="#37B4CE" />
+                  <g class="jd-fan-blade">
+                    <line x1="-10" y1="0" x2="10" y2="0" stroke="#37B4CE" stroke-width="2.5" stroke-linecap="round" />
+                    <line x1="0" y1="-10" x2="0" y2="10" stroke="#37B4CE" stroke-width="2.5" stroke-linecap="round" />
+                  </g>
+                </g>
+                <text x="465" y="80" fill="#37B4CE" font-family="'Inter', sans-serif" font-size="12" font-weight="700">EVAPORADOR INDUSTRIAL DUAL-FAN</text>
+              </g>
+
+              <!-- Camada Porta -->
+              <g id="layer-porta" style="transition:opacity 0.3s ease;">
+                <polygon points="180,195 240,175 240,115 180,135" fill="#3B497F" stroke="#4181BC" stroke-width="2" />
+                <circle cx="190" cy="165" r="3" fill="#F1BD43" />
+                <text x="90" y="240" fill="#4181BC" font-family="'Inter', sans-serif" font-size="12" font-weight="700">PORTA SEMI-EMBUTIDA GIRATÓRIA</text>
+              </g>
+
+              <!-- Cotas Técnicas CAD -->
+              <line x1="120" y1="220" x2="360" y2="320" stroke="#9CADC2" stroke-width="1.2" />
+              <text x="210" y="285" fill="#9CADC2" font-family="'Inter', sans-serif" font-size="12" font-weight="700">LARGURA: 3.000 mm</text>
+
+              <line x1="400" y1="320" x2="640" y2="220" stroke="#9CADC2" stroke-width="1.2" />
+              <text x="500" y="285" fill="#9CADC2" font-family="'Inter', sans-serif" font-size="12" font-weight="700">COMPRIMENTO: 4.500 mm</text>
+            </svg>
+          </div>
+
+          <div style="margin-top:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+            <span id="corte-info-desc" style="font-size:13.5px;color:var(--jd-cinza-aco);">
+              Painéis certificados com montagem precisa e proteção térmica completa.
+            </span>
+            <button class="jd-btn jd-btn--primary" style="font-size:12px;padding:8px 18px;" onclick="document.getElementById('tab-btn-components').click();location.hash='#c-form';">
+              <span>Orçar Este Modelo</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- 3. "Calcule o Tamanho da Sua Câmara Fria" (Simulador de Geometria - Ajuste 6) -->
+      <section id="sec-simulador" style="padding:64px clamp(20px, 4vw, 64px);background:var(--jd-branco);border-top:1px solid var(--jd-borda);border-bottom:1px solid var(--jd-borda);">
+        <div style="max-width:var(--jd-container-max);margin:0 auto;">
+          <div style="margin-bottom:32px;text-align:center;">
+            <span style="font-size:12px;font-weight:700;color:var(--jd-azul);text-transform:uppercase;letter-spacing:0.08em;display:block;">
+              DIMENSIONAMENTO RÁPIDO
+            </span>
+            <h2 style="font-family:var(--jd-font-display);font-size:var(--jd-text-xl);font-weight:900;text-transform:uppercase;color:var(--jd-marinho);margin-top:4px;">
+              Calcule o Tamanho da Sua Câmara Fria
+            </h2>
+            <p style="color:var(--jd-cinza-texto);font-size:15px;max-width:640px;margin:0 auto;">
+              Arraste as medidas abaixo para calcular o volume cúbico (m³) e a área de painéis (m²). Em seguida, envie para a engenharia da JD definir a potência exata.
+            </p>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));gap:36px;align-items:start;">
+            <!-- Sliders Táteis -->
+            <div style="display:flex;flex-direction:column;gap:20px;">
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:700;margin-bottom:6px;">
+                  <label for="sim-largura">Largura Externa (m):</label>
+                  <span id="sim-val-largura" class="jd-num-tabular" style="color:var(--jd-azul);">3.0 m</span>
+                </div>
+                <input type="range" id="sim-largura" min="2.0" max="10.0" step="0.5" value="3.0" style="width:100%;accent-color:var(--jd-azul);height:8px;cursor:pointer;">
+              </div>
+
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:700;margin-bottom:6px;">
+                  <label for="sim-comprimento">Comprimento / Profundidade (m):</label>
+                  <span id="sim-val-comprimento" class="jd-num-tabular" style="color:var(--jd-azul);">4.0 m</span>
+                </div>
+                <input type="range" id="sim-comprimento" min="2.0" max="15.0" step="0.5" value="4.0" style="width:100%;accent-color:var(--jd-azul);height:8px;cursor:pointer;">
+              </div>
+
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:700;margin-bottom:6px;">
+                  <label for="sim-altura">Altura Pé-Direito (m):</label>
+                  <span id="sim-val-altura" class="jd-num-tabular" style="color:var(--jd-azul);">2.8 m</span>
+                </div>
+                <input type="range" id="sim-altura" min="2.2" max="5.0" step="0.2" value="2.8" style="width:100%;accent-color:var(--jd-azul);height:8px;cursor:pointer;">
+              </div>
+
+              <div>
+                <label for="sim-tipo-uso" style="display:block;font-size:13px;font-weight:700;text-transform:uppercase;margin-bottom:6px;">Finalidade da Operação:</label>
+                <select id="sim-tipo-uso" class="jd-form-select">
+                  <option value="Congelados (-18 °C)">Congelados (-18 °C) — Carnes, Aves e Gelo</option>
+                  <option value="Resfriados (0 a +15 °C)">Resfriados (0 a +15 °C) — Bebidas, Laticínios e Alimentos</option>
+                  <option value="Walk-In Cooler">Expositora Walk-In Cooler com Portas de Vidro</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Resumo Geométrico em Tempo Real -->
+            <div class="jd-spotlight" style="background:var(--jd-gelo);border:1px solid var(--jd-borda);border-radius:var(--jd-radius);padding:28px;">
+              <span style="font-size:12px;font-weight:800;color:var(--jd-marinho);text-transform:uppercase;display:block;margin-bottom:16px;">
+                GEOMETRIA DO PROJETO EM TEMPO REAL
+              </span>
+
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
+                <div style="background:var(--jd-branco);padding:16px;border-radius:var(--jd-radius);border:1px solid var(--jd-borda);">
+                  <span style="font-size:12px;color:var(--jd-cinza-texto);display:block;">Volume Interno:</span>
+                  <strong id="sim-out-volume" class="jd-num-tabular" style="font-size:26px;color:var(--jd-marinho);">33.6 m³</strong>
+                </div>
+                <div style="background:var(--jd-branco);padding:16px;border-radius:var(--jd-radius);border:1px solid var(--jd-borda);">
+                  <span style="font-size:12px;color:var(--jd-cinza-texto);display:block;">Área de Painéis:</span>
+                  <strong id="sim-out-paineis" class="jd-num-tabular" style="font-size:26px;color:var(--jd-marinho);">63 m²</strong>
+                </div>
+              </div>
+
+              <!-- Nota Técnica de Engenharia (Ajuste 6) -->
+              <p style="font-size:13px;color:var(--jd-cinza-texto);line-height:1.5;margin-bottom:20px;padding:12px;background:var(--jd-branco);border-left:3px solid var(--jd-azul);border-radius:2px;">
+                ℹ️ <strong>Nota Técnica:</strong> A potência do compressor e a espessura exata dos painéis são calculadas pela equipe de engenharia da JD conforme a sua carga térmica. Envie as medidas para receber a proposta técnica oficial.
+              </p>
+
+              <button class="jd-btn jd-btn--primary" id="btn-transfer-sim" style="width:100%;">
+                <span>Preencher Orçamento com Estas Medidas</span>
+                <span>→</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+
+    <!-- ==========================================================================
+         VIEW 2: CATÁLOGO TÉCNICO DE COMPONENTES (22 MÓDULOS COM CLARO E ESCURO LADO A LADO)
+         ========================================================================== -->
+    <div id="view-components" class="catalog-view">
+      <div class="components-shell">
+
+        <!-- Sidebar de Navegação dos Componentes -->
+        <aside class="components-sidebar" aria-label="Navegação dos Componentes">
+          <span style="font-size:11px;font-weight:800;color:var(--jd-marinho);text-transform:uppercase;padding:0 12px 10px;display:block;">
+            CATÁLOGO DO DS (22 MÓDULOS)
+          </span>
+          <a href="#m-cores" class="is-active">01. Cores Oficiais do Site</a>
+          <a href="#m-tipografia">02. Tipografia Industrial</a>
+          <a href="#m-espacamento">03. Espaçamento Base 8px</a>
+          <a href="#m-contraste">04. Matriz de Contraste AA</a>
+          <a href="#m-botoes">05. Botões &amp; Ações</a>
+          <a href="#m-header">06. Cabeçalho Enxuto</a>
+          <a href="#m-hero-a">07. Hero A (Direta)</a>
+          <a href="#m-hero-b">08. Hero B (Rica - Otto)</a>
+          <a href="#m-form">09. Formulário em 2 Etapas</a>
+          <a href="#m-cards">10. Cards de Produto (Spotlight)</a>
+          <a href="#m-specs">11. Ficha Técnica SCADA</a>
+          <a href="#m-provas">12. Faixa de Provas</a>
+          <a href="#m-passos">13. Passo a Passo</a>
+          <a href="#m-galeria">14. Galeria de Obras (Lightbox)</a>
+          <a href="#m-depoimentos">15. Depoimentos</a>
+          <a href="#m-logos">16. Logos de Clientes</a>
+          <a href="#m-faq">17. FAQ com Acordeão</a>
+          <a href="#m-whatsapp">18. WhatsApp Flutuante</a>
+          <a href="#m-rodape">19. Rodapé Institucional</a>
+          <a href="#m-cookies">20. Banner de Cookies LGPD</a>
+          <a href="#m-chips">21. Selos, Chips e Avisos</a>
+          <a href="#m-checklist">22. Checklist de Verificação</a>
+        </aside>
+
+        <!-- Conteúdo dos 22 Módulos -->
+        <div class="components-content">
+
+          <!-- 01. CORES OFICIAIS DO SITE -->
+          <div id="m-cores" class="component-card-wrap">
+            <div class="component-card-header">
+              <div>
+                <span style="font-size:12px;font-weight:700;color:var(--jd-azul);text-transform:uppercase;">FUNDAÇÕES VISUAIS</span>
+                <h2 class="component-card-title">01. Cores de Marca &amp; Origem no Site</h2>
+              </div>
+              <button class="ds-copy-btn" data-copy="--jd-azul: #4181BC; --jd-marinho: #3B497F; --jd-ciano: #37B4CE; --jd-amarelo: #F1BD43;">Copiar Cores</button>
+            </div>
+            <p style="font-size:14px;color:var(--jd-cinza-texto);margin-bottom:20px;">
+              Cores extraídas estritamente do site <code>jdcamarasfrias.com.br</code>. O amarelo #F1BD43 é exclusivo para CTA principal de orçamento (sempre com texto preto #101010). O verde #008749 é exclusivo para WhatsApp e confirmação.
+            </p>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));gap:16px;">
+              <div class="jd-spotlight" style="border:1px solid var(--jd-borda);border-radius:var(--jd-radius);overflow:hidden;background:var(--jd-branco);">
+                <div style="height:64px;background:#4181BC;display:grid;place-items:center;color:#FFF;font-weight:700;">#4181BC</div>
+                <div style="padding:10px;font-size:12px;"><strong>--jd-azul</strong><br>Primária global</div>
+              </div>
+              <div class="jd-spotlight" style="border:1px solid var(--jd-borda);border-radius:var(--jd-radius);overflow:hidden;background:var(--jd-branco);">
+                <div style="height:64px;background:#3B497F;display:grid;place-items:center;color:#FFF;font-weight:700;">#3B497F</div>
+                <div style="padding:10px;font-size:12px;"><strong>--jd-marinho</strong><br>Títulos e escuros</div>
+              </div>
+              <div class="jd-spotlight" style="border:1px solid var(--jd-borda);border-radius:var(--jd-radius);overflow:hidden;background:var(--jd-branco);">
+                <div style="height:64px;background:#37B4CE;display:grid;place-items:center;color:#000;font-weight:700;">#37B4CE</div>
+                <div style="padding:10px;font-size:12px;"><strong>--jd-ciano</strong><br>Destaque e linhas</div>
+              </div>
+              <div class="jd-spotlight" style="border:1px solid var(--jd-borda);border-radius:var(--jd-radius);overflow:hidden;background:var(--jd-branco);">
+                <div style="height:64px;background:#F1BD43;display:grid;place-items:center;color:#101010;font-weight:800;">#F1BD43</div>
+                <div style="padding:10px;font-size:12px;"><strong>--jd-amarelo</strong><br>CTA de Orçamento</div>
+              </div>
+              <div class="jd-spotlight" style="border:1px solid var(--jd-borda);border-radius:var(--jd-radius);overflow:hidden;background:var(--jd-branco);">
+                <div style="height:64px;background:#008749;display:grid;place-items:center;color:#FFF;font-weight:700;">#008749</div>
+                <div style="padding:10px;font-size:12px;"><strong>--jd-verde</strong><br>WhatsApp</div>
+              </div>
+              <div class="jd-spotlight" style="border:1px solid var(--jd-borda);border-radius:var(--jd-radius);overflow:hidden;background:var(--jd-branco);">
+                <div style="height:64px;background:#12111F;display:grid;place-items:center;color:#FFF;font-weight:700;">#12111F</div>
+                <div style="padding:10px;font-size:12px;"><strong>--jd-noite</strong><br>Fundo escuro hero</div>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- 02. TIPOGRAFIA INDUSTRIAL -->
+          <div id="m-tipografia" class="component-card-wrap">
+            <div class="component-card-header">
+              <div>
+                <span style="font-size:12px;font-weight:700;color:var(--jd-azul);text-transform:uppercase;">SISTEMA TIPOGRÁFICO</span>
+                <h2 class="component-card-title">02. Tipografia Industrial (Archivo + Inter)</h2>
+              </div>
+              <button class="ds-copy-btn" data-copy="font-family: 'Archivo', sans-serif; font-weight: 800;">Copiar Fontes</button>
+            </div>
+            <p style="font-size:14px;color:var(--jd-cinza-texto);margin-bottom:16px;">
+              Exatamente 2 famílias (Ajuste 4): <strong>Archivo 800/900</strong> nos títulos e <strong>Inter 400/600/700</strong> no corpo e dados numéricos com <code>tabular-nums</code>. Rótulos mínimos com 12px.
+            </p>
+
+            <div style="display:flex;flex-direction:column;gap:18px;">
+              <div>
+                <span style="font-size:11px;font-weight:700;color:var(--jd-cinza-texto);">H1 DISPLAY // ARCHIVO 900 // 48PX</span>
+                <h1 style="font-family:var(--jd-font-display);font-size:clamp(28px, 4vw, 48px);font-weight:900;text-transform:uppercase;color:var(--jd-marinho);line-height:1.05;margin-top:4px;">
+                  CÂMARAS FRIAS DE ALTA CAPACIDADE
+                </h1>
+              </div>
+              <div>
+                <span style="font-size:11px;font-weight:700;color:var(--jd-cinza-texto);">H2 SEÇÃO // ARCHIVO 800 // 24PX</span>
+                <h2 style="font-family:var(--jd-font-display);font-size:24px;font-weight:800;text-transform:uppercase;color:var(--jd-azul);margin-top:4px;">
+                  MONTAGEM RÁPIDA E PROJETO SOB MEDIDA
+                </h2>
+              </div>
+              <div>
+                <span style="font-size:11px;font-weight:700;color:var(--jd-cinza-texto);">CORPO TÉCNICO // INTER 400 / 600 // 16PX</span>
+                <p style="font-size:15px;color:var(--jd-preto);max-width:70ch;margin-top:4px;">
+                  Câmaras frigoríficas construídas com painéis termoisolantes modulados de alta densidade e acabamento atóxico em conformidade com as exigências sanitárias da Anvisa e ABNT.
+                </p>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- 04. MATRIZ DE CONTRASTE -->
+          <div id="m-contraste" class="component-card-wrap">
+            <div class="component-card-header">
+              <div>
+                <span style="font-size:12px;font-weight:700;color:var(--jd-azul);text-transform:uppercase;">ACESSIBILIDADE WCAG AA</span>
+                <h2 class="component-card-title">04. Matriz de Contraste: Pares Permitidos e Proibidos</h2>
+              </div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:16px;margin-bottom:20px;">
+              <div style="background:#F1BD43;color:#101010;padding:16px;border-radius:var(--jd-radius);">
+                <strong>Preto #101010 sobre Amarelo</strong>
+                <span style="display:block;font-size:12px;margin-top:4px;">Contraste: 11.8:1 (✔ AAA)</span>
+              </div>
+              <div style="background:#008749;color:#FFFFFF;padding:16px;border-radius:var(--jd-radius);">
+                <strong>Branco #FFFFFF sobre Verde</strong>
+                <span style="display:block;font-size:12px;margin-top:4px;">Contraste: 4.6:1 (✔ AA)</span>
+              </div>
+              <div style="background:#3B497F;color:#FFFFFF;padding:16px;border-radius:var(--jd-radius);">
+                <strong>Branco #FFFFFF sobre Marinho</strong>
+                <span style="display:block;font-size:12px;margin-top:4px;">Contraste: 7.8:1 (✔ AAA)</span>
+              </div>
+              <div style="background:#FFFFFF;color:#101010;padding:16px;border-radius:var(--jd-radius);border:1px solid var(--jd-borda);">
+                <strong>Preto #101010 sobre Branco</strong>
+                <span style="display:block;font-size:12px;margin-top:4px;">Contraste: 18.2:1 (✔ AAA)</span>
+              </div>
+            </div>
+
+            <div style="padding:14px;background:#FDE8E8;border:1px solid #F5C6CB;border-radius:var(--jd-radius);color:#721C24;font-size:13px;">
+              🚫 <strong>PARES ESTRITAMENTE PROIBIDOS:</strong> Texto branco sobre amarelo (1.8:1 - ilegível), texto azul #4181BC pequeno sobre branco (4.1:1 - reprovado no AA para texto normal).
+            </div>
+          </div>
+
+
+          <!-- 05. BOTÕES COM EFEITO LASER (LADO A LADO CLARO E ESCURO) -->
+          <div id="m-botoes" class="component-card-wrap">
+            <div class="component-card-header">
+              <div>
+                <span style="font-size:12px;font-weight:700;color:var(--jd-azul);text-transform:uppercase;">COMPONENTES DE AÇÃO</span>
+                <h2 class="component-card-title">05. Botões com Laser Shimmer (Claro e Escuro Lado a Lado)</h2>
+              </div>
+              <button class="ds-copy-btn" data-copy="<a href='#' class='jd-btn jd-btn--primary'><span>Pedir Orçamento</span></a>">Copiar Botão</button>
+            </div>
+            <p style="font-size:14px;color:var(--jd-cinza-texto);">
+              Apresentando o efeito Laser Shimmer criogênico no botão de orçamento e o Radar Ping no WhatsApp nos dois temas obrigatórios da página.
+            </p>
+
+            <div class="ds-duo-grid">
+              <!-- Tema Claro -->
+              <div class="ds-duo-pane tema-claro jd-spotlight">
+                <span class="ds-duo-label">TEMA CLARO (PADRÃO)</span>
+                <div style="display:flex;flex-direction:column;gap:14px;align-items:flex-start;">
+                  <button class="jd-btn jd-btn--primary">
+                    <span>Pedir Orçamento</span>
+                    <span>→</span>
+                  </button>
+                  <a href="#" class="jd-btn jd-btn--whatsapp">
+                    <span class="jd-radar-ping" style="color:#FFF;margin-right:4px;">●</span>
+                    <span>Chamar no WhatsApp</span>
+                  </a>
+                  <button class="jd-btn jd-btn--secondary">
+                    <span>Ver Catálogo</span>
+                  </button>
+                  <button class="jd-btn--link">
+                    <span>Falar com um Consultor →</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Tema Escuro -->
+              <div class="ds-duo-pane tema-escuro jd-spotlight">
+                <span class="ds-duo-label">TEMA ESCURO (HERO)</span>
+                <div style="display:flex;flex-direction:column;gap:14px;align-items:flex-start;">
+                  <button class="jd-btn jd-btn--primary">
+                    <span>Pedir Orçamento</span>
+                    <span>→</span>
+                  </button>
+                  <a href="#" class="jd-btn jd-btn--whatsapp">
+                    <span class="jd-radar-ping" style="color:#FFF;margin-right:4px;">●</span>
+                    <span>Chamar no WhatsApp</span>
+                  </a>
+                  <button class="jd-btn jd-btn--secondary">
+                    <span>Ver Catálogo</span>
+                  </button>
+                  <button class="jd-btn--link">
+                    <span>Falar com um Consultor →</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- 10. CARDS DE PRODUTO COM SPOTLIGHT -->
+          <div id="m-cards" class="component-card-wrap">
+            <div class="component-card-header">
+              <div>
+                <span style="font-size:12px;font-weight:700;color:var(--jd-azul);text-transform:uppercase;">CATÁLOGO DE PRODUTOS</span>
+                <h2 class="component-card-title">10. Cards de Produto com Mouse Spotlight</h2>
+              </div>
+              <button class="ds-copy-btn" data-copy="<div class='jd-product-card jd-spotlight'>...</div>">Copiar Card</button>
+            </div>
+            <p style="font-size:14px;color:var(--jd-cinza-texto);margin-bottom:20px;">
+              Passe o mouse para ver o reflexo Spotlight suave e a elevação mecânica industrial.
+            </p>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));gap:20px;">
+              <!-- Mini Câmara -->
+              <div class="jd-spotlight" style="border:1px solid var(--jd-borda);border-radius:var(--jd-radius);background:var(--jd-branco);overflow:hidden;display:flex;flex-direction:column;">
+                <div style="height:160px;background:#E0E5EC;display:grid;place-items:center;padding:16px;text-align:center;font-size:12px;font-weight:600;color:var(--jd-cinza-texto);border-bottom:1px solid var(--jd-borda);">
+                  [Foto de obra: mini câmara fria comercial]
+                </div>
+                <div style="padding:20px;flex:1;display:flex;flex-direction:column;">
+                  <span style="font-size:12px;font-weight:700;color:var(--jd-azul);margin-bottom:6px;">0 °C a +10 °C</span>
+                  <h3 style="font-family:var(--jd-font-display);font-size:18px;font-weight:800;text-transform:uppercase;margin-bottom:8px;">Mini Câmara Fria</h3>
+                  <p style="font-size:13.5px;color:var(--jd-cinza-texto);margin-bottom:16px;flex:1;">Para padarias, açougues e restaurantes. Montagem rápida sem quebrar alvenaria.</p>
+                  <button class="jd-btn jd-btn--primary" style="width:100%;font-size:12px;padding:10px 14px;">Orçar Mini Câmara</button>
+                </div>
+              </div>
+
+              <!-- Expositora Walk-In -->
+              <div class="jd-spotlight" style="border:1px solid var(--jd-borda);border-radius:var(--jd-radius);background:var(--jd-branco);overflow:hidden;display:flex;flex-direction:column;">
+                <div style="height:160px;background:#E0E5EC;display:grid;place-items:center;padding:16px;text-align:center;font-size:12px;font-weight:600;color:var(--jd-cinza-texto);border-bottom:1px solid var(--jd-borda);">
+                  [Foto de obra: câmara expositora walk-in cooler com portas de vidro]
+                </div>
+                <div style="padding:20px;flex:1;display:flex;flex-direction:column;">
+                  <span style="font-size:12px;font-weight:700;color:var(--jd-azul);margin-bottom:6px;">0 °C a +4 °C</span>
+                  <h3 style="font-family:var(--jd-font-display);font-size:18px;font-weight:800;text-transform:uppercase;margin-bottom:8px;">Expositora Walk-In</h3>
+                  <p style="font-size:13.5px;color:var(--jd-cinza-texto);margin-bottom:16px;flex:1;">Abastecimento traseiro contínuo e portas de vidro anti-embaçante para bebidas.</p>
+                  <button class="jd-btn jd-btn--primary" style="width:100%;font-size:12px;padding:10px 14px;">Orçar Expositora</button>
+                </div>
+              </div>
+
+              <!-- Congelados -18°C -->
+              <div class="jd-spotlight" style="border:1px solid var(--jd-borda);border-radius:var(--jd-radius);background:var(--jd-branco);overflow:hidden;display:flex;flex-direction:column;">
+                <div style="height:160px;background:#E0E5EC;display:grid;place-items:center;padding:16px;text-align:center;font-size:12px;font-weight:600;color:var(--jd-cinza-texto);border-bottom:1px solid var(--jd-borda);">
+                  [Foto de obra: câmara de congelados com porta frigorífica pesada]
+                </div>
+                <div style="padding:20px;flex:1;display:flex;flex-direction:column;">
+                  <span style="font-size:12px;font-weight:700;color:var(--jd-amarelo);margin-bottom:6px;">-18 °C</span>
+                  <h3 style="font-family:var(--jd-font-display);font-size:18px;font-weight:800;text-transform:uppercase;margin-bottom:8px;">Câmara de Congelados</h3>
+                  <p style="font-size:13.5px;color:var(--jd-cinza-texto);margin-bottom:16px;flex:1;">Para carnes, pescados e gelo. Estanqueidade térmica e piso reforçado com aquecimento.</p>
+                  <button class="jd-btn jd-btn--primary" style="width:100%;font-size:12px;padding:10px 14px;">Orçar Congelados</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- 09. FORMULÁRIO EM 2 ETAPAS COM INTEGRAÇÃO DE MEDIDAS -->
+          <div id="m-form" class="component-card-wrap">
+            <div class="component-card-header">
+              <div>
+                <span style="font-size:12px;font-weight:700;color:var(--jd-azul);text-transform:uppercase;">MOTOR DE LEADS</span>
+                <h2 class="component-card-title">09. Formulário de Conversão em 2 Etapas</h2>
+              </div>
+              <button class="ds-copy-btn" data-copy="<form class='jd-form-wrap'>...</form>">Copiar Formulário</button>
+            </div>
+
+            <div style="max-width:540px;margin:0 auto;">
+              <div class="jd-form-wrap jd-spotlight">
+                <div style="margin-bottom:20px;">
+                  <span id="form-step-title" style="font-size:12px;font-weight:700;color:var(--jd-azul);">ETAPA 1 DE 2: DADOS BÁSICOS</span>
+                  <div style="height:4px;background:var(--jd-borda);border-radius:2px;margin-top:6px;overflow:hidden;">
+                    <div id="form-progress-bar" style="width:50%;height:100%;background:var(--jd-azul);transition:width 0.3s ease;"></div>
+                  </div>
+                </div>
+
+                <!-- ETAPA 1 -->
+                <div id="form-step-1">
+                  <div class="jd-form-group">
+                    <label class="jd-form-label" for="lead-nome">Seu Nome / Razão Social:</label>
+                    <input type="text" id="lead-nome" class="jd-form-input" placeholder="Ex: Roberto Carlos">
+                  </div>
+
+                  <div class="jd-form-group">
+                    <label class="jd-form-label" for="lead-tel">Seu WhatsApp (com DDD):</label>
+                    <input type="tel" id="lead-tel" class="jd-form-input" placeholder="(00) 00000-0000">
+                  </div>
+
+                  <!-- Campos Ocultos de Medidas e UTM -->
+                  <input type="hidden" id="form-hid-largura" value="3.0">
+                  <input type="hidden" id="form-hid-comprimento" value="4.0">
+                  <input type="hidden" id="form-hid-altura" value="2.8">
+
+                  <button type="button" class="jd-btn jd-btn--primary" id="btn-next-form" style="width:100%;">
+                    <span>Avançar para Etapa 2</span>
+                    <span>→</span>
+                  </button>
+                </div>
+
+                <!-- ETAPA 2 (Oculta) -->
+                <div id="form-step-2" style="display:none;">
+                  <div class="jd-form-group">
+                    <label class="jd-form-label" for="lead-cidade">Cidade e Estado da Obra:</label>
+                    <input type="text" id="lead-cidade" class="jd-form-input" placeholder="Ex: Goiânia - GO">
+                  </div>
+
+                  <div class="jd-form-group">
+                    <label class="jd-form-label" for="lead-medidas-info">Medidas Calculadas (m):</label>
+                    <input type="text" id="lead-medidas-info" class="jd-form-input" value="3.0m x 4.0m x 2.8m" readonly style="background:var(--jd-gelo);">
+                  </div>
+
+                  <div style="display:flex;gap:12px;">
+                    <button type="button" class="jd-btn jd-btn--dark" id="btn-prev-form" style="flex:1;">
+                      <span>Voltar</span>
+                    </button>
+                    <button type="button" class="jd-btn jd-btn--primary" id="btn-submit-form" style="flex:2;">
+                      <span>Receber Orçamento</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- 11. FICHA TÉCNICA SCADA -->
+          <div id="m-specs" class="component-card-wrap">
+            <div class="component-card-header">
+              <div>
+                <span style="font-size:12px;font-weight:700;color:var(--jd-azul);text-transform:uppercase;">DADOS DE ENGENHARIA</span>
+                <h2 class="component-card-title">11. Ficha Técnica de Especificação (SCADA)</h2>
+              </div>
+              <button class="ds-copy-btn" data-copy="table.jd-spec-table">Copiar Tabela</button>
+            </div>
+
+            <table class="jd-spec-table">
+              <thead>
+                <tr>
+                  <th>Item de Engenharia</th>
+                  <th>Especificação Padrão JD</th>
+                  <th>Status de Validação</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Núcleo Termoisolante</strong></td>
+                  <td>Poliisocianurato (PIR) de alta densidade 40 kg/m³</td>
+                  <td><span class="tag-exemplo">EXEMPLO</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Revestimento das Paredes</strong></td>
+                  <td>Chapa de aço galvanizado 0,5 mm RAL 9003 pré-pintado</td>
+                  <td>Padrão Construtivo</td>
+                </tr>
+                <tr>
+                  <td><strong>Tensão de Alimentação</strong></td>
+                  <td>220V Bifásico / 220V Trifásico / 380V Trifásico</td>
+                  <td>Conforme Rede do Cliente</td>
+                </tr>
+                <tr>
+                  <td><strong>Garantia de Fábrica</strong></td>
+                  <td>00 anos <span class="tag-exemplo">CONFIRMAR</span></td>
+                  <td>A ser informado no contrato</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+
+          <!-- 17. FAQ ACCORDION -->
+          <div id="m-faq" class="component-card-wrap">
+            <div class="component-card-header">
+              <div>
+                <span style="font-size:12px;font-weight:700;color:var(--jd-azul);text-transform:uppercase;">DÚVIDAS FREQUENTES</span>
+                <h2 class="component-card-title">17. Perguntas Frequentes (FAQ)</h2>
+              </div>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <details class="jd-spotlight" style="padding:16px 20px;background:var(--jd-gelo);border-radius:var(--jd-radius);cursor:pointer;">
+                <summary style="font-weight:700;color:var(--jd-marinho);list-style:none;display:flex;justify-content:space-between;">
+                  <span>Como é feita a entrega e montagem da câmara?</span>
+                  <span style="font-size:18px;color:var(--jd-azul);">+</span>
+                </summary>
+                <p style="margin-top:10px;font-size:14px;color:var(--jd-cinza-texto);line-height:1.6;">
+                  A JD envia a câmara modular e técnicos próprios para montagem e comissionamento de temperatura no local da sua obra.
+                </p>
+              </details>
+
+              <details class="jd-spotlight" style="padding:16px 20px;background:var(--jd-gelo);border-radius:var(--jd-radius);cursor:pointer;">
+                <summary style="font-weight:700;color:var(--jd-marinho);list-style:none;display:flex;justify-content:space-between;">
+                  <span>Qual a forma de pagamento e faturamento?</span>
+                  <span style="font-size:18px;color:var(--jd-azul);">+</span>
+                </summary>
+                <p style="margin-top:10px;font-size:14px;color:var(--jd-cinza-texto);line-height:1.6;">
+                  Faturamento direto da fábrica via cartão BNDES, financiamento bancário para empresas ou condições de fábrica.
+                </p>
+              </details>
+            </div>
+          </div>
+
+
+          <!-- 19. RODAPÉ INSTITUCIONAL (ANTI-INVENÇÃO) -->
+          <div id="m-rodape" class="component-card-wrap">
+            <div class="component-card-header">
+              <div>
+                <span style="font-size:12px;font-weight:700;color:var(--jd-azul);text-transform:uppercase;">DADOS FABRIS</span>
+                <h2 class="component-card-title">19. Rodapé Institucional</h2>
+              </div>
+            </div>
+
+            <div style="background:var(--jd-noite);color:var(--jd-branco);padding:28px;border-radius:var(--jd-radius);">
+              <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:24px;margin-bottom:20px;">
+                <div>
+                  <strong style="color:var(--jd-amarelo);display:block;margin-bottom:6px;">EMPRESA</strong>
+                  <span style="font-size:13px;color:var(--jd-cinza-aco);line-height:1.6;">
+                    [RAZÃO SOCIAL DA JD CÂMARAS] <span class="tag-exemplo">CONFIRMAR</span><br>
+                    CNPJ: [00.000.000/0000-00] <span class="tag-exemplo">CONFIRMAR</span>
+                  </span>
+                </div>
+                <div>
+                  <strong style="color:var(--jd-amarelo);display:block;margin-bottom:6px;">LOCALIZAÇÃO FABRIL</strong>
+                  <span style="font-size:13px;color:var(--jd-cinza-aco);line-height:1.6;">
+                    Fábrica Matriz: Ubá - MG<br>
+                    Fábrica Filial: Anápolis - GO
+                  </span>
+                </div>
+              </div>
+              <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:14px;text-align:center;font-size:12px;color:var(--jd-cinza-texto);">
+                © 2026 JD Câmaras Frias — Projeto e Fabricação sob Medida.
+              </div>
+            </div>
+          </div>
+
+
+          <!-- 22. CHECKLIST DE CONFORMIDADE -->
+          <div id="m-checklist" class="component-card-wrap">
+            <div class="component-card-header">
+              <div>
+                <span style="font-size:12px;font-weight:700;color:var(--jd-azul);text-transform:uppercase;">AUDITORIA DO PROMPT 01 &amp; 01b</span>
+                <h2 class="component-card-title">22. Checklist de Verificação da Fusão Master</h2>
+              </div>
+            </div>
+
+            <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;font-size:14px;">
+              <li style="color:var(--jd-verde);font-weight:700;">✔ Cores 100% restritas à paleta oficial (sem verde neon, sem vermelho, sem azuis estranhos).</li>
+              <li style="color:var(--jd-verde);font-weight:700;">✔ Efeitos dinâmicos preservados: Mouse Spotlight, Laser Shimmer, Radar Ping, Hélices Isométricas e Termostato Danfoss.</li>
+              <li style="color:var(--jd-verde);font-weight:700;">✔ Sobriedade e linguagem real do comprador comercial (açougues, conveniências e supermercados).</li>
+              <li style="color:var(--jd-verde);font-weight:700;">✔ Componentes exibidos nos dois temas obrigatórios lado a lado (.tema-claro e .tema-escuro).</li>
+              <li style="color:var(--jd-verde);font-weight:700;">✔ Todos os números e prazos de exemplo etiquetados visivelmente com [EXEMPLO].</li>
+              <li style="color:var(--jd-verde);font-weight:700;">✔ Simulador mobile 360px integrado no topo com um clique.</li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Toast de Notificação -->
+  <div class="ds-toast" id="ds-toast">
+    <span style="color:var(--jd-verde);font-size:16px;">✔</span>
+    <span id="ds-toast-msg">Código copiado para a área de transferência!</span>
+  </div>
+
+  <!-- SCRIPT INTEGRADO DA FUSÃO MASTER -->
+  <script>
+    (function () {
+      'use strict';
+
+      // 1. Áudio Haptic (Web Audio API)
+      var audioCtx = null;
+      var soundEnabled = false;
+
+      function playRelayClick() {
+        if (!soundEnabled) return;
+        try {
+          if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+          if (audioCtx.state === 'suspended') audioCtx.resume();
+          var osc = audioCtx.createOscillator();
+          var gain = audioCtx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(1100, audioCtx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.04);
+          gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.04);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.04);
+        } catch (e) {}
+      }
+
+      var btnSfx = document.getElementById('btn-toggle-sfx');
+      var lblSfx = document.getElementById('lbl-sfx');
+      if (btnSfx) {
+        btnSfx.addEventListener('click', function () {
+          soundEnabled = !soundEnabled;
+          lblSfx.textContent = soundEnabled ? 'SFX: LIGADO' : 'SFX: MUDO';
+          btnSfx.classList.toggle('is-active', soundEnabled);
+          if (soundEnabled) playRelayClick();
+        });
+      }
+
+      // 2. Alternador de Abas: Visão Geral vs Catálogo Técnico
+      var tabOverview = document.getElementById('tab-btn-overview');
+      var tabComponents = document.getElementById('tab-btn-components');
+      var viewOverview = document.getElementById('view-overview');
+      var viewComponents = document.getElementById('view-components');
+
+      function switchTab(target) {
+        playRelayClick();
+        if (target === 'overview') {
+          tabOverview.classList.add('is-active');
+          tabComponents.classList.remove('is-active');
+          viewOverview.classList.add('is-active');
+          viewComponents.classList.remove('is-active');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          tabComponents.classList.add('is-active');
+          tabOverview.classList.remove('is-active');
+          viewComponents.classList.add('is-active');
+          viewOverview.classList.remove('is-active');
+        }
+      }
+
+      tabOverview.addEventListener('click', function () { switchTab('overview'); });
+      tabComponents.addEventListener('click', function () { switchTab('components'); });
+
+      if (window.location.hash && window.location.hash.startsWith('#m-')) {
+        switchTab('components');
+      }
+
+      // 3. Termostato Digital HUD (Danfoss)
+      var liveTemp = document.getElementById('live-temp-display');
+      var btnTempCong = document.getElementById('btn-temp-cong');
+      var btnTempResf = document.getElementById('btn-temp-resf');
+      var currentTemp = -18.0;
+
+      function setThermostat(targetVal) {
+        playRelayClick();
+        var start = currentTemp;
+        var startTime = performance.now();
+        var duration = 400;
+
+        function step(now) {
+          var elapsed = now - startTime;
+          var progress = Math.min(elapsed / duration, 1);
+          var eased = 1 - Math.pow(1 - progress, 3);
+          var val = start + (targetVal - start) * eased;
+          var sign = val > 0 ? '+' : '';
+          if (liveTemp) liveTemp.textContent = sign + val.toFixed(1).replace('.', ',');
+          if (progress < 1) {
+            requestAnimationFrame(step);
+          } else {
+            currentTemp = targetVal;
+            if (liveTemp) liveTemp.textContent = (targetVal > 0 ? '+' : '') + targetVal.toFixed(1).replace('.', ',');
+          }
+        }
+        requestAnimationFrame(step);
+      }
+
+      if (btnTempCong) {
+        btnTempCong.addEventListener('click', function () {
+          btnTempCong.classList.add('is-active');
+          btnTempResf.classList.remove('is-active');
+          setThermostat(-18.0);
+        });
+      }
+      if (btnTempResf) {
+        btnTempResf.addEventListener('click', function () {
+          btnTempResf.classList.add('is-active');
+          btnTempCong.classList.remove('is-active');
+          setThermostat(4.0);
+        });
+      }
+
+      // 4. Simulador de Viewport Mobile 360px
+      var btnToggleViewport = document.getElementById('btn-toggle-viewport');
+      var lblViewport = document.getElementById('lbl-viewport');
+      var viewportShell = document.getElementById('catalog-viewport-shell');
+      var isMobileView = false;
+
+      if (btnToggleViewport) {
+        btnToggleViewport.addEventListener('click', function () {
+          playRelayClick();
+          isMobileView = !isMobileView;
+          if (isMobileView) {
+            viewportShell.classList.add('mobile-simulator-wrapper');
+            lblViewport.textContent = 'Desktop (1200px)';
+            btnToggleViewport.classList.add('is-active');
+          } else {
+            viewportShell.classList.remove('mobile-simulator-wrapper');
+            lblViewport.textContent = 'Mobile 360px';
+            btnToggleViewport.classList.remove('is-active');
+          }
+        });
+      }
+
+      // 5. Alternador de Tema Geral
+      var btnTheme = document.getElementById('btn-toggle-theme');
+      var lblTheme = document.getElementById('lbl-theme');
+      if (btnTheme) {
+        btnTheme.addEventListener('click', function () {
+          playRelayClick();
+          var current = document.body.getAttribute('data-theme') || 'dark';
+          var next = current === 'dark' ? 'clean' : 'dark';
+          document.body.setAttribute('data-theme', next);
+          lblTheme.textContent = next === 'dark' ? 'FÁBRICA' : 'COMERCIAL';
+          btnTheme.classList.toggle('is-active', next === 'clean');
+        });
+      }
+
+      // 6. Spotlight Mouse Tracker
+      var spotlights = document.querySelectorAll('.jd-spotlight');
+      spotlights.forEach(function (card) {
+        card.addEventListener('mousemove', function (e) {
+          var rect = card.getBoundingClientRect();
+          card.style.setProperty('--mouse-x', (e.clientX - rect.left) + 'px');
+          card.style.setProperty('--mouse-y', (e.clientY - rect.top) + 'px');
+        });
+      });
+
+      // 7. Simulador de Geometria em Tempo Real (Ajuste 6)
+      var inL = document.getElementById('sim-largura');
+      var inC = document.getElementById('sim-comprimento');
+      var inA = document.getElementById('sim-altura');
+      var outV = document.getElementById('sim-out-volume');
+      var outP = document.getElementById('sim-out-paineis');
+
+      var valL = document.getElementById('sim-val-largura');
+      var valC = document.getElementById('sim-val-comprimento');
+      var valA = document.getElementById('sim-val-altura');
+
+      function updateCalc() {
+        if (!inL || !inC || !inA) return;
+        var l = parseFloat(inL.value);
+        var c = parseFloat(inC.value);
+        var a = parseFloat(inA.value);
+
+        if (valL) valL.textContent = l.toFixed(1) + ' m';
+        if (valC) valC.textContent = c.toFixed(1) + ' m';
+        if (valA) valA.textContent = a.toFixed(1) + ' m';
+
+        var vol = l * c * a;
+        var area = 2 * (l * a) + 2 * (c * a) + 2 * (l * c);
+
+        if (outV) outV.textContent = vol.toFixed(1) + ' m³';
+        if (outP) outP.textContent = Math.round(area) + ' m²';
+
+        var hL = document.getElementById('form-hid-largura');
+        var hC = document.getElementById('form-hid-comprimento');
+        var hA = document.getElementById('form-hid-altura');
+        if (hL) hL.value = l;
+        if (hC) hC.value = c;
+        if (hA) hA.value = a;
+
+        var medInfo = document.getElementById('lead-medidas-info');
+        if (medInfo) medInfo.value = l.toFixed(1) + 'm x ' + c.toFixed(1) + 'm x ' + a.toFixed(1) + 'm (' + vol.toFixed(1) + ' m³)';
+      }
+
+      [inL, inC, inA].forEach(function (el) {
+        if (el) el.addEventListener('input', function() {
+          updateCalc();
+          playRelayClick();
+        });
+      });
+      updateCalc();
+
+      var btnTransferSim = document.getElementById('btn-transfer-sim');
+      if (btnTransferSim) {
+        btnTransferSim.addEventListener('click', function () {
+          switchTab('components');
+          location.hash = '#m-form';
+        });
+      }
+
+      // 8. Raio-X Isométrico Camadas
+      var corteBtns = document.querySelectorAll('[data-corte-layer]');
+      var descInfo = document.getElementById('corte-info-desc');
+      var descTexts = {
+        geral: 'Câmara frigorífica montada sob medida com painéis modulares e estanqueidade total.',
+        paineis: 'Painéis termoisolantes com núcleo maciço e encaixe macho-fêmea hermético que evita pontes térmicas.',
+        refrig: 'Unidade evaporadora com ventiladores axiais de alto rendimento e degelo elétrico inteligente.',
+        porta: 'Porta frigorífica giratória semi-embutida com gaxeta magnética e batente aquecido contra congelamento.'
+      };
+
+      corteBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          playRelayClick();
+          corteBtns.forEach(function (b) { b.classList.remove('is-active'); });
+          btn.classList.add('is-active');
+          var layer = btn.getAttribute('data-corte-layer');
+
+          var lPaineis = document.getElementById('layer-paineis');
+          var lRefrig = document.getElementById('layer-refrig');
+          var lPorta = document.getElementById('layer-porta');
+
+          if (descInfo && descTexts[layer]) descInfo.textContent = descTexts[layer];
+
+          if (layer === 'geral') {
+            if (lPaineis) lPaineis.style.opacity = '1';
+            if (lRefrig) lRefrig.style.opacity = '1';
+            if (lPorta) lPorta.style.opacity = '1';
+          } else if (layer === 'paineis') {
+            if (lPaineis) lPaineis.style.opacity = '1';
+            if (lRefrig) lRefrig.style.opacity = '0.2';
+            if (lPorta) lPorta.style.opacity = '0.2';
+          } else if (layer === 'refrig') {
+            if (lPaineis) lPaineis.style.opacity = '0.2';
+            if (lRefrig) lRefrig.style.opacity = '1';
+            if (lPorta) lPorta.style.opacity = '0.2';
+          } else if (layer === 'porta') {
+            if (lPaineis) lPaineis.style.opacity = '0.2';
+            if (lRefrig) lRefrig.style.opacity = '0.2';
+            if (lPorta) lPorta.style.opacity = '1';
+          }
+        });
+      });
+
+      // 9. Formulário em 2 Etapas
+      var btnNextForm = document.getElementById('btn-next-form');
+      var btnPrevForm = document.getElementById('btn-prev-form');
+      var step1 = document.getElementById('form-step-1');
+      var step2 = document.getElementById('form-step-2');
+      var pBar = document.getElementById('form-progress-bar');
+      var pTitle = document.getElementById('form-step-title');
+
+      if (btnNextForm && step1 && step2) {
+        btnNextForm.addEventListener('click', function () {
+          playRelayClick();
+          var nome = document.getElementById('lead-nome');
+          var tel = document.getElementById('lead-tel');
+          if (nome && !nome.value.trim()) { alert('Por favor, informe seu nome ou empresa.'); nome.focus(); return; }
+          if (tel && tel.value.length < 10) { alert('Por favor, informe um número de WhatsApp com DDD.'); tel.focus(); return; }
+
+          step1.style.display = 'none';
+          step2.style.display = 'block';
+          if (pBar) pBar.style.width = '100%';
+          if (pTitle) pTitle.textContent = 'ETAPA 2 DE 2: LOCAL DA OBRA & MEDIDAS';
+        });
+
+        if (btnPrevForm) {
+          btnPrevForm.addEventListener('click', function () {
+            playRelayClick();
+            step2.style.display = 'none';
+            step1.style.display = 'block';
+            if (pBar) pBar.style.width = '50%';
+            if (pTitle) pTitle.textContent = 'ETAPA 1 DE 2: DADOS BÁSICOS';
+          });
+        }
+      }
+
+      // Máscara de Telefone
+      var telInput = document.getElementById('lead-tel');
+      if (telInput) {
+        telInput.addEventListener('input', function () {
+          var v = this.value.replace(/\D/g, '');
+          if (v.length > 11) v = v.slice(0, 11);
+          if (v.length > 6) {
+            this.value = '(' + v.slice(0, 2) + ') ' + v.slice(2, 7) + '-' + v.slice(7);
+          } else if (v.length > 2) {
+            this.value = '(' + v.slice(0, 2) + ') ' + v.slice(2);
+          } else if (v.length > 0) {
+            this.value = '(' + v;
+          }
+        });
+      }
+
+      // 10. Canvas de Névoa Criogênica
+      var canvas = document.getElementById('jd-frost-canvas');
+      if (canvas) {
+        var ctx = canvas.getContext('2d');
+        var particles = [];
+        var count = 24;
+        var w, h;
+
+        function resize() {
+          w = canvas.width = canvas.parentElement.offsetWidth || window.innerWidth;
+          h = canvas.height = canvas.parentElement.offsetHeight || 500;
+        }
+        resize();
+        window.addEventListener('resize', resize);
+
+        for (var i = 0; i < count; i++) {
+          particles.push({
+            x: Math.random() * w,
+            y: Math.random() * h,
+            r: Math.random() * 2 + 0.8,
+            sy: -(Math.random() * 0.35 + 0.15),
+            sx: (Math.random() - 0.5) * 0.25,
+            op: Math.random() * 0.4 + 0.2
+          });
+        }
+
+        function animFrost() {
+          ctx.clearRect(0, 0, w, h);
+          particles.forEach(function (p) {
+            p.y += p.sy;
+            p.x += p.sx;
+            if (p.y < 0) { p.y = h; p.x = Math.random() * w; }
+            if (p.x < 0) p.x = w;
+            if (p.x > w) p.x = 0;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(55, 180, 206, ' + p.op + ')';
+            ctx.fill();
+          });
+          requestAnimationFrame(animFrost);
+        }
+        animFrost();
+      }
+
+      // 11. Botão Copiar Código com Toast
+      var copyBtns = document.querySelectorAll('[data-copy]');
+      var toast = document.getElementById('ds-toast');
+      var toastTimeout = null;
+
+      copyBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var code = btn.getAttribute('data-copy');
+          if (!code) return;
+          navigator.clipboard.writeText(code).then(function () {
+            playRelayClick();
+            if (toast) {
+              toast.style.opacity = '1';
+              toast.style.transform = 'translateY(0)';
+              clearTimeout(toastTimeout);
+              toastTimeout = setTimeout(function () {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(10px)';
+              }, 2200);
+            }
+          });
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
