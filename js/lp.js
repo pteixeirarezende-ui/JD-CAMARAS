@@ -441,7 +441,40 @@ const WHATSAPP_NUMBER = ''; // TODO: preencher com DDI+DDD+número (ex.: 5532999
     }
   }
 
-  // 7. BOTÕES DE WHATSAPP E CABEÇALHO
+  // 7. BOTÕES DE WHATSAPP, CABEÇALHO E ATALHOS PARA O FORMULÁRIO
+  function irParaFormulario() {
+    const form = document.getElementById('lp-form-lead');
+    if (!form) return;
+
+    const rect = form.getBoundingClientRect();
+    const headerHeight = window.innerWidth <= 768 ? 64 : 72;
+    
+    // Se o topo do formulário já estiver visível na janela abaixo do cabeçalho, não role: só foque
+    const isFormVisible = (rect.top >= headerHeight && rect.top <= window.innerHeight * 0.7);
+
+    const activeEtapa = form.querySelector('.jd-form__etapa.is-active') || form;
+    const firstInput = activeEtapa.querySelector('input:not([type="hidden"]), select, textarea');
+
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (!isFormVisible) {
+      form.scrollIntoView({
+        behavior: prefersReduced ? 'auto' : 'smooth',
+        block: 'start'
+      });
+    }
+
+    if (firstInput) {
+      if (!isFormVisible) {
+        setTimeout(function () {
+          firstInput.focus({ preventScroll: true });
+        }, prefersReduced ? 50 : 350);
+      } else {
+        firstInput.focus({ preventScroll: true });
+      }
+    }
+  }
+
   function initButtons() {
     const waButtons = document.querySelectorAll('[data-whatsapp-btn], .jd-btn--whatsapp');
     const msg = encodeURIComponent('Olá! Vim pelo site e quero um orçamento de câmara fria.');
@@ -453,7 +486,7 @@ const WHATSAPP_NUMBER = ''; // TODO: preencher com DDI+DDD+número (ex.: 5532999
 
     waButtons.forEach(function (btn) {
       if (!WHATSAPP_NUMBER) {
-        btn.href = '#form-lead';
+        btn.href = '#lp-form-lead';
         btn.setAttribute('title', 'Pedir orçamento');
 
         // Em modo ?debug=1, exibe a etiqueta [CONFIRMAR NÚMERO]
@@ -467,7 +500,9 @@ const WHATSAPP_NUMBER = ''; // TODO: preencher com DDI+DDD+número (ex.: 5532999
         }
 
         btn.addEventListener('click', function (e) {
+          e.preventDefault();
           pushTrackingEvent('click_whatsapp');
+          irParaFormulario();
         });
       } else {
         btn.href = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + msg;
@@ -479,38 +514,102 @@ const WHATSAPP_NUMBER = ''; // TODO: preencher com DDI+DDD+número (ex.: 5532999
       }
     });
 
-    const ctaHeader = document.querySelector('.lp-header-cta');
+    // CTA do Cabeçalho
+    const ctaHeader = document.getElementById('cta-header');
     if (ctaHeader) {
-      ctaHeader.addEventListener('click', function () {
+      ctaHeader.addEventListener('click', function (e) {
+        e.preventDefault();
         pushTrackingEvent('click_cta_header');
+        irParaFormulario();
       });
     }
 
-    // CTA da Dobra 2 (Por que a JD): rola suavemente até #form-lead e foca #lp-field-nome sem saltar
+    // CTA da Dobra 2 (Por que a JD)
     const ctaPorque = document.getElementById('cta-porque-jd');
     if (ctaPorque) {
       ctaPorque.addEventListener('click', function (e) {
         e.preventDefault();
         pushTrackingEvent('click_cta_porque');
-
-        const formTarget = document.getElementById('form-lead');
-        const firstInput = document.getElementById('lp-field-nome');
-
-        if (formTarget) {
-          const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-          formTarget.scrollIntoView({
-            behavior: prefersReduced ? 'auto' : 'smooth',
-            block: 'start'
-          });
-        }
-
-        if (firstInput) {
-          setTimeout(function () {
-            firstInput.focus({ preventScroll: true });
-          }, 300);
-        }
+        irParaFormulario();
       });
     }
+
+    // CTAs da Dobra 3 (Produtos)
+    const PRODUTO_MAP = {
+      'mini': 'Mini câmara',
+      'expositora': 'Câmara expositora (walk-in cooler)',
+      'resfriados': 'Câmara de resfriados (0 a +15 °C)',
+      'congelados': 'Câmara de congelados (-18 °C)'
+    };
+
+    const cardCtas = document.querySelectorAll('[data-cta-produto]');
+    cardCtas.forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        const prodKey = btn.getAttribute('data-cta-produto');
+        const tipoNome = PRODUTO_MAP[prodKey] || prodKey;
+
+        // Pré-seleciona o tipo no select do formulário
+        const selectTipo = document.getElementById('lp-field-tipo_camara');
+        if (selectTipo) {
+          selectTipo.value = tipoNome;
+          selectTipo.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+
+        pushTrackingEvent('click_cta_produto', { produto: prodKey });
+
+        // Se o formulário já foi enviado com sucesso, não reabre
+        const formSucesso = document.getElementById('lp-form-sucesso');
+        if (formSucesso && formSucesso.classList.contains('is-visible')) {
+          return;
+        }
+
+        irParaFormulario();
+      });
+    });
+
+    // CTA da Dobra 4 (Como Funciona)
+    const ctaComo = document.getElementById('cta-como');
+    if (ctaComo) {
+      ctaComo.addEventListener('click', function (e) {
+        e.preventDefault();
+        pushTrackingEvent('click_cta_como');
+        irParaFormulario();
+      });
+    }
+
+    // CTA da Dobra 6B (CTA Final)
+    const ctaFinal = document.getElementById('cta-final-btn');
+    if (ctaFinal) {
+      ctaFinal.addEventListener('click', function (e) {
+        e.preventDefault();
+        pushTrackingEvent('click_cta_final');
+        irParaFormulario();
+      });
+    }
+
+    // Link do Rodapé para o Formulário (se houver)
+    const ctaFooter = document.getElementById('cta-footer-form');
+    if (ctaFooter) {
+      ctaFooter.addEventListener('click', function (e) {
+        e.preventDefault();
+        irParaFormulario();
+      });
+    }
+  }
+
+  // 6. RASTREAMENTO DO FAQ (Dobra 6A) — Controle de abrir/fechar gerenciado exclusivamente por ds.js
+  function initFAQ() {
+    const faqBtns = document.querySelectorAll('.jd-faq__pergunta');
+    faqBtns.forEach(function (btn, index) {
+      btn.addEventListener('click', function () {
+        setTimeout(function () {
+          if (btn.getAttribute('aria-expanded') === 'true') {
+            pushTrackingEvent('faq_open', { pergunta: String(index + 1) });
+          }
+        }, 0);
+      });
+    });
   }
 
   // INICIALIZAÇÃO
@@ -519,6 +618,7 @@ const WHATSAPP_NUMBER = ''; // TODO: preencher com DDI+DDD+número (ex.: 5532999
     initTrackingFields();
     initLeadForm();
     initButtons();
+    initFAQ();
   }
 
   if (document.readyState === 'loading') {

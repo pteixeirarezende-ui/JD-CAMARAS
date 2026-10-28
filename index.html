@@ -22,6 +22,7 @@
   <link rel="stylesheet" href="css/tokens.css">
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/lp.css">
 
   <!-- GTM: inserir snippet do container [GTM-XXXXXXX] aqui -->
 
@@ -51,7 +52,7 @@
       <a href="#" class="lp-brand" aria-label="JD Câmaras Frias — Página Inicial">
         <img src="assets/logo-jd-branco.png" alt="JD Câmaras Frias" width="168" height="38" onerror="this.outerHTML='<div class=\'lp-brand-fallback\'><span class=\'fallback-jd\'>JD</span> <span class=\'fallback-sub\'>CÂMARAS FRIAS</span></div>'">
       </a>
-      <a href="#form-lead" class="lp-header-cta" id="cta-header">
+      <a href="#lp-form-lead" class="lp-header-cta" id="cta-header">
         <span>Pedir orçamento</span>
         <span aria-hidden="true">→</span>
       </a>
@@ -94,6 +95,19 @@
                 <span>Resfriados (0 a +15 °C)</span>
               </div>
             </div>
+          </div>
+
+          <!-- Botão de WhatsApp no Hero -->
+          <div class="hero-wa-wrap" style="margin-bottom:var(--jd-space-6);">
+            <a href="javascript:void(0);" class="jd-btn jd-btn--whatsapp" data-whatsapp-btn data-lp-wa="true" id="hero-whatsapp-btn">
+              <span class="jd-whatsapp-icon-wrap" aria-hidden="true">
+                <span class="jd-radar-ring"></span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--jd-branco);position:relative;z-index:2;">
+                  <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                </svg>
+              </span>
+              <span>Chamar no WhatsApp</span>
+            </a>
           </div>
 
           <!-- 3 Provas Curtas (Componente do DS) -->
@@ -329,15 +343,15 @@
       <div class="jd-container">
         
         <!-- Cabeçalho da Dobra 2 -->
-        <div style="text-align:center;max-width:760px;margin:0 auto var(--jd-space-8);">
-          <div class="jd-label" style="color:var(--jd-azul);margin-bottom:var(--jd-space-2);">POR QUE A JD</div>
-          <h2 class="jd-h2" id="porque-title" style="margin:0;">
+        <div class="lp-porque__header">
+          <div class="jd-label lp-porque__eyebrow">POR QUE A JD</div>
+          <h2 class="jd-h2 lp-porque__title" id="porque-title">
             Do projeto à câmara funcionando, com um fornecedor só
           </h2>
         </div>
 
         <!-- 3 Cards usando .jd-passos / .jd-passo (sem número) -->
-        <div class="jd-passos" style="margin-bottom:var(--jd-space-8);">
+        <div class="jd-passos lp-porque__passos">
           
           <!-- Card 1: Projeto sob medida -->
           <div class="jd-passo">
@@ -386,19 +400,392 @@
         </div>
 
         <!-- CTA abaixo dos cards -->
-        <div style="text-align:center;display:flex;flex-direction:column;align-items:center;gap:var(--jd-space-3);">
-          <a href="#form-lead" class="jd-btn jd-btn--primary" id="cta-porque-jd">
+        <div class="lp-porque__cta">
+          <a href="#lp-form-lead" class="jd-btn jd-btn--primary" id="cta-porque-jd">
             <span>Pedir orçamento</span>
             <span aria-hidden="true">→</span>
           </a>
-          <p style="font-size:12px;color:var(--jd-cinza-texto);line-height:1.4;margin:0;max-width:420px;text-align:center;">
+          <p class="lp-porque__apoio">
             Sem compromisso. A JD chama você no WhatsApp para entender o seu projeto.
           </p>
         </div>
 
       </div>
     </section>
+
+    <!-- ==========================================================================
+         5. DOBRA 3: PRODUTOS (Tema Claro, Fundo --jd-gelo) — 4 Cards de Produto
+         ========================================================================== -->
+    <section class="jd-section tema-claro lp-produtos" id="produtos" aria-labelledby="produtos-title">
+      <div class="jd-container">
+        
+        <!-- Cabeçalho da Dobra 3 -->
+        <div class="lp-produtos__header">
+          <div class="jd-label lp-produtos__eyebrow">NOSSAS CÂMARAS</div>
+          <h2 class="jd-h2 lp-produtos__title" id="produtos-title">
+            Qual câmara serve para o seu negócio?
+          </h2>
+        </div>
+
+        <!-- Grid de 4 Cards de Produto -->
+        <div class="lp-produtos__grid">
+          
+          <!-- Card 1: Mini câmara -->
+          <article class="jd-card-produto" aria-labelledby="card-prod-mini-title">
+            <div class="jd-card-produto__image">
+              <img src="assets/placeholder-camara.svg" alt="Foto: Mini câmara" width="800" height="600" loading="lazy">
+              <div class="jd-card-produto__temp" aria-label="Temperatura da mini câmara">
+                <span class="tag-exemplo">[CONFIRMAR faixa]</span><!-- CONFIRMAR: faixa de temperatura da mini câmara -->
+              </div>
+            </div>
+            <div class="jd-card-produto__body">
+              <div class="jd-card-produto__tipo">Para espaço pequeno</div>
+              <h3 class="jd-card-produto__nome" id="card-prod-mini-title">Mini câmara</h3>
+              <p class="jd-card-produto__uso">
+                Para quem tem pouco espaço e precisa de frio. <span class="tag-exemplo">[CONFIRMAR dimensões e uso]</span><!-- CONFIRMAR: dimensões padrão e uso típico -->
+              </p>
+              <div class="jd-card-produto__footer">
+                <a href="#lp-form-lead" class="jd-btn jd-btn--primary" data-cta-produto="mini">
+                  <span>Pedir orçamento</span>
+                  <span aria-hidden="true">→</span>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 2: Câmara expositora (walk-in cooler) -->
+          <article class="jd-card-produto" aria-labelledby="card-prod-walkin-title">
+            <div class="jd-card-produto__image">
+              <img src="assets/placeholder-camara.svg" alt="Foto: Câmara expositora (walk-in cooler)" width="800" height="600" loading="lazy">
+              <div class="jd-card-produto__temp" aria-label="Temperatura da câmara expositora">
+                <span class="tag-exemplo">[CONFIRMAR faixa]</span><!-- CONFIRMAR: faixa de temperatura da câmara expositora -->
+              </div>
+            </div>
+            <div class="jd-card-produto__body">
+              <div class="jd-card-produto__tipo">Para produtos à vista do cliente</div>
+              <h3 class="jd-card-produto__nome" id="card-prod-walkin-title">Câmara expositora (walk-in cooler)</h3>
+              <p class="jd-card-produto__uso">
+                Para bebidas e produtos que ficam à vista do cliente. <span class="tag-exemplo">[CONFIRMAR formato]</span><!-- CONFIRMAR: formato de portas e abastecimento traseiro -->
+              </p>
+              <div class="jd-card-produto__footer">
+                <a href="#lp-form-lead" class="jd-btn jd-btn--primary" data-cta-produto="expositora">
+                  <span>Pedir orçamento</span>
+                  <span aria-hidden="true">→</span>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 3: Câmara de resfriados -->
+          <article class="jd-card-produto" aria-labelledby="card-prod-resfriados-title">
+            <div class="jd-card-produto__image">
+              <img src="assets/placeholder-camara.svg" alt="Foto: Câmara de resfriados" width="800" height="600" loading="lazy">
+              <div class="jd-card-produto__temp" aria-label="Temperatura de 0 a +15 °C">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z"></path>
+                </svg>
+                <span>0 a +15 °C</span>
+              </div>
+            </div>
+            <div class="jd-card-produto__body">
+              <div class="jd-card-produto__tipo">Produtos que não podem congelar</div>
+              <h3 class="jd-card-produto__nome" id="card-prod-resfriados-title">Câmara de resfriados</h3>
+              <p class="jd-card-produto__uso">
+                Para hortifrúti, laticínios, bebidas e produtos que não podem congelar.
+              </p>
+              <div class="jd-card-produto__footer">
+                <a href="#lp-form-lead" class="jd-btn jd-btn--primary" data-cta-produto="resfriados">
+                  <span>Pedir orçamento</span>
+                  <span aria-hidden="true">→</span>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 4: Câmara de congelados -->
+          <article class="jd-card-produto" aria-labelledby="card-prod-congelados-title">
+            <div class="jd-card-produto__image">
+              <img src="assets/placeholder-camara.svg" alt="Foto: Câmara de congelados" width="800" height="600" loading="lazy">
+              <div class="jd-card-produto__temp" aria-label="Temperatura de -18 °C">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z"></path>
+                </svg>
+                <span>-18 °C</span>
+              </div>
+            </div>
+            <div class="jd-card-produto__body">
+              <div class="jd-card-produto__tipo">Alimentos congelados</div>
+              <h3 class="jd-card-produto__nome" id="card-prod-congelados-title">Câmara de congelados</h3>
+              <p class="jd-card-produto__uso">
+                Para carnes, sorvetes e alimentos congelados.
+              </p>
+              <div class="jd-card-produto__footer">
+                <a href="#lp-form-lead" class="jd-btn jd-btn--primary" data-cta-produto="congelados">
+                  <span>Pedir orçamento</span>
+                  <span aria-hidden="true">→</span>
+                </a>
+              </div>
+            </div>
+          </article>
+
+        </div>
+
+        <!-- Nota abaixo dos cards -->
+        <p class="lp-produtos__nota">
+          Não achou a sua? Cada projeto é feito sob medida. Conte o que você precisa e a JD indica o tipo certo.
+        </p>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         6. DOBRA 4: COMO FUNCIONA (Tema Claro — Fundo Branco)
+         ========================================================================== -->
+    <section class="jd-section tema-claro lp-como" id="como-funciona" aria-labelledby="como-title">
+      <div class="jd-container">
+        
+        <!-- Cabeçalho da Seção -->
+        <div class="lp-como__header">
+          <span class="jd-label lp-como__eyebrow">COMO FUNCIONA</span>
+          <h2 class="jd-h2 lp-como__title" id="como-title">Como pedir a sua câmara</h2>
+        </div>
+
+        <!-- Passos em 4 etapas reais -->
+        <div class="jd-passos lp-como__passos">
+          <!-- Passo 1 -->
+          <div class="jd-passo">
+            <div class="jd-passo__icon">1</div>
+            <div class="jd-passo__content">
+              <span class="jd-passo__numero">Passo 01</span>
+              <h3 class="jd-passo__titulo">Você conta o que precisa</h3>
+              <p class="jd-passo__desc">Tipo de câmara, o que vai armazenar e as medidas do espaço.</p>
+            </div>
+          </div>
+
+          <!-- Passo 2 -->
+          <div class="jd-passo">
+            <div class="jd-passo__icon">2</div>
+            <div class="jd-passo__content">
+              <span class="jd-passo__numero">Passo 02</span>
+              <h3 class="jd-passo__titulo">A JD dimensiona e envia o orçamento</h3>
+              <p class="jd-passo__desc">O projeto é feito para o seu caso.</p>
+            </div>
+          </div>
+
+          <!-- Passo 3 -->
+          <div class="jd-passo">
+            <div class="jd-passo__icon">3</div>
+            <div class="jd-passo__content">
+              <span class="jd-passo__numero">Passo 03</span>
+              <h3 class="jd-passo__titulo">Entrega e instalação</h3>
+              <p class="jd-passo__desc">
+                A equipe da JD leva e monta a câmara no seu local. <span class="tag-exemplo">[CONFIRMAR prazo]</span><!-- CONFIRMAR: prazo de entrega e instalação -->
+              </p>
+            </div>
+          </div>
+
+          <!-- Passo 4 -->
+          <div class="jd-passo">
+            <div class="jd-passo__icon">4</div>
+            <div class="jd-passo__content">
+              <span class="jd-passo__numero">Passo 04</span>
+              <h3 class="jd-passo__titulo">Câmara funcionando e suporte</h3>
+              <p class="jd-passo__desc">Depois da obra, você conta com a JD para ampliar, fazer manutenção ou corrigir.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Aviso honesto (abaixo dos passos) -->
+        <div class="lp-como__aviso">
+          <div class="jd-aviso jd-aviso--info">
+            <svg class="jd-aviso__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+            <div class="jd-aviso__content">
+              O que você providencia: energia elétrica adequada e, se necessário, o piso. A JD orienta sobre isso no orçamento.
+            </div>
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="lp-como__cta">
+          <a href="#lp-form-lead" class="jd-btn jd-btn--primary" id="cta-como">
+            <span>Pedir orçamento</span>
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         7. DOBRA 6A: FAQ — ACORDEÃO ACESSÍVEL (Tema Claro — Fundo Gelo)
+         ========================================================================== -->
+    <section class="jd-section tema-claro lp-faq" id="faq" aria-labelledby="faq-title">
+      <div class="jd-container">
+        
+        <!-- Cabeçalho do FAQ -->
+        <div class="lp-faq__header">
+          <span class="jd-label lp-faq__eyebrow">DÚVIDAS</span>
+          <h2 class="jd-h2 lp-faq__title" id="faq-title">Antes de pedir o orçamento</h2>
+        </div>
+
+        <!-- Lista do Acordeão de FAQ -->
+        <div class="jd-faq lp-faq__accordion">
+          <!-- Item 1 -->
+          <div class="jd-faq__item" data-lp-faq>
+            <button type="button" class="jd-faq__pergunta" id="faq-btn-1" aria-expanded="false" aria-controls="faq-ans-1" data-faq-index="1">
+              <span>Quanto custa?</span>
+              <svg class="jd-faq__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </button>
+            <div class="jd-faq__resposta" id="faq-ans-1" role="region" aria-labelledby="faq-btn-1">
+              <p>Cada câmara é projetada sob medida, então o valor depende do tamanho, da temperatura e do uso. Informe as medidas e a JD envia o orçamento.</p>
+            </div>
+          </div>
+
+          <!-- Item 2 -->
+          <div class="jd-faq__item" data-lp-faq>
+            <button type="button" class="jd-faq__pergunta" id="faq-btn-2" aria-expanded="false" aria-controls="faq-ans-2" data-faq-index="2">
+              <span>Quanto tempo leva?</span>
+              <svg class="jd-faq__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </button>
+            <div class="jd-faq__resposta" id="faq-ans-2" role="region" aria-labelledby="faq-btn-2">
+              <p><span class="tag-exemplo">[CONFIRMAR prazo de fabricação, entrega e instalação]</span><!-- CONFIRMAR: prazo de fabricação, entrega e instalação --></p>
+            </div>
+          </div>
+
+          <!-- Item 3 -->
+          <div class="jd-faq__item" data-lp-faq>
+            <button type="button" class="jd-faq__pergunta" id="faq-btn-3" aria-expanded="false" aria-controls="faq-ans-3" data-faq-index="3">
+              <span>Quem instala?</span>
+              <svg class="jd-faq__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </button>
+            <div class="jd-faq__resposta" id="faq-ans-3" role="region" aria-labelledby="faq-btn-3">
+              <p>A equipe da JD faz a instalação. <span class="tag-exemplo">[CONFIRMAR]</span><!-- CONFIRMAR --></p>
+            </div>
+          </div>
+
+          <!-- Item 4 -->
+          <div class="jd-faq__item" data-lp-faq>
+            <button type="button" class="jd-faq__pergunta" id="faq-btn-4" aria-expanded="false" aria-controls="faq-ans-4" data-faq-index="4">
+              <span>O que preciso ter no local?</span>
+              <svg class="jd-faq__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </button>
+            <div class="jd-faq__resposta" id="faq-ans-4" role="region" aria-labelledby="faq-btn-4">
+              <p>Energia elétrica adequada e, se necessário, o piso. A JD orienta no orçamento.</p>
+            </div>
+          </div>
+
+          <!-- Item 5 -->
+          <div class="jd-faq__item" data-lp-faq>
+            <button type="button" class="jd-faq__pergunta" id="faq-btn-5" aria-expanded="false" aria-controls="faq-ans-5" data-faq-index="5">
+              <span>Atendem a minha cidade?</span>
+              <svg class="jd-faq__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </button>
+            <div class="jd-faq__resposta" id="faq-ans-5" role="region" aria-labelledby="faq-btn-5">
+              <p><span class="tag-exemplo">[CONFIRMAR regiões atendidas]</span><!-- CONFIRMAR: regiões atendidas --></p>
+            </div>
+          </div>
+
+          <!-- Item 6 -->
+          <div class="jd-faq__item" data-lp-faq>
+            <button type="button" class="jd-faq__pergunta" id="faq-btn-6" aria-expanded="false" aria-controls="faq-ans-6" data-faq-index="6">
+              <span>Vendem para pessoa física?</span>
+              <svg class="jd-faq__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </button>
+            <div class="jd-faq__resposta" id="faq-ans-6" role="region" aria-labelledby="faq-btn-6">
+              <p>Sim. A JD atende empresas e pessoas físicas.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         8. DOBRA 6B: CTA FINAL (Tema Escuro — Fundo Noite)
+         ========================================================================== -->
+    <section class="jd-cta-final tema-escuro lp-cta-final-sec" id="cta-final" aria-labelledby="cta-final-title">
+      <div class="jd-container">
+        <div class="jd-cta-final__inner">
+          <h2 class="jd-h2 lp-cta-final__title" id="cta-final-title">Peça o orçamento da sua câmara fria</h2>
+          <p class="lp-cta-final__desc">
+            Conte o que você vai armazenar e as medidas do espaço. A JD chama você no WhatsApp.
+          </p>
+          <div class="lp-cta-final__actions">
+            <a href="#lp-form-lead" class="jd-btn jd-btn--primary" id="cta-final-btn">
+              <span>Pedir orçamento</span>
+              <span aria-hidden="true">→</span>
+            </a>
+            <a href="https://wa.me/?text=Ol%C3%A1!%20Gostaria%20de%20um%20or%C3%A7amento%20de%20c%C3%A2mara%20fria." class="jd-btn jd-btn--whatsapp" data-whatsapp-btn>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+              </svg>
+              <span>Chamar no WhatsApp</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
+
+  <!-- ==========================================================================
+       9. DOBRA 6C: RODAPÉ INSTITUCIONAL (Tema Escuro — Fundo Grafite)
+       ========================================================================== -->
+  <footer class="jd-footer tema-escuro" id="rodape">
+    <div class="jd-container">
+      <div class="jd-footer__inner">
+        <!-- Coluna 1: Informações Cadastrais -->
+        <div class="jd-footer__info">
+          <div class="jd-footer__logo">
+            <a href="#" class="lp-brand" aria-label="JD Câmaras Frias">
+              <img src="assets/logo-jd-branco.png" alt="JD Câmaras Frias" width="168" height="38" loading="lazy" onerror="this.outerHTML='<div class=\'lp-brand-fallback\'><span class=\'fallback-jd\'>JD</span> <span class=\'fallback-sub\'>CÂMARAS FRIAS</span></div>'">
+            </a>
+          </div>
+          <p class="lp-footer__empresa"><strong>J.D. Câmaras Frias</strong></p>
+          <p class="lp-footer__linha">
+            <span class="tag-exemplo">[RAZÃO SOCIAL]</span><!-- CONFIRMAR: Razão Social --> · <span class="tag-exemplo">[CNPJ]</span><!-- CONFIRMAR: CNPJ -->
+          </p>
+          <p class="lp-footer__linha">
+            Endereços: Ubá-MG · Anápolis-GO <span class="tag-exemplo">[CONFIRMAR endereços completos]</span><!-- CONFIRMAR: endereços completos -->
+          </p>
+          <p class="lp-footer__linha">
+            <span class="tag-exemplo">[TELEFONE]</span><!-- CONFIRMAR: Telefone --> · <span class="tag-exemplo">[E-MAIL]</span><!-- CONFIRMAR: E-mail -->
+          </p>
+        </div>
+
+        <!-- Coluna 2: Links e Políticas -->
+        <div class="jd-footer__links">
+          <a href="#privacidade"><span class="tag-exemplo">[CONFIRMAR: Política de privacidade]</span><!-- CONFIRMAR: Política de privacidade --></a>
+        </div>
+      </div>
+
+      <!-- Barra de Direitos Autorais -->
+      <div class="jd-footer__bar">
+        <span>© 2026 J.D. Câmaras Frias. Todos os direitos reservados.</span>
+      </div>
+    </div>
+  </footer>
 
   <!-- Scripts: ds.js para utilidades core e lp.js para lógica da LP A -->
   <script src="js/ds.js"></script>

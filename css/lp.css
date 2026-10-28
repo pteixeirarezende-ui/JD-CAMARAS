@@ -1,0 +1,256 @@
+/* ============================================================================
+   JD CÂMARAS FRIAS — LP LAYOUT UTILITIES (lp.css)
+   Classes de layout e espaçamento com prefixo lp- usando estritamente tokens do DS.
+   Zero tokens, cores ou tipografia novos.
+   ============================================================================ */
+
+/* Compensação do cabeçalho fixo na rolagem até o formulário */
+#lp-form-lead {
+  scroll-margin-top: calc(72px + var(--jd-space-4));
+}
+
+@media (max-width: 768px) {
+  #lp-form-lead {
+    scroll-margin-top: calc(64px + var(--jd-space-3));
+  }
+}
+
+/* ====================================================================
+   DOBRA 2: POR QUE A JD (Layout sem estilos inline)
+   ==================================================================== */
+
+.lp-porque__header {
+  text-align: center;
+  max-width: 760px;
+  margin: 0 auto var(--jd-space-8);
+}
+
+.lp-porque__eyebrow {
+  color: var(--jd-azul);
+  margin-bottom: var(--jd-space-2);
+}
+
+.lp-porque__title {
+  margin: 0;
+}
+
+.lp-porque__passos {
+  margin-bottom: var(--jd-space-8);
+}
+
+.lp-porque__cta {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--jd-space-3);
+}
+
+.lp-porque__apoio {
+  font-size: var(--jd-text-xs);
+  color: var(--jd-cinza-texto);
+  line-height: var(--jd-lh-body);
+  margin: 0;
+  max-width: 420px;
+  text-align: center;
+}
+
+/* ====================================================================
+   DOBRA 3: PRODUTOS (Fundo --jd-gelo alternado com a Dobra 2)
+   ==================================================================== */
+
+.lp-produtos {
+  background-color: var(--jd-gelo);
+}
+
+.lp-produtos__header {
+  text-align: center;
+  max-width: 760px;
+  margin: 0 auto var(--jd-space-8);
+}
+
+.lp-produtos__eyebrow {
+  color: var(--jd-azul);
+  margin-bottom: var(--jd-space-2);
+}
+
+.lp-produtos__title {
+  margin: 0;
+}
+
+.lp-produtos__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--jd-space-6);
+  margin-bottom: var(--jd-space-8);
+}
+
+@media (min-width: 768px) {
+  .lp-produtos__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.lp-produtos__grid .jd-card-produto {
+  display: flex;
+  flex-direction: column;
+}
+
+.lp-produtos__grid .jd-card-produto__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.lp-produtos__grid .jd-card-produto__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.lp-produtos__grid .jd-card-produto__footer {
+  margin-top: auto;
+}
+
+.lp-produtos__grid .jd-btn--primary {
+  width: 100%;
+}
+
+.lp-produtos__nota {
+  font-size: var(--jd-text-xs);
+  color: var(--jd-cinza-texto);
+  line-height: var(--jd-lh-body);
+  text-align: center;
+  margin: 0 auto;
+  max-width: 600px;
+}
+
+/* ====================================================================
+   DOBRA 4: COMO FUNCIONA (Fundo --jd-branco)
+   ==================================================================== */
+
+.lp-como {
+  background-color: var(--jd-branco);
+}
+
+.lp-como__header {
+  text-align: center;
+  max-width: 760px;
+  margin: 0 auto var(--jd-space-8);
+}
+
+.lp-como__eyebrow {
+  color: var(--jd-azul);
+  margin-bottom: var(--jd-space-2);
+}
+
+.lp-como__title {
+  margin: 0;
+}
+
+.lp-como__passos {
+  margin-bottom: var(--jd-space-8);
+}
+
+.lp-como__aviso {
+  max-width: var(--jd-container-narrow);
+  margin: 0 auto var(--jd-space-8);
+}
+
+.lp-como__cta {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+}
+
+/* ====================================================================
+   DOBRA 6A: FAQ (Fundo --jd-gelo)
+   ==================================================================== */
+
+.lp-faq {
+  background-color: var(--jd-gelo);
+}
+
+.lp-faq__header {
+  text-align: center;
+  max-width: 760px;
+  margin: 0 auto var(--jd-space-8);
+}
+
+.lp-faq__eyebrow {
+  color: var(--jd-azul);
+  margin-bottom: var(--jd-space-2);
+}
+
+.lp-faq__title {
+  margin: 0;
+}
+
+.lp-faq__accordion {
+  margin: 0 auto;
+}
+
+/* ====================================================================
+   DOBRA 6B: CTA FINAL (Fundo --jd-noite, tema escuro)
+   ==================================================================== */
+
+.lp-cta-final-sec {
+  background-color: var(--jd-noite);
+  padding: var(--jd-space-12) 0;
+}
+
+.lp-cta-final__title {
+  color: var(--jd-branco);
+  margin: 0 0 var(--jd-space-3);
+  position: relative;
+  z-index: var(--jd-z-base);
+}
+
+.lp-cta-final__desc {
+  color: var(--jd-cinza-aco);
+  font-size: var(--jd-text-base);
+  line-height: var(--jd-lh-body);
+  max-width: 55ch;
+  margin: 0 auto var(--jd-space-6);
+  position: relative;
+  z-index: var(--jd-z-base);
+}
+
+.lp-cta-final__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--jd-space-3);
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: var(--jd-z-base);
+}
+
+@media (min-width: 640px) {
+  .lp-cta-final__actions {
+    flex-direction: row;
+    gap: var(--jd-space-4);
+  }
+}
+
+/* ====================================================================
+   DOBRA 6C: RODAPÉ (Fundo --jd-grafite, tema escuro)
+   ==================================================================== */
+
+.lp-footer__empresa {
+  color: var(--jd-branco);
+  font-size: var(--jd-text-sm);
+  margin-bottom: var(--jd-space-2);
+}
+
+.lp-footer__linha {
+  font-size: var(--jd-text-xs);
+  line-height: var(--jd-lh-loose);
+  color: var(--jd-cinza-aco);
+  margin-bottom: var(--jd-space-1);
+}
+
+.jd-footer .tag-exemplo {
+  margin: 0 2px;
+}
+
