@@ -612,6 +612,18 @@ const WHATSAPP_NUMBER = ''; // TODO: preencher com DDI+DDD+número (ex.: 5532999
     });
   }
 
+  // 7. SPOTLIGHT MOUSE TRACKER (Efeito Criogênico do DS Master)
+  function initSpotlight() {
+    const spotlights = document.querySelectorAll('.jd-spotlight');
+    spotlights.forEach(function (el) {
+      el.addEventListener('mousemove', function (e) {
+        var rect = el.getBoundingClientRect();
+        el.style.setProperty('--mouse-x', (e.clientX - rect.left) + 'px');
+        el.style.setProperty('--mouse-y', (e.clientY - rect.top) + 'px');
+      }, { passive: true });
+    });
+  }
+
   // INICIALIZAÇÃO
   function init() {
     applyDynamicHeadline();
@@ -619,6 +631,7 @@ const WHATSAPP_NUMBER = ''; // TODO: preencher com DDI+DDD+número (ex.: 5532999
     initLeadForm();
     initButtons();
     initFAQ();
+    initSpotlight();
   }
 
   if (document.readyState === 'loading') {
