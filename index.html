@@ -24,12 +24,19 @@
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/lp.css">
 
-  <!-- GTM: inserir snippet do container [GTM-XXXXXXX] aqui -->
-
+  <!-- Google Tag Manager -->
+  <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-MQM9DPFR"></script>
   <script>
-    // Inicialização do dataLayer
+    // Inicialização do dataLayer e gtag
     window.dataLayer = window.dataLayer || [];
     function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    // Inicialização do evento gtm.js para acionadores do GTM
+    dataLayer.push({
+      'gtm.start': new Date().getTime(),
+      event: 'gtm.js'
+    });
 
     // Consent Mode v2: padrão denied (configurar junto com o banner de cookies na dobra final)
     gtag('consent', 'default', {
@@ -39,10 +46,12 @@
       'analytics_storage': 'denied'
     });
   </script>
+  <!-- End Google Tag Manager -->
 </head>
 <body class="tema-escuro">
-  <!-- GTM noscript -->
-  <!-- <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXXX" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript> -->
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MQM9DPFR" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
 
   <!-- ==========================================================================
        2. CABEÇALHO DA LP (Fixo, 64px mobile / 72px desktop, Logo + Botão)
