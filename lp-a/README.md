@@ -574,7 +574,7 @@ Todas as marcações temporárias foram removidas e substituídas por copy comer
 
 ### 9.3. Aplicação das 5 Fotos Reais Enviadas pelo Cliente
 Todas as 5 fotografias enviadas pelo cliente foram preparadas na proporção 4:3 (960 × 720 px, otimizadas para carregamento instantâneo) e integradas nos componentes:
-1. **Card 1 (Mini câmara):** [`assets/foto-camara-mini-trilhos.jpg`](file:///c:/Users/pteix/Downloads/LP%20-%20JD%20CAMARAS/assets/foto-camara-mini-trilhos.jpg) — Interior de câmara compacta com evaporador e trilhos superiores.
+1. **Card 1 (Mini câmara):** [`assets/foto-camara-mini-trilhos.jpg`](file:///c:/Users/pteix/Downloads/LP%20-%20JD%20CAMARAS/assets/foto-camara-mini-trilhos.jpg) — Mini câmara fria compacta sob medida com porta frontal isotérmica, puxador ergonômico e controlador digital superior.
 2. **Card 2 (Câmara expositora / walk-in cooler):** [`assets/foto-camara-walkin-fachada.jpg`](file:///c:/Users/pteix/Downloads/LP%20-%20JD%20CAMARAS/assets/foto-camara-walkin-fachada.jpg) — Walk-in cooler expositor com múltiplas portas de vidro em L, puxadores modernos e iluminação interna para loja/distribuidora.
 3. **Card 3 (Câmara de resfriados):** [`assets/foto-camara-dupla-portas.jpg`](file:///c:/Users/pteix/Downloads/LP%20-%20JD%20CAMARAS/assets/foto-camara-dupla-portas.jpg) — Fachada de câmara frigorífica de resfriados com porta giratória isotérmica branca, puxador ergonômico e controlador digital superior.
 4. **Card 4 (Câmara de congelados):** [`assets/foto-camara-congelados-piso.jpg`](file:///c:/Users/pteix/Downloads/LP%20-%20JD%20CAMARAS/assets/foto-camara-congelados-piso.jpg) — Fachada de câmara frigorífica de congelados industrial com porta de correr isotérmica, trilho superior e painel digital.
