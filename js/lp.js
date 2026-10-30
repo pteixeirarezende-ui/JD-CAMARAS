@@ -381,6 +381,15 @@ const WHATSAPP_NUMBER = ''; // TODO: preencher com DDI+DDD+número (ex.: 5532999
           }
           if (submitErrorWrap) {
             submitErrorWrap.style.display = 'block';
+            const errorTextEl = document.getElementById('lp-submit-error-text');
+            if (errorTextEl) {
+              const errMsg = err && err.message ? String(err.message) : '';
+              if (errMsg.indexOf('404') !== -1 || errMsg.indexOf('Failed to fetch') !== -1) {
+                errorTextEl.innerHTML = 'O webhook do n8n retornou erro (HTTP 404). O fluxo precisa estar com o interruptor <strong>"Active" (Ativo)</strong> ligado no canto superior direito do n8n. Você também pode enviar o orçamento diretamente pelo WhatsApp:';
+              } else {
+                errorTextEl.innerHTML = 'Não foi possível conectar ao webhook (' + (errMsg || 'Erro de rede') + '). Ative o fluxo no n8n ou peça diretamente pelo botão de WhatsApp abaixo:';
+              }
+            }
           }
         });
     }
@@ -437,19 +446,21 @@ const WHATSAPP_NUMBER = ''; // TODO: preencher com DDI+DDD+número (ex.: 5532999
     }
 
     waButtons.forEach(function (btn) {
+      const isFallbackWa = btn.classList.contains('lp-submit-error__btn-wa');
+      if (isFallbackWa) {
+        const fallbackMsg = encodeURIComponent('Olá! Tentei enviar o formulário pelo site da JD mas deu erro, gostaria de pedir meu orçamento por aqui.');
+        btn.href = WHATSAPP_NUMBER ? ('https://wa.me/' + WHATSAPP_NUMBER + '?text=' + fallbackMsg) : ('https://wa.me/?text=' + fallbackMsg);
+        btn.setAttribute('target', '_blank');
+        btn.setAttribute('rel', 'noopener noreferrer');
+        btn.addEventListener('click', function () {
+          pushTrackingEvent('click_whatsapp');
+        });
+        return;
+      }
+
       if (!WHATSAPP_NUMBER) {
         btn.href = '#lp-form-lead';
         btn.setAttribute('title', 'Pedir orçamento');
-
-        // Em modo ?debug=1, exibe a etiqueta [CONFIRMAR NÚMERO]
-        if (isDebug && !btn.querySelector('.tag-confirmar-wa')) {
-          const tag = document.createElement('span');
-          tag.className = 'tag-exemplo tag-confirmar-wa';
-          tag.style.marginLeft = '6px';
-          tag.style.fontSize = '12px';
-          tag.textContent = '[CONFIRMAR NÚMERO]';
-          btn.appendChild(tag);
-        }
 
         btn.addEventListener('click', function (e) {
           e.preventDefault();
@@ -459,7 +470,7 @@ const WHATSAPP_NUMBER = ''; // TODO: preencher com DDI+DDD+número (ex.: 5532999
       } else {
         btn.href = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + msg;
         btn.setAttribute('target', '_blank');
-        btn.setAttribute('rel', 'noopener');
+        btn.setAttribute('rel', 'noopener noreferrer');
         btn.addEventListener('click', function () {
           pushTrackingEvent('click_whatsapp');
         });

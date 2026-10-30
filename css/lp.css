@@ -441,6 +441,91 @@
   outline: none;
 }
 
+/* Estados de Erro e Validação com Alto Contraste no Card Noturno */
+.jd-hero-a .jd-form .jd-form__error {
+  color: #FFA4A4;
+  font-size: 13px;
+  font-weight: 600;
+  margin-top: 4px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.jd-hero-a .jd-form .jd-form__group.is-error .jd-form__input,
+.jd-hero-a .jd-form .jd-form__group.is-error .jd-form__select {
+  border-color: #FF6B6B;
+  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.35);
+}
+
+/* Bloco de Erro de Envio — Caixa de Alerta Noturna de Alto Contraste */
+.lp-submit-error {
+  display: none;
+  background: rgba(38, 14, 20, 0.96);
+  border: 1px solid rgba(255, 107, 107, 0.65);
+  border-radius: var(--jd-radius);
+  padding: var(--jd-space-4);
+  margin-top: var(--jd-space-4);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.75), 0 0 20px rgba(255, 107, 107, 0.2);
+  color: var(--jd-branco);
+  animation: lpErrorFadeIn 0.3s ease;
+}
+
+@keyframes lpErrorFadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.lp-submit-error__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: var(--jd-space-2);
+}
+
+.lp-submit-error__icon {
+  width: 22px;
+  height: 22px;
+  color: #FF6B6B;
+  flex-shrink: 0;
+}
+
+.lp-submit-error__title {
+  color: #FFFFFF;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.lp-submit-error__text {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #F0F4F8;
+  margin-bottom: var(--jd-space-3);
+}
+
+.lp-submit-error__text strong {
+  color: #FFE4E4;
+  font-weight: 700;
+}
+
+.lp-submit-error__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.lp-submit-error__btn-retry {
+  min-height: 38px;
+  padding: 8px 16px;
+  font-size: 13px;
+}
+
+.lp-submit-error__btn-wa {
+  min-height: 38px;
+  padding: 8px 16px;
+  font-size: 13px;
+}
+
 /* ====================================================================
    4. DOBRA 2: POR QUE A JD (Cards Refinados com Elevação & Glow)
    ==================================================================== */

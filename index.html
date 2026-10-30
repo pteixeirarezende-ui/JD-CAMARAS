@@ -224,14 +224,27 @@
                 <a href="https://www.facebook.com/privacy/policy/?locale=pt_BR" target="_blank" rel="noopener noreferrer" style="color:var(--jd-azul);text-decoration:underline;">Política de privacidade</a>
               </p>
 
-              <!-- Bloco de Erro de Envio -->
-              <div id="lp-submit-error" class="jd-aviso jd-aviso--erro" style="display:none;margin-top:var(--jd-space-4);">
-                <div style="font-size:12px;line-height:1.4;margin-bottom:8px;">
-                  Não conseguimos enviar agora. Toque em Tentar de novo ou chame no WhatsApp.
+              <!-- Bloco de Erro de Envio com Alto Contraste -->
+              <div id="lp-submit-error" class="lp-submit-error">
+                <div class="lp-submit-error__header">
+                  <svg class="lp-submit-error__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                  </svg>
+                  <strong class="lp-submit-error__title">Não foi possível enviar o formulário</strong>
                 </div>
-                <button type="button" class="jd-btn jd-btn--secondary" id="lp-btn-retry" style="font-size:12px;min-height:36px;padding:6px 14px;">
-                  Tentar de novo
-                </button>
+                <p id="lp-submit-error-text" class="lp-submit-error__text">
+                  O servidor do webhook (n8n) está inacessível ou inativo (HTTP 404). O fluxo precisa estar com o interruptor <strong>"Active" (Ativo)</strong> ligado no topo do n8n.
+                </p>
+                <div class="lp-submit-error__actions">
+                  <button type="button" class="jd-btn jd-btn--primary lp-submit-error__btn-retry" id="lp-btn-retry">
+                    Tentar de novo
+                  </button>
+                  <a href="https://wa.me/?text=Ol%C3%A1!%20Tentei%20enviar%20o%20formul%C3%A1rio%20pelo%20site%20da%20JD%20mas%20deu%20erro%2C%20gostaria%20de%20pedir%20meu%20or%C3%A7amento%20por%20aqui." class="jd-btn jd-btn--whatsapp lp-submit-error__btn-wa" data-whatsapp-btn>
+                    <span>Pedir via WhatsApp</span>
+                  </a>
+                </div>
               </div>
             </div>
 
