@@ -5,7 +5,9 @@
  */
 
 // Endpoint de envio do webhook (n8n)
-const LEAD_ENDPOINT = 'https://n8n-n8n.6djmf0.easypanel.host/webhook/2d504637-993c-408d-8679-9741149bb883';
+// Produção: 'https://n8n-n8n.6djmf0.easypanel.host/webhook/2d504637-993c-408d-8679-9741149bb883'
+// Teste:    'https://n8n-n8n.6djmf0.easypanel.host/webhook-test/2d504637-993c-408d-8679-9741149bb883'
+const LEAD_ENDPOINT = 'https://n8n-n8n.6djmf0.easypanel.host/webhook-test/2d504637-993c-408d-8679-9741149bb883';
 
 // Número de WhatsApp da JD
 const WHATSAPP_NUMBER = ''; // TODO: preencher com DDI+DDD+número (ex.: 5532999999999)
@@ -385,9 +387,13 @@ const WHATSAPP_NUMBER = ''; // TODO: preencher com DDI+DDD+número (ex.: 5532999
             if (errorTextEl) {
               const errMsg = err && err.message ? String(err.message) : '';
               if (errMsg.indexOf('404') !== -1 || errMsg.indexOf('Failed to fetch') !== -1) {
-                errorTextEl.innerHTML = 'O webhook do n8n retornou erro (HTTP 404). O fluxo precisa estar com o interruptor <strong>"Active" (Ativo)</strong> ligado no canto superior direito do n8n. Você também pode enviar o orçamento diretamente pelo WhatsApp:';
+                if (LEAD_ENDPOINT.indexOf('webhook-test') !== -1) {
+                  errorTextEl.innerHTML = 'O webhook de teste do n8n retornou erro 404. No n8n, você precisa clicar no botão <strong>"Execute workflow"</strong> (ou "Test step") antes de enviar o formulário para ele escutar o evento.';
+                } else {
+                  errorTextEl.innerHTML = 'O webhook do n8n retornou erro (HTTP 404). O fluxo precisa estar com o interruptor <strong>"Active" (Ativo)</strong> ligado no canto superior direito do n8n. Você também pode enviar o orçamento diretamente pelo WhatsApp:';
+                }
               } else {
-                errorTextEl.innerHTML = 'Não foi possível conectar ao webhook (' + (errMsg || 'Erro de rede') + '). Ative o fluxo no n8n ou peça diretamente pelo botão de WhatsApp abaixo:';
+                errorTextEl.innerHTML = 'Não foi possível conectar ao webhook (' + (errMsg || 'Erro de rede') + '). Verifique se o n8n está ativo ou envie o orçamento direto pelo WhatsApp:';
               }
             }
           }
