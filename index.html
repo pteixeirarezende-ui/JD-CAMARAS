@@ -110,9 +110,9 @@
             </div>
             <div class="hero-proof-item">
               <div class="hero-proof-val">
-                <span>12 anos</span>
+                <span>Entrega e instalação</span>
               </div>
-              <div class="hero-proof-lbl">de experiência</div>
+              <div class="hero-proof-lbl">no seu local</div>
             </div>
             <div class="hero-proof-item">
               <div class="hero-proof-val">
@@ -125,7 +125,7 @@
 
         <!-- Coluna do Formulário + Imagem de Obra (No mobile, imagem vem depois do formulário) -->
         <div class="jd-hero-a__form-col" id="form-lead">
-          <form class="jd-form jd-cantoneira" id="lp-form-lead" data-lp-form="true" data-step="1" novalidate>
+          <form class="jd-form jd-cantoneira" id="lp-form-lead" data-lp-form="true" novalidate>
             
             <!-- Cabeçalho do Formulário -->
             <div class="jd-form__header" id="lp-form-header">
@@ -133,46 +133,21 @@
               <p class="jd-form__subtitle">Leva menos de 1 minuto.</p>
             </div>
 
-            <!-- Indicador Visual das Etapas -->
-            <div class="jd-form__steps" id="lp-form-steps" aria-hidden="true">
-              <div class="jd-form__step is-active" id="lp-step-ind-1">
-                <span class="jd-form__step-number">1</span>
-                <span class="jd-form__step-label">Etapa 1</span>
-              </div>
-              <div class="jd-form__step-connector"></div>
-              <div class="jd-form__step is-pending" id="lp-step-ind-2">
-                <span class="jd-form__step-number">2</span>
-                <span class="jd-form__step-label" id="lp-step-label-2">Etapa 2</span>
-              </div>
-            </div>
-
-            <!-- ETAPA 1: Nome e WhatsApp -->
-            <div class="jd-form__etapa is-active" id="lp-etapa-1">
+            <!-- Corpo dos Campos (Etapa Única) -->
+            <div class="jd-form__body" id="lp-form-body">
+              <!-- 1. Nome -->
               <div class="jd-form__group">
                 <label for="lp-field-nome" class="jd-form__label jd-form__label--required">Seu nome</label>
                 <input type="text" id="lp-field-nome" name="nome" class="jd-form__input" placeholder="Como podemos chamar você?" autocomplete="name" required>
               </div>
 
+              <!-- 2. WhatsApp -->
               <div class="jd-form__group">
                 <label for="lp-field-whatsapp" class="jd-form__label jd-form__label--required">WhatsApp</label>
                 <input type="tel" id="lp-field-whatsapp" name="whatsapp" class="jd-form__input" placeholder="(00) 00000-0000" inputmode="tel" autocomplete="tel" required>
               </div>
 
-              <button type="button" class="jd-btn jd-btn--primary" id="lp-btn-next" style="width:100%;margin-top:var(--jd-space-4);">
-                <span>Continuar</span>
-                <span aria-hidden="true">→</span>
-              </button>
-            </div>
-
-            <!-- ETAPA 2: Especificações Técnicas e Localização -->
-            <div class="jd-form__etapa" id="lp-etapa-2">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--jd-space-4);">
-                <button type="button" class="jd-btn--link" id="lp-btn-prev" style="font-size:13px;padding:0;cursor:pointer;">
-                  ← Voltar
-                </button>
-                <span style="font-size:12px;font-weight:700;color:var(--jd-cinza-texto);">Etapa 2 de 2</span>
-              </div>
-
+              <!-- 3. Tipo de câmara -->
               <div class="jd-form__group">
                 <label for="lp-field-tipo_camara" class="jd-form__label jd-form__label--required">Que tipo de câmara você procura?</label>
                 <select id="lp-field-tipo_camara" name="tipo_camara" class="jd-form__input jd-form__select" required>
@@ -185,6 +160,7 @@
                 </select>
               </div>
 
+              <!-- 4. O que vai armazenar -->
               <div class="jd-form__group">
                 <label for="lp-field-armazenar" class="jd-form__label jd-form__label--required">O que você vai armazenar?</label>
                 <select id="lp-field-armazenar" name="armazenar" class="jd-form__input jd-form__select" required>
@@ -198,6 +174,7 @@
                 </select>
               </div>
 
+              <!-- 5. Medidas do espaço (opcional) -->
               <div class="jd-form__group">
                 <label class="jd-form__label">Medidas do espaço (opcional)</label>
                 <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:8px;">
@@ -217,6 +194,7 @@
                 <span style="font-size:12px;color:var(--jd-cinza-texto);margin-top:4px;display:block;">Não sabe? Deixe em branco, a JD ajuda.</span>
               </div>
 
+              <!-- 6. Cidade e UF -->
               <div class="jd-form__group">
                 <label class="jd-form__label jd-form__label--required">Cidade e UF</label>
                 <div style="display:grid;grid-template-columns:1fr 92px;gap:8px;">
@@ -232,16 +210,7 @@
                 </div>
               </div>
 
-              <div class="jd-form__group">
-                <label for="lp-field-prazo" class="jd-form__label jd-form__label--required">Prazo</label>
-                <select id="lp-field-prazo" name="prazo" class="jd-form__input jd-form__select" required>
-                  <option value="" disabled selected>Quando pretende instalar?</option>
-                  <option value="Preciso o quanto antes">Preciso o quanto antes</option>
-                  <option value="Em 1 a 3 meses">Em 1 a 3 meses</option>
-                  <option value="Estou só pesquisando">Estou só pesquisando</option>
-                </select>
-              </div>
-
+              <!-- Botão Pedir orçamento -->
               <button type="submit" class="jd-btn jd-btn--primary" id="lp-btn-submit" style="width:100%;margin-top:var(--jd-space-3);">
                 <span>Pedir orçamento</span>
                 <span aria-hidden="true">→</span>
@@ -445,7 +414,8 @@
           <!-- Card 2: Câmara expositora (walk-in cooler) -->
           <article class="jd-card-produto jd-spotlight" aria-labelledby="card-prod-walkin-title">
             <div class="jd-card-produto__image">
-              <img src="assets/placeholder-camara.svg" alt="Foto: Câmara expositora (walk-in cooler)" width="800" height="600" loading="lazy">
+              <!-- CONFIRMAR: foto enviada pelo cliente em 30/10; confirmar que é obra da JD e o tipo/uso exato -->
+              <img src="assets/foto-walk-in-vitrine.jpg" alt="Câmara com portas de vidro instalada pela JD" width="960" height="720" loading="lazy">
               <div class="jd-card-produto__temp" aria-label="Temperatura da câmara expositora">
                 <span class="tag-exemplo">[CONFIRMAR faixa]</span><!-- CONFIRMAR: faixa de temperatura da câmara expositora -->
               </div>
@@ -468,7 +438,8 @@
           <!-- Card 3: Câmara de resfriados -->
           <article class="jd-card-produto jd-spotlight" aria-labelledby="card-prod-resfriados-title">
             <div class="jd-card-produto__image">
-              <img src="assets/placeholder-camara.svg" alt="Foto: Câmara de resfriados" width="800" height="600" loading="lazy">
+              <!-- CONFIRMAR: foto enviada pelo cliente em 30/10; confirmar que é obra da JD e o tipo/uso exato -->
+              <img src="assets/foto-camara-prateleiras.jpg" alt="Interior de câmara fria com prateleiras e evaporador" width="960" height="720" loading="lazy">
               <div class="jd-card-produto__temp" aria-label="Temperatura de 0 a +15 °C">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z"></path>

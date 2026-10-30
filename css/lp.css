@@ -341,17 +341,37 @@
 
 .jd-form__header {
   border-bottom: 1px solid rgba(55, 180, 206, 0.2);
+  padding-bottom: var(--jd-space-2);
+  margin-bottom: var(--jd-space-3);
 }
 
-.jd-form__step.is-active .jd-form__step-num {
-  background: var(--jd-azul);
-  color: var(--jd-branco);
-  box-shadow: 0 0 12px rgba(55, 180, 206, 0.6);
+/* Espaçamento vertical enxuto com tokens do DS para Etapa Única */
+.jd-hero-a .jd-form .jd-form__group {
+  margin-bottom: var(--jd-space-2);
 }
 
-.jd-form__step.is-done .jd-form__step-num {
-  background: var(--jd-verde);
-  color: var(--jd-branco);
+.jd-hero-a .jd-form .jd-form__label {
+  margin-bottom: var(--jd-space-1);
+}
+
+.jd-hero-a .jd-form .jd-form__input,
+.jd-hero-a .jd-form .jd-form__select {
+  padding: 10px 12px;
+  min-height: 44px;
+}
+
+@media (min-width: 1024px) {
+  .jd-hero-a {
+    padding-top: var(--jd-space-2);
+    padding-bottom: var(--jd-space-4);
+  }
+  .jd-hero-a__inner {
+    padding-top: var(--jd-space-2);
+    padding-bottom: var(--jd-space-4);
+  }
+  .jd-hero-a .jd-form {
+    padding: var(--jd-space-4) var(--jd-space-5);
+  }
 }
 
 /* Foco Iluminado nos Campos do Formulário */

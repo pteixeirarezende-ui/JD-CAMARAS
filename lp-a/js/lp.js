@@ -16,8 +16,8 @@ const WHATSAPP_NUMBER = ''; // TODO: preencher com DDI+DDD+número (ex.: 5532999
   // 1. TÍTULO DINÂMICO POR PARÂMETRO ?h=
   const VARIANTS = {
     preco: {
-      h1: 'Quanto custa a sua câmara fria? Informe as medidas e receba o orçamento da JD',
-      sub: 'Cada câmara é projetada sob medida, então o valor depende do tamanho, da temperatura e do uso. Conte o que você precisa e a JD envia o orçamento.'
+      h1: 'Receba o preço da sua câmara fria sob medida',
+      sub: 'A JD calcula pelo tamanho, pela temperatura e pelo uso e envia o orçamento pelo WhatsApp.'
     },
     mini: {
       h1: 'Mini câmara fria sob medida para o seu espaço',
@@ -167,7 +167,7 @@ const WHATSAPP_NUMBER = ''; // TODO: preencher com DDI+DDD+número (ex.: 5532999
       group.classList.add('is-error');
       field.classList.add('is-error');
       field.setAttribute('aria-invalid', 'true');
-      const msg = customMessage || 'Preencha este campo para continuar.';
+      const msg = customMessage || 'Preencha este campo.';
       errorEl.innerHTML = ERROR_ICON_SVG + '<span>' + msg + '</span>';
       errorEl.style.display = 'flex';
     } else {
@@ -184,7 +184,7 @@ const WHATSAPP_NUMBER = ''; // TODO: preencher com DDI+DDD+número (ex.: 5532999
     const isRequired = field.hasAttribute('required');
 
     if (isRequired && !val) {
-      setFieldError(field, true, 'Preencha este campo para continuar.');
+      setFieldError(field, true, 'Preencha este campo.');
       return false;
     }
 
@@ -197,7 +197,7 @@ const WHATSAPP_NUMBER = ''; // TODO: preencher com DDI+DDD+número (ex.: 5532999
     }
 
     if (field.id === 'lp-field-nome' && val.length < 3) {
-      setFieldError(field, true, 'Preencha este campo para continuar.');
+      setFieldError(field, true, 'Preencha este campo.');
       return false;
     }
 
@@ -205,28 +205,37 @@ const WHATSAPP_NUMBER = ''; // TODO: preencher com DDI+DDD+número (ex.: 5532999
     return true;
   }
 
-  // 6. MOTOR DO FORMULÁRIO EM 2 ETAPAS
+  // 6. MOTOR DO FORMULÁRIO EM ETAPA ÚNICA
   function initLeadForm() {
     const form = document.getElementById('lp-form-lead');
     if (!form) return;
 
-    const etapa1 = document.getElementById('lp-etapa-1');
-    const etapa2 = document.getElementById('lp-etapa-2');
-    const stepInd1 = document.getElementById('lp-step-ind-1');
-    const stepInd2 = document.getElementById('lp-step-ind-2');
-    const stepLabel2 = document.getElementById('lp-step-label-2');
-    const btnNext = document.getElementById('lp-btn-next');
-    const btnPrev = document.getElementById('lp-btn-prev');
+    const formBody = document.getElementById('lp-form-body');
     const btnSubmit = document.getElementById('lp-btn-submit');
     const successBlock = document.getElementById('lp-form-sucesso');
     const formHeader = document.getElementById('lp-form-header');
-    const formStepsNav = document.getElementById('lp-form-steps');
     const honeypot = document.getElementById('lp-field-website');
     const submitErrorWrap = document.getElementById('lp-submit-error');
     const btnRetry = document.getElementById('lp-btn-retry');
 
+    const nomeField = document.getElementById('lp-field-nome');
+    const phoneField = document.getElementById('lp-field-whatsapp');
+
     // Rastreia primeiro foco em qualquer campo (lead_form_start)
     let formStartedTracked = false;
+    let step1CompletedTracked = false;
+
+    function checkStep1Completion() {
+      if (step1CompletedTracked) return;
+      if (!nomeField || !phoneField) return;
+      const isNomeValid = (nomeField.value || '').trim().length >= 3;
+      const isPhoneValid = (phoneField.value || '').replace(/\D/g, '').length >= 10;
+      if (isNomeValid && isPhoneValid) {
+        step1CompletedTracked = true;
+        pushTrackingEvent('lead_form_step1_complete');
+      }
+    }
+
     const allFormInputs = form.querySelectorAll('input, select, textarea');
     allFormInputs.forEach(function (input) {
       input.addEventListener('focus', function () {
@@ -239,6 +248,9 @@ const WHATSAPP_NUMBER = ''; // TODO: preencher com DDI+DDD+número (ex.: 5532999
         if (this.hasAttribute('required') || this.value.trim().length > 0) {
           validateInput(this);
         }
+        if (this === phoneField || this === nomeField) {
+          checkStep1Completion();
+        }
       });
       input.addEventListener('input', function () {
         if (this.classList.contains('is-error')) {
@@ -247,78 +259,18 @@ const WHATSAPP_NUMBER = ''; // TODO: preencher com DDI+DDD+número (ex.: 5532999
       });
     });
 
-    const phoneField = document.getElementById('lp-field-whatsapp');
     applyPhoneMask(phoneField);
-
-    // Inicializa com data-step="1"
-    form.setAttribute('data-step', '1');
-
-    // Avançar para Etapa 2
-    if (btnNext) {
-      btnNext.addEventListener('click', function (e) {
-        e.preventDefault();
-        const nomeField = document.getElementById('lp-field-nome');
-        const isNomeValid = validateInput(nomeField);
-        const isPhoneValid = validateInput(phoneField);
-
-        if (isNomeValid && isPhoneValid) {
-          etapa1.classList.remove('is-active');
-          etapa2.classList.add('is-active');
-          form.setAttribute('data-step', '2');
-
-          if (stepInd1) {
-            stepInd1.classList.remove('is-active');
-            stepInd1.classList.add('is-done');
-          }
-          if (stepInd2) {
-            stepInd2.classList.remove('is-pending');
-            stepInd2.classList.add('is-active');
-          }
-          if (stepLabel2) {
-            stepLabel2.textContent = 'Etapa 2 de 2';
-          }
-
-          pushTrackingEvent('lead_form_step1_complete');
-
-          // Foca no primeiro campo da etapa 2
-          const firstStep2Field = etapa2.querySelector('select, input');
-          if (firstStep2Field) {
-            firstStep2Field.focus();
-          }
-        }
-      });
-    }
-
-    // Voltar para Etapa 1
-    if (btnPrev) {
-      btnPrev.addEventListener('click', function (e) {
-        e.preventDefault();
-        etapa2.classList.remove('is-active');
-        etapa1.classList.add('is-active');
-        form.setAttribute('data-step', '1');
-
-        if (stepInd1) {
-          stepInd1.classList.remove('is-done');
-          stepInd1.classList.add('is-active');
-        }
-        if (stepInd2) {
-          stepInd2.classList.remove('is-active');
-          stepInd2.classList.add('is-pending');
-        }
-        if (stepLabel2) {
-          stepLabel2.textContent = 'Etapa 2';
-        }
-      });
-    }
 
     // Tentar de novo após erro de envio
     if (btnRetry) {
       btnRetry.addEventListener('click', function (e) {
         e.preventDefault();
         if (submitErrorWrap) submitErrorWrap.style.display = 'none';
-        btnSubmit.disabled = false;
-        btnSubmit.classList.remove('is-loading');
-        btnSubmit.focus();
+        if (btnSubmit) {
+          btnSubmit.disabled = false;
+          btnSubmit.classList.remove('is-loading');
+          btnSubmit.focus();
+        }
       });
     }
 
@@ -336,8 +288,8 @@ const WHATSAPP_NUMBER = ''; // TODO: preencher com DDI+DDD+número (ex.: 5532999
     }
 
     function handleFormSubmit() {
-      // Validação da etapa 2
-      const requiredInputs = etapa2.querySelectorAll('[required]');
+      // Validação de todos os campos obrigatórios
+      const requiredInputs = form.querySelectorAll('[required]');
       let allValid = true;
       let firstInvalid = null;
 
@@ -355,22 +307,24 @@ const WHATSAPP_NUMBER = ''; // TODO: preencher com DDI+DDD+número (ex.: 5532999
 
       // Honeypot anti-spam
       if (honeypot && honeypot.value.trim() !== '') {
-        // Descarte silencioso do spam
         showSuccessView();
         return;
       }
 
       // Bloqueio de duplo clique
-      btnSubmit.disabled = true;
-      btnSubmit.classList.add('is-loading');
+      if (btnSubmit) {
+        btnSubmit.disabled = true;
+        btnSubmit.classList.add('is-loading');
+      }
       if (submitErrorWrap) submitErrorWrap.style.display = 'none';
 
-      // Monta Payload do Lead
+      // Monta Payload do Lead (21 colunas)
       const timestampIso = new Date().toISOString();
       const timestampInput = document.getElementById('lp-field-timestamp_envio');
       if (timestampInput) timestampInput.value = timestampIso;
 
       const payload = {
+        timestamp_envio: timestampIso,
         nome: (document.getElementById('lp-field-nome') || {}).value || '',
         whatsapp: (document.getElementById('lp-field-whatsapp') || {}).value || '',
         tipo_camara: (document.getElementById('lp-field-tipo_camara') || {}).value || '',
@@ -380,7 +334,6 @@ const WHATSAPP_NUMBER = ''; // TODO: preencher com DDI+DDD+número (ex.: 5532999
         altura: (document.getElementById('lp-field-altura') || {}).value || '',
         cidade: (document.getElementById('lp-field-cidade') || {}).value || '',
         uf: (document.getElementById('lp-field-uf') || {}).value || '',
-        prazo: (document.getElementById('lp-field-prazo') || {}).value || '',
         utm_source: (document.getElementById('lp-field-utm_source') || {}).value || '',
         utm_medium: (document.getElementById('lp-field-utm_medium') || {}).value || '',
         utm_campaign: (document.getElementById('lp-field-utm_campaign') || {}).value || '',
@@ -391,8 +344,7 @@ const WHATSAPP_NUMBER = ''; // TODO: preencher com DDI+DDD+número (ex.: 5532999
         wbraid: (document.getElementById('lp-field-wbraid') || {}).value || '',
         landing_page: (document.getElementById('lp-field-landing-page') || {}).value || window.location.href,
         lp_version: 'A',
-        titulo_variante: activeVariantKey,
-        timestamp_envio: timestampIso
+        titulo_variante: activeVariantKey
       };
 
       const isDebug = new URLSearchParams(window.location.search).get('debug') === '1';
@@ -400,7 +352,7 @@ const WHATSAPP_NUMBER = ''; // TODO: preencher com DDI+DDD+número (ex.: 5532999
       if (!LEAD_ENDPOINT) {
         if (isDebug) {
           console.group('[LP Debug Mode] Lead submetido com LEAD_ENDPOINT vazio:');
-          console.log('Payload do Lead:', payload);
+          console.log('Payload do Lead (21 colunas):', payload);
           console.groupEnd();
         }
         showSuccessView();
@@ -421,8 +373,10 @@ const WHATSAPP_NUMBER = ''; // TODO: preencher com DDI+DDD+número (ex.: 5532999
         })
         .catch(function (err) {
           console.error('[LP Form Submit Error]', err);
-          btnSubmit.disabled = false;
-          btnSubmit.classList.remove('is-loading');
+          if (btnSubmit) {
+            btnSubmit.disabled = false;
+            btnSubmit.classList.remove('is-loading');
+          }
           if (submitErrorWrap) {
             submitErrorWrap.style.display = 'block';
           }
@@ -430,10 +384,8 @@ const WHATSAPP_NUMBER = ''; // TODO: preencher com DDI+DDD+número (ex.: 5532999
     }
 
     function showSuccessView() {
-      etapa1.classList.remove('is-active');
-      etapa2.classList.remove('is-active');
+      if (formBody) formBody.style.display = 'none';
       if (formHeader) formHeader.style.display = 'none';
-      if (formStepsNav) formStepsNav.style.display = 'none';
       if (submitErrorWrap) submitErrorWrap.style.display = 'none';
       if (successBlock) successBlock.classList.add('is-visible');
 
@@ -442,7 +394,7 @@ const WHATSAPP_NUMBER = ''; // TODO: preencher com DDI+DDD+número (ex.: 5532999
   }
 
   // 7. BOTÕES DE WHATSAPP, CABEÇALHO E ATALHOS PARA O FORMULÁRIO
-  function irParaFormulario() {
+  function irParaFormulario(targetField) {
     const form = document.getElementById('lp-form-lead');
     if (!form) return;
 
@@ -451,9 +403,6 @@ const WHATSAPP_NUMBER = ''; // TODO: preencher com DDI+DDD+número (ex.: 5532999
     
     // Se o topo do formulário já estiver visível na janela abaixo do cabeçalho, não role: só foque
     const isFormVisible = (rect.top >= headerHeight && rect.top <= window.innerHeight * 0.7);
-
-    const activeEtapa = form.querySelector('.jd-form__etapa.is-active') || form;
-    const firstInput = activeEtapa.querySelector('input:not([type="hidden"]), select, textarea');
 
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -464,13 +413,14 @@ const WHATSAPP_NUMBER = ''; // TODO: preencher com DDI+DDD+número (ex.: 5532999
       });
     }
 
-    if (firstInput) {
+    const focusTarget = targetField || document.getElementById('lp-field-nome');
+    if (focusTarget) {
       if (!isFormVisible) {
         setTimeout(function () {
-          firstInput.focus({ preventScroll: true });
+          focusTarget.focus({ preventScroll: true });
         }, prefersReduced ? 50 : 350);
       } else {
-        firstInput.focus({ preventScroll: true });
+        focusTarget.focus({ preventScroll: true });
       }
     }
   }
@@ -554,6 +504,9 @@ const WHATSAPP_NUMBER = ''; // TODO: preencher com DDI+DDD+número (ex.: 5532999
         if (selectTipo) {
           selectTipo.value = tipoNome;
           selectTipo.dispatchEvent(new Event('change', { bubbles: true }));
+          if (selectTipo.classList.contains('is-error')) {
+            setFieldError(selectTipo, false);
+          }
         }
 
         pushTrackingEvent('click_cta_produto', { produto: prodKey });
@@ -564,7 +517,26 @@ const WHATSAPP_NUMBER = ''; // TODO: preencher com DDI+DDD+número (ex.: 5532999
           return;
         }
 
-        irParaFormulario();
+        const nomeField = document.getElementById('lp-field-nome');
+        let targetField = nomeField;
+        if (nomeField && (nomeField.value || '').trim().length >= 3) {
+          const requiredIds = [
+            'lp-field-whatsapp',
+            'lp-field-tipo_camara',
+            'lp-field-armazenar',
+            'lp-field-cidade',
+            'lp-field-uf'
+          ];
+          for (let i = 0; i < requiredIds.length; i++) {
+            const f = document.getElementById(requiredIds[i]);
+            if (f && !f.value.trim()) {
+              targetField = f;
+              break;
+            }
+          }
+        }
+
+        irParaFormulario(targetField);
       });
     });
 

@@ -164,7 +164,7 @@ Verificação automatizada realizada no HTML e nos scripts:
 ### 2.9. Placeholders Pendentes do Cliente (Dobra 1)
 
 1. **Número de WhatsApp**: `WHATSAPP_NUMBER` em `lp.js` — **A LP NÃO PODE IR AO AR SEM ESTE NÚMERO CONFIGURADO**. Em modo normal o botão rola para o formulário; em `?debug=1`, a etiqueta `[CONFIRMAR NÚMERO]` e o aviso de console são ativados.
-2. **12 anos de experiência**: Confirmar com o cliente se são 12 anos de CNPJ ou de atuação no setor, antes de ir ao ar.
+2. **Tempo de Empresa**: Não usar tempo de empresa na LP da JD até o cliente confirmar quanto tempo é da JD.
 3. **Endpoint do Webhook de Leads**: `LEAD_ENDPOINT` em `lp.js` (atualmente vazio, pronto para receber webhook do Google Sheets, n8n ou CRM).
 4. **Container do Google Tag Manager**: ID `[GTM-XXXXXXX]` no `<head>` e no `<!-- GTM noscript -->`.
 5. **Política de Privacidade**: Link `[CONFIRMAR: política de privacidade]` aguardando URL oficial do cliente.
@@ -454,6 +454,95 @@ Verificação automatizada realizada no HTML e nos scripts:
      - Evento 1: `pergunta: "1"`, `lp_version: "A"`, `titulo_variante: "padrao"`
      - Evento 2: `pergunta: "3"`, `lp_version: "A"`, `titulo_variante: "padrao"`
      - Evento 3: `pergunta: "5"`, `lp_version: "A"`, `titulo_variante: "padrao"`
+
+---
+
+## 8. Verificação 06 — Ajustes de Etapa Única, Fotos Reais, Preço Honesto e Prova do Hero
+
+### 8.1. Integridade das Dobras
+- **Dobras 2, 4 e 6:** Permanecem **100% idênticas e inalteradas** (textos, ícones, estrutura e layout preservados sem qualquer modificação).
+- **Dobra 3:** Apenas as imagens dos Cards 2 e 3 foram substituídas por fotos reais de obra conforme solicitado. Demais cards e textos permanecem idênticos.
+
+### 8.2. Busca por Termos Proibidos e Removidos
+- **Busca por `12 anos`:** 0 ocorrências.
+- **Busca por `anos de experiência`:** 0 ocorrências.
+- **Busca por `21 anos`:** 0 ocorrências.
+- **Busca por `Continuar`:** 0 ocorrências em HTML e JS.
+- **Busca por `prazo`:** 0 ocorrências no formulário e no JS (ocorrências mantidas exclusivamente na copy original da Dobra 4 conforme regra de integridade).
+- **Claims proibidos (Anvisa, Inmetro, ABNT, patente, fábrica própria, garantia de 5 anos, supercongelados -125 °C, a partir de, etc.):** 0 ocorrências.
+
+### 8.3. Posição Real dos Elementos (BoundingClientRect em px)
+Medição realizada via Playwright Chromium no estado inicial da página:
+
+| Elemento | 360 × 740 px (Mobile) | 390 × 844 px (Mobile) | 1280 × 800 px (Desktop) |
+|---|---|---|---|
+| **Cabeçalho Form (`#lp-form-header`)** | Topo: **374.2 px** / Base: **455.2 px** (Visível) | Topo: **340.6 px** / Base: **389.6 px** (Visível) | Topo: **105.0 px** / Base: **181.4 px** (Visível) |
+| **1. Seu nome (`#lp-field-nome`)** | Topo: **490.3 px** / Base: **534.7 px** (Visível) | Topo: **424.8 px** / Base: **469.2 px** (Visível) | Topo: **218.4 px** / Base: **265.7 px** (Visível) |
+| **2. WhatsApp (`#lp-field-whatsapp`)** | Topo: **565.9 px** / Base: **610.3 px** (Visível) | Topo: **500.4 px** / Base: **544.9 px** (Visível) | Topo: **298.7 px** / Base: **346.1 px** (Visível) |
+| **3. Tipo de câmara (`#lp-field-tipo_camara`)** | Topo: **641.5 px** / Base: **685.9 px** (Visível) | Topo: **576.1 px** / Base: **620.6 px** (Visível) | Topo: **379.1 px** / Base: **426.4 px** (Visível) |
+| **4. O que vai armazenar (`#lp-field-armazenar`)** | Topo: 717.1 px / Base: 761.5 px | Topo: **651.8 px** / Base: **696.3 px** (Visível) | Topo: **459.4 px** / Base: **506.8 px** (Visível) |
+| **5. Medidas (`#lp-field-largura`)** | Topo: 813.8 px / Base: 858.2 px | Topo: **748.7 px** / Base: **793.2 px** (Visível) | Topo: **561.0 px** / Base: **608.3 px** (Visível) |
+| **6. Cidade e UF (`#lp-field-cidade`)** | Topo: 931.8 px / Base: 976.2 px | Topo: 866.8 px / Base: 911.2 px | Topo: **664.5 px** / Base: **711.8 px** (Visível) |
+| **Botão Pedir Orçamento (`#lp-btn-submit`)** | Topo: 996.2 px / Base: 1045.0 px | Topo: 931.2 px / Base: 980.1 px | Topo: **731.8 px** / Base: **782.8 px** (Visível sem scroll) |
+
+- **Mobile:** Título do form, Seu nome, WhatsApp e Tipo de câmara **100% visíveis na primeira tela** tanto em 360 × 740 px quanto em 390 × 844 px.
+- **Desktop (1280 × 800 px):** Formulário completo e botão "Pedir orçamento" **100% visíveis na primeira tela sem rolagem e sem scroll interno** (Base = 782.8 px < 800 px).
+
+### 8.4. Colunas do Payload Final (21 Colunas)
+Para integração direta com Google Sheets / Webhook de CRM (`LEAD_ENDPOINT` ou `?debug=1`), as 21 colunas seguem exatamente esta ordem:
+1. `timestamp_envio` (ISO 8601 string)
+2. `nome`
+3. `whatsapp`
+4. `tipo_camara`
+5. `armazenar`
+6. `largura`
+7. `comprimento`
+8. `altura`
+9. `cidade`
+10. `uf`
+11. `utm_source`
+12. `utm_medium`
+13. `utm_campaign`
+14. `utm_term`
+15. `utm_content`
+16. `gclid`
+17. `gbraid`
+18. `wbraid`
+19. `landing_page`
+20. `lp_version` ("A")
+21. `titulo_variante` ("preco", "mini", "walkin", "congelados", "resfriados" ou "padrao")
+
+*Campo `prazo` removido do payload com sucesso.*
+
+### 8.5. Teste dos 4 Botões de Produto da Dobra 3
+- **Card 1 (Mini câmara):** Seleciona `"Mini câmara"`, foca `#lp-field-nome` (se vazio) ou `#lp-field-whatsapp` (se nome preenchido), dispara `click_cta_produto` com `produto: "mini"`.
+- **Card 2 (Câmara expositora / walk-in cooler):** Seleciona `"Câmara expositora (walk-in cooler)"`, foca campo correspondente, dispara `click_cta_produto` com `produto: "expositora"`.
+- **Card 3 (Câmara de resfriados):** Seleciona `"Câmara de resfriados (0 a +15 °C)"`, foca campo correspondente, dispara `click_cta_produto` com `produto: "resfriados"`.
+- **Card 4 (Câmara de congelados):** Seleciona `"Câmara de congelados (-18 °C)"`, foca campo correspondente, dispara `click_cta_produto` com `produto: "congelados"`.
+
+### 8.6. Teste de Eventos de Telemetria do Formulário
+- `lead_form_start`: disparado exatamente 1 vez na primeira interação com qualquer campo.
+- `lead_form_step1_complete`: disparado exatamente 1 vez quando Nome (>= 3 caracteres) e WhatsApp (>= 10 dígitos) tornam-se ambos válidos (no blur do campo WhatsApp).
+- `lead_form_submit`: disparado exatamente 1 vez na conclusão da submissão com sucesso.
+
+### 8.7. Variante Dinâmica de Preço Honesto (`?h=preco`)
+- **URL:** `?h=preco`
+- **H1:** `Receba o preço da sua câmara fria sob medida`
+- **Subtítulo:** `A JD calcula pelo tamanho, pela temperatura e pelo uso e envia o orçamento pelo WhatsApp.`
+- **Variante Inválida (`?h=invalido`):** Cai de forma segura no padrão (`Câmara fria sob medida, projetada e instalada para o seu negócio`) com `activeVariantKey = 'padrao'`, sem valores em reais ou promessas enganosas.
+
+### 8.8. Substituição de Fotos Reais nos Cards 2 e 3
+- **Card 2:** `assets/foto-walk-in-vitrine.jpg`, alt `"Câmara com portas de vidro instalada pela JD"`, `width="960" height="720"`, `loading="lazy"`, `object-fit: cover`.
+- **Card 3:** `assets/foto-camara-prateleiras.jpg`, alt `"Interior de câmara fria com prateleiras e evaporador"`, `width="960" height="720"`, `loading="lazy"`, `object-fit: cover`.
+- **Comentário HTML incluído em ambas:** `<!-- CONFIRMAR: foto enviada pelo cliente em 30/10; confirmar que é obra da JD e o tipo/uso exato -->`.
+- **Cards 1 e 4:** Mantidos com placeholder gráfico com rótulo sem reaproveitamento indevido.
+
+### 8.9. Auditoria Técnica Geral
+- **Rolagem Horizontal:** Nula em 360 px, 390 px, 768 px e 1280 px (`scrollWidth <= innerWidth`).
+- **Fontes < 12 px:** Zero ocorrências.
+- **IDs Duplicados:** Zero ocorrências (74 IDs únicos).
+- **Total de Formulários:** 1 (`#lp-form-lead`).
+- **Peso Total:** ~325 kB transferidos não-comprimidos (< 180 kB comprimidos).
 
 
 
