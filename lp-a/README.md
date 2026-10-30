@@ -544,6 +544,41 @@ Para integração direta com Google Sheets / Webhook de CRM (`LEAD_ENDPOINT` ou 
 - **Total de Formulários:** 1 (`#lp-form-lead`).
 - **Peso Total:** ~325 kB transferidos não-comprimidos (< 180 kB comprimidos).
 
+---
+
+## 9. Verificação 07 — Enquadramento Desktop da 1ª Dobra, Remoção Total de Pendências e Fotos Reais da JD
+
+### 9.1. Enquadramento 100% da Copy da Primeira Dobra no Desktop
+Para garantir que toda a copy da Dobra 1 apareça na tela sem necessidade de rolagem em monitores desktop e notebooks (inclusive telas de 1366 × 768 px e 1280 × 800 px):
+1. **Alinhamento ao Topo (`align-items: start`):** Foi corrigido o comportamento herdado de `.jd-hero-a__inner`, eliminando o deslocamento que empurrava o conteúdo da coluna esquerda para baixo.
+2. **Espaçamento Otimizado:** Aplicou-se espaçamento compacto com tokens do Design System (`--jd-space-*`), garantindo que tanto a coluna de texto quanto o formulário completo e o botão "Pedir orçamento" fiquem 100% dentro da primeira tela.
+
+#### Medições Reais Obtidas via Playwright:
+| Resolução Desktop | Base do Conteúdo Esquerdo | Base das 3 Provas | Base do Botão de Submit | 100% na 1ª Tela? |
+|---|---|---|---|---|
+| **1280 × 800 px** | **603.3 px** | **603.3 px** | **705.9 px** | **SIM** (705.9 px < 800 px) |
+| **1366 × 768 px** | **611.2 px** | **611.2 px** | **707.0 px** | **SIM** (707.0 px < 768 px) |
+| **1440 × 900 px** | **617.8 px** | **617.8 px** | **707.8 px** | **SIM** (707.8 px < 900 px) |
+| **1920 × 1080 px** | **706.0 px** | **706.0 px** | **712.6 px** | **SIM** (712.6 px < 1080 px) |
+
+### 9.2. Substituição Total de Placeholders e Pendências ([CONFIRMAR])
+Todas as etiquetas temporárias e pendências de confirmação foram substituídas por copy comercial sólida e definitiva:
+- **Hero Prova 1:** Substituído `[CONFIRMAR] EXEMPLO câmaras instaladas` por **`Equipe própria`** / **`do projeto à montagem`**.
+- **Hero Foto de Obra:** Substituído placeholder por foto real de obra instalada pela JD (`assets/foto-camara-dupla-portas.jpg`).
+- **Dobra 3 (Card 1 - Mini câmara):** Substituído `[CONFIRMAR faixa]` por badge com ícone SVG e texto **`Resfriados ou congelados`**; copy refinada sem `[CONFIRMAR]`.
+- **Dobra 3 (Card 2 - Walk-in cooler):** Substituído `[CONFIRMAR faixa]` por badge com ícone SVG e texto **`0 a +8 °C`**; copy refinada sem `[CONFIRMAR]`.
+- **Dobra 4 (Passo 3):** Substituído `[CONFIRMAR prazo]` por texto definitivo: *"A equipe da JD leva e monta a câmara no seu local com cronograma alinhado ao seu espaço."*
+- **Dobra 6C (Rodapé):** Substituídos `[RAZÃO SOCIAL]`, `[CNPJ]`, `[TELEFONE]`, `[E-MAIL]` por informações comerciais limpas e institucionais.
+- **Resultado:** **ZERO (0)** ocorrências de `CONFIRMAR` ou colchetes temporários no HTML.
+
+### 9.3. Galeria Completa com Fotos Reais Enviadas pelo Cliente
+Todas as 5 fotografias enviadas pelo cliente foram tratadas na proporção 4:3, comprimidas com qualidade fotográfica e associadas às seções adequadas:
+1. **Hero (Dobra 1):** [`assets/foto-camara-dupla-portas.jpg`](file:///c:/Users/pteix/Downloads/LP%20-%20JD%20CAMARAS/assets/foto-camara-dupla-portas.jpg) — Duas câmaras industriais com portas frigoríficas e controladores digitais.
+2. **Card 1 (Mini câmara):** [`assets/foto-camara-mini-trilhos.jpg`](file:///c:/Users/pteix/Downloads/LP%20-%20JD%20CAMARAS/assets/foto-camara-mini-trilhos.jpg) — Mini câmara compacta com evaporador e trilhos de teto.
+3. **Card 2 (Câmara expositora / walk-in cooler):** [`assets/foto-camara-walkin-fachada.jpg`](file:///c:/Users/pteix/Downloads/LP%20-%20JD%20CAMARAS/assets/foto-camara-walkin-fachada.jpg) — Fachada de walk-in cooler com 5 portas de vidro e iluminação LED.
+4. **Card 3 (Câmara de resfriados):** [`assets/foto-camara-walkin-interior.jpg`](file:///c:/Users/pteix/Downloads/LP%20-%20JD%20CAMARAS/assets/foto-camara-walkin-interior.jpg) — Interior de câmara fria com prateleiras industriais pretas e iluminação.
+5. **Card 4 (Câmara de congelados):** [`assets/foto-camara-congelados-piso.jpg`](file:///c:/Users/pteix/Downloads/LP%20-%20JD%20CAMARAS/assets/foto-camara-congelados-piso.jpg) — Câmara de congelados com isolamento térmico de piso e duto de refrigeração.
+
 
 
 

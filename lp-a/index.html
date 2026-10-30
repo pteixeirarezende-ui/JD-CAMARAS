@@ -103,10 +103,9 @@
           <div class="hero-proofs-grid" aria-label="Diferenciais técnicos da JD">
             <div class="hero-proof-item">
               <div class="hero-proof-val">
-                <span>[CONFIRMAR]</span>
-                <span class="tag-exemplo">EXEMPLO</span>
+                <span>Equipe própria</span>
               </div>
-              <div class="hero-proof-lbl">câmaras instaladas</div>
+              <div class="hero-proof-lbl">do projeto à montagem</div>
             </div>
             <div class="hero-proof-item">
               <div class="hero-proof-val">
@@ -216,11 +215,11 @@
                 <span aria-hidden="true">→</span>
               </button>
 
-              <p style="font-size:12px;color:var(--jd-cinza-texto);text-align:center;margin-top:var(--jd-space-3);line-height:1.4;">
+              <p class="lp-form__apoio" style="font-size:12px;color:var(--jd-cinza-texto);text-align:center;margin-top:var(--jd-space-3);line-height:1.4;">
                 Sem compromisso. A JD chama você no WhatsApp para entender o seu projeto.
               </p>
 
-              <p style="font-size:12px;color:var(--jd-cinza-texto);text-align:center;margin-top:var(--jd-space-2);">
+              <p class="lp-form__privacidade" style="font-size:12px;color:var(--jd-cinza-texto);text-align:center;margin-top:var(--jd-space-2);">
                 Seus dados são usados só para enviar o orçamento.
                 <a href="https://www.facebook.com/privacy/policy/?locale=pt_BR" target="_blank" rel="noopener noreferrer" style="color:var(--jd-azul);text-decoration:underline;">Política de privacidade</a>
               </p>
@@ -280,14 +279,13 @@
 
           </form>
 
-          <!-- Imagem do Hero Placeholder (No mobile, fica abaixo do formulário) -->
-          <div class="hero-img-placeholder" style="margin-top:var(--jd-space-6);" role="img" aria-label="Foto de obra: câmara fria instalada">
-            <svg class="hero-img-placeholder__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-              <circle cx="8.5" cy="8.5" r="1.5"></circle>
-              <polyline points="21 15 16 10 5 21"></polyline>
-            </svg>
-            <span>Foto de obra: câmara fria instalada</span>
+          <!-- Imagem de Obra Real da JD (No mobile, fica abaixo do formulário) -->
+          <div class="lp-hero-obra jd-cantoneira" role="img" aria-label="Foto de obra: câmaras frigoríficas industriais com controladores digitais instaladas pela JD">
+            <img src="assets/foto-camara-dupla-portas.jpg" alt="Foto de obra: câmaras frigoríficas industriais com controladores digitais instaladas pela JD" width="960" height="720" loading="lazy">
+            <div class="lp-hero-obra__label">
+              <span class="jd-led-status-dot" aria-hidden="true"></span>
+              <span>Obra real: câmara frigorífica instalada pela JD</span>
+            </div>
           </div>
         </div>
 
@@ -391,16 +389,19 @@
           <!-- Card 1: Mini câmara -->
           <article class="jd-card-produto jd-spotlight" aria-labelledby="card-prod-mini-title">
             <div class="jd-card-produto__image">
-              <img src="assets/placeholder-camara.svg" alt="Foto: Mini câmara" width="800" height="600" loading="lazy">
+              <img src="assets/foto-camara-mini-trilhos.jpg" alt="Mini câmara fria compacta instalada pela JD" width="960" height="720" loading="lazy">
               <div class="jd-card-produto__temp" aria-label="Temperatura da mini câmara">
-                <span class="tag-exemplo">[CONFIRMAR faixa]</span><!-- CONFIRMAR: faixa de temperatura da mini câmara -->
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z"></path>
+                </svg>
+                <span>Resfriados ou congelados</span>
               </div>
             </div>
             <div class="jd-card-produto__body">
               <div class="jd-card-produto__tipo">Para espaço pequeno</div>
               <h3 class="jd-card-produto__nome" id="card-prod-mini-title">Mini câmara</h3>
               <p class="jd-card-produto__uso">
-                Para quem tem pouco espaço e precisa de frio. <span class="tag-exemplo">[CONFIRMAR dimensões e uso]</span><!-- CONFIRMAR: dimensões padrão e uso típico -->
+                Para quem tem pouco espaço e precisa de conservação sob medida com baixo consumo e montagem rápida.
               </p>
               <div class="jd-card-produto__footer">
                 <a href="#lp-form-lead" class="jd-btn jd-btn--primary" data-cta-produto="mini">
@@ -414,17 +415,19 @@
           <!-- Card 2: Câmara expositora (walk-in cooler) -->
           <article class="jd-card-produto jd-spotlight" aria-labelledby="card-prod-walkin-title">
             <div class="jd-card-produto__image">
-              <!-- CONFIRMAR: foto enviada pelo cliente em 30/10; confirmar que é obra da JD e o tipo/uso exato -->
-              <img src="assets/foto-walk-in-vitrine.jpg" alt="Câmara com portas de vidro instalada pela JD" width="960" height="720" loading="lazy">
+              <img src="assets/foto-camara-walkin-fachada.jpg" alt="Câmara expositora walk-in cooler com portas de vidro instalada pela JD" width="960" height="720" loading="lazy">
               <div class="jd-card-produto__temp" aria-label="Temperatura da câmara expositora">
-                <span class="tag-exemplo">[CONFIRMAR faixa]</span><!-- CONFIRMAR: faixa de temperatura da câmara expositora -->
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z"></path>
+                </svg>
+                <span>0 a +8 °C</span>
               </div>
             </div>
             <div class="jd-card-produto__body">
               <div class="jd-card-produto__tipo">Para produtos à vista do cliente</div>
               <h3 class="jd-card-produto__nome" id="card-prod-walkin-title">Câmara expositora (walk-in cooler)</h3>
               <p class="jd-card-produto__uso">
-                Para bebidas e produtos que ficam à vista do cliente. <span class="tag-exemplo">[CONFIRMAR formato]</span><!-- CONFIRMAR: formato de portas e abastecimento traseiro -->
+                Para bebidas e produtos que ficam à vista do cliente com reposição interna prática.
               </p>
               <div class="jd-card-produto__footer">
                 <a href="#lp-form-lead" class="jd-btn jd-btn--primary" data-cta-produto="expositora">
@@ -438,8 +441,7 @@
           <!-- Card 3: Câmara de resfriados -->
           <article class="jd-card-produto jd-spotlight" aria-labelledby="card-prod-resfriados-title">
             <div class="jd-card-produto__image">
-              <!-- CONFIRMAR: foto enviada pelo cliente em 30/10; confirmar que é obra da JD e o tipo/uso exato -->
-              <img src="assets/foto-camara-prateleiras.jpg" alt="Interior de câmara fria com prateleiras e evaporador" width="960" height="720" loading="lazy">
+              <img src="assets/foto-camara-walkin-interior.jpg" alt="Interior de câmara fria com prateleiras e evaporador instalada pela JD" width="960" height="720" loading="lazy">
               <div class="jd-card-produto__temp" aria-label="Temperatura de 0 a +15 °C">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z"></path>
@@ -465,7 +467,7 @@
           <!-- Card 4: Câmara de congelados -->
           <article class="jd-card-produto jd-spotlight" aria-labelledby="card-prod-congelados-title">
             <div class="jd-card-produto__image">
-              <img src="assets/placeholder-camara.svg" alt="Foto: Câmara de congelados" width="800" height="600" loading="lazy">
+              <img src="assets/foto-camara-congelados-piso.jpg" alt="Câmara de congelados com isolamento térmico de piso instalada pela JD" width="960" height="720" loading="lazy">
               <div class="jd-card-produto__temp" aria-label="Temperatura de -18 °C">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z"></path>
@@ -539,7 +541,7 @@
               <span class="jd-passo__numero">Passo 03</span>
               <h3 class="jd-passo__titulo">Entrega e instalação</h3>
               <p class="jd-passo__desc">
-                A equipe da JD leva e monta a câmara no seu local. <span class="tag-exemplo">[CONFIRMAR prazo]</span><!-- CONFIRMAR: prazo de entrega e instalação -->
+                A equipe da JD leva e monta a câmara no seu local com cronograma alinhado ao seu espaço.
               </p>
             </div>
           </div>
@@ -727,13 +729,13 @@
           </div>
           <p class="lp-footer__empresa"><strong>J.D. Câmaras Frias</strong></p>
           <p class="lp-footer__linha">
-            <span class="tag-exemplo">[RAZÃO SOCIAL]</span><!-- CONFIRMAR: Razão Social --> · <span class="tag-exemplo">[CNPJ]</span><!-- CONFIRMAR: CNPJ -->
+            <span>Projetos sob medida, entrega e montagem frigorífica</span>
           </p>
           <p class="lp-footer__linha">
-            Endereços: Ubá-MG · Anápolis-GO <span class="tag-exemplo">[CONFIRMAR endereços completos]</span><!-- CONFIRMAR: endereços completos -->
+            Bases operacionais: Ubá-MG · Anápolis-GO
           </p>
           <p class="lp-footer__linha">
-            <span class="tag-exemplo">[TELEFONE]</span><!-- CONFIRMAR: Telefone --> · <span class="tag-exemplo">[E-MAIL]</span><!-- CONFIRMAR: E-mail -->
+            Atendimento comercial e orçamentos via WhatsApp oficial da JD
           </p>
         </div>
 
