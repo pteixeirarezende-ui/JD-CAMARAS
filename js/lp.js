@@ -4,8 +4,8 @@
  * Zero dependências externas.
  */
 
-// Endpoint de envio do webhook
-const LEAD_ENDPOINT = ''; // TODO: URL do webhook que grava na planilha e dispara WhatsApp + e-mail
+// Endpoint de envio do webhook (n8n)
+const LEAD_ENDPOINT = 'https://n8n-n8n.6djmf0.easypanel.host/webhook/2d504637-993c-408d-8679-9741149bb883';
 
 // Número de WhatsApp da JD
 const WHATSAPP_NUMBER = ''; // TODO: preencher com DDI+DDD+número (ex.: 5532999999999)
@@ -349,12 +349,14 @@ const WHATSAPP_NUMBER = ''; // TODO: preencher com DDI+DDD+número (ex.: 5532999
 
       const isDebug = new URLSearchParams(window.location.search).get('debug') === '1';
 
+      if (isDebug) {
+        console.group('[LP Debug Mode] Enviando payload para LEAD_ENDPOINT:');
+        console.log('Endpoint:', LEAD_ENDPOINT);
+        console.log('Payload do Lead (21 colunas):', payload);
+        console.groupEnd();
+      }
+
       if (!LEAD_ENDPOINT) {
-        if (isDebug) {
-          console.group('[LP Debug Mode] Lead submetido com LEAD_ENDPOINT vazio:');
-          console.log('Payload do Lead (21 colunas):', payload);
-          console.groupEnd();
-        }
         showSuccessView();
         return;
       }
@@ -366,7 +368,7 @@ const WHATSAPP_NUMBER = ''; // TODO: preencher com DDI+DDD+número (ex.: 5532999
       })
         .then(function (res) {
           if (!res.ok) throw new Error('HTTP ' + res.status);
-          return res.json().catch(function () { return {}; });
+          return res.text().catch(function () { return ''; });
         })
         .then(function () {
           showSuccessView();

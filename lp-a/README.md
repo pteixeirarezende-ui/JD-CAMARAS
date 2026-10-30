@@ -165,7 +165,7 @@ Verificação automatizada realizada no HTML e nos scripts:
 
 1. **Número de WhatsApp**: `WHATSAPP_NUMBER` em `lp.js` — Em modo normal o botão rola para o formulário; em `?debug=1`, a etiqueta `[CONFIRMAR NÚMERO]` e o aviso de console são ativados.
 2. **Tempo de Empresa**: Não usar tempo de empresa na LP da JD até o cliente confirmar quanto tempo é da JD (substituído por "Instalação própria / técnicos da JD").
-3. **Endpoint do Webhook de Leads**: `LEAD_ENDPOINT` em `lp.js` (atualmente vazio, pronto para receber webhook do Google Sheets, n8n ou CRM).
+3. **Endpoint do Webhook de Leads**: `LEAD_ENDPOINT` configurado para o webhook n8n do cliente (`https://n8n-n8n.6djmf0.easypanel.host/webhook/2d504637-993c-408d-8679-9741149bb883`). Dispara as 21 colunas estruturadas em JSON.
 4. **Container do Google Tag Manager**: ID `[GTM-XXXXXXX]` no `<head>` e no `<!-- GTM noscript -->`.
 5. **Política de Privacidade**: Link oficial configurado para `https://www.facebook.com/privacy/policy/?locale=pt_BR`.
 6. **Fotografia Real de Obra**: 100% resolvida com as 5 fotos reais enviadas pelo cliente, cobrindo todos os cards de produtos e o hero mobile.
