@@ -12,37 +12,30 @@ O projeto está organizado nos seguintes módulos:
 ```
 LP - JD CAMARAS/
 │
-├── index.html            # Landing Page A (Dobra 1 ativa na raiz para teste imediato)
-├── css/                  # tokens.css, base.css, components.css
-├── js/                   # ds.js e lp.js
-├── assets/               # logo-jd.png e logo-jd-branco.png
+├── index.html            # Landing Page em produção (raiz para GitHub Pages / hospedagem direta)
+├── css/                  # Estilos oficiais: tokens.css, base.css, components.css, lp.css
+├── js/                   # Scripts oficiais: ds.js e lp.js
+├── assets/               # Imagens ativas otimizadas para produção (960×720 px, ~40-100 KB)
+│   ├── foto-camara-mini-trilhos.jpg    # Card 1: Mini câmara compacta
+│   ├── foto-camara-walkin-fachada.jpg  # Card 2: Walk-in cooler expositor
+│   ├── foto-camara-dupla-portas.jpg    # Card 3: Câmara de resfriados
+│   ├── foto-camara-congelados-piso.jpg # Card 4: Câmara de congelados
+│   ├── foto-camara-walkin-interior.jpg # Hero mobile: Foto de obra real
+│   ├── logo-jd.png                     # Logo oficial cabeçalho & favicon
+│   ├── logo-jd-branco.png              # Logo oficial rodapé
+│   └── originais/                      # Fotos brutas de alta resolução enviadas pelo cliente
 │
-├── lp-a/                 # Módulo completo e isolado da Landing Page A
-│   ├── index.html        # Página da LP A
-│   ├── css/              # Estilos da LP A
-│   ├── js/               # Scripts da LP A
-│   ├── assets/           # Logos da LP A
-│   └── README.md         # Documentação específica da LP A
+├── design-system/        # Catálogo técnico e showcase oficial do Design System
+│   ├── index.html        # Showcase oficial aprovado
+│   ├── ds_variacao.html  # Versão consolidada do Design System
+│   └── css/, js/, assets/# Recursos isolados do Design System
 │
-├── design-system/        # Catálogo técnico e componentes oficiais do DS
-│   ├── index.html        # Showcase oficial aprovado (ds_variacao.html)
-│   ├── ds_variacao.html  # Versão consolidada aprovada
-│   ├── ds_oficial.html   # Versão com efeitos / raio-x
-│   ├── ds_alternativo.html # Versão direta industrial
-│   ├── css/, js/, assets/# Recursos isolados do Design System
-│   └── README.md         # Guia do Design System
-│
-├── docs/                 # Documentação de briefings e prompts de especificação
-│   ├── COPY-E-ESTRUTURA-LP-JD-Camaras-Frias.md
-│   ├── PROMPT-01-DS-JD-Camaras-Frias.md
-│   ├── PROMPT-01b-AJUSTES-DS-JD.md
-│   ├── PROMPT-01c-AJUSTES-FINAIS-DS-JD.md
-│   ├── PROMPT-02-LP-A-DOBRA-1.md
-│   └── PROMPT-02b-AJUSTES-DOBRA-1.md
-│
-└── referencias/          # Material de apoio e histórico
-    ├── site-atual/       # Prints e assets extraídos do site jdcamarasfrias.com.br
-    └── inspiracoes/      # Referências de design (Sable, IX-7, Moveflux, Otto, etc.)
+└── lp-a/                 # Módulo sincronizado da Landing Page A
+    ├── index.html
+    ├── css/
+    ├── js/
+    ├── assets/
+    └── README.md
 ```
 
 ---
