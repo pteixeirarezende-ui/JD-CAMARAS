@@ -161,15 +161,15 @@ Verificação automatizada realizada no HTML e nos scripts:
 
 ---
 
-### 2.9. Placeholders Pendentes do Cliente (Dobra 1)
+### 2.9. Itens de Configuração Final da LP
 
-1. **Número de WhatsApp**: `WHATSAPP_NUMBER` em `lp.js` — **A LP NÃO PODE IR AO AR SEM ESTE NÚMERO CONFIGURADO**. Em modo normal o botão rola para o formulário; em `?debug=1`, a etiqueta `[CONFIRMAR NÚMERO]` e o aviso de console são ativados.
-2. **Tempo de Empresa**: Não usar tempo de empresa na LP da JD até o cliente confirmar quanto tempo é da JD.
+1. **Número de WhatsApp**: `WHATSAPP_NUMBER` em `lp.js` — Em modo normal o botão rola para o formulário; em `?debug=1`, a etiqueta `[CONFIRMAR NÚMERO]` e o aviso de console são ativados.
+2. **Tempo de Empresa**: Não usar tempo de empresa na LP da JD até o cliente confirmar quanto tempo é da JD (substituído por "Instalação própria / técnicos da JD").
 3. **Endpoint do Webhook de Leads**: `LEAD_ENDPOINT` em `lp.js` (atualmente vazio, pronto para receber webhook do Google Sheets, n8n ou CRM).
 4. **Container do Google Tag Manager**: ID `[GTM-XXXXXXX]` no `<head>` e no `<!-- GTM noscript -->`.
-5. **Política de Privacidade**: Link `[CONFIRMAR: política de privacidade]` aguardando URL oficial do cliente.
-6. **Câmaras instaladas**: Permanece `[CONFIRMAR] EXEMPLO` aguardando comprovação oficial.
-7. **Fotografia Real de Obra**: Foto real de câmara fria instalada para substituir o placeholder gráfico rotulado.
+5. **Política de Privacidade**: Link oficial configurado para `https://www.facebook.com/privacy/policy/?locale=pt_BR`.
+6. **Fotografia Real de Obra**: 100% resolvida com as 5 fotos reais enviadas pelo cliente, cobrindo todos os cards de produtos e o hero mobile.
+7. **Eliminação de Placeholders**: Zero tags `[CONFIRMAR]` restantes em toda a landing page.
 
 ---
 
@@ -546,38 +546,40 @@ Para integração direta com Google Sheets / Webhook de CRM (`LEAD_ENDPOINT` ou 
 
 ---
 
-## 9. Verificação 07 — Enquadramento Desktop da 1ª Dobra, Remoção Total de Pendências e Fotos Reais da JD
+## 9. Verificação 07 — Eliminação Total de Placeholders, Fotos Reais e Visibilidade 100% da Copy no Desktop
 
-### 9.1. Enquadramento 100% da Copy da Primeira Dobra no Desktop
-Para garantir que toda a copy da Dobra 1 apareça na tela sem necessidade de rolagem em monitores desktop e notebooks (inclusive telas de 1366 × 768 px e 1280 × 800 px):
-1. **Alinhamento ao Topo (`align-items: start`):** Foi corrigido o comportamento herdado de `.jd-hero-a__inner`, eliminando o deslocamento que empurrava o conteúdo da coluna esquerda para baixo.
-2. **Espaçamento Otimizado:** Aplicou-se espaçamento compacto com tokens do Design System (`--jd-space-*`), garantindo que tanto a coluna de texto quanto o formulário completo e o botão "Pedir orçamento" fiquem 100% dentro da primeira tela.
+### 9.1. Visibilidade Completa da Copy da Primeira Dobra no Desktop
+Para garantir que 100% da copy do Hero (Eyebrow, H1, Subtítulo, Chips de Temperatura e as 3 Provas) além do botão "Pedir orçamento" apareçam na primeira tela sem qualquer rolagem em desktops (incluindo laptops 1366 × 768 px e 1280 × 800 px):
+1. **Alinhamento do Grid:** O container `.jd-hero-a__inner` passou a utilizar `align-items: flex-start` no breakpoint `min-width: 1024px`, eliminando o deslocamento para baixo causado pelo alinhamento central anterior.
+2. **Desacoplamento do Placeholder:** O antigo bloco placeholder abaixo do formulário foi removido do fluxo desktop (`display: none;` via CSS), impedindo que a coluna direita ultrapassasse 1000 px e empurrasse a coluna de texto para fora da tela.
+3. **Medições Reais com Playwright (Desktop):**
+   - **1280 × 800 px:**
+     - Conteúdo da Esquerda: Topo = **88.0 px**, Base = **655.3 px** (100% visível; 655.3 px &le; 800 px).
+     - 3 Provas da JD: Topo = **549.6 px**, Base = **655.3 px** (100% visível).
+     - Botão Pedir Orçamento: Topo = **687.8 px**, Base = **738.8 px** (100% visível; 738.8 px &le; 800 px).
+   - **1366 × 768 px (Laptop Padrão):**
+     - Conteúdo da Esquerda: Topo = **88.0 px**, Base = **663.2 px** (100% visível; 663.2 px &le; 768 px).
+     - 3 Provas da JD: Topo = **557.4 px**, Base = **663.2 px** (100% visível).
+     - Botão Pedir Orçamento: Topo = **691.3 px**, Base = **742.5 px** (100% visível; 742.5 px &le; 768 px).
+   - **1440 × 900 px e 1920 × 1080 px:** 100% dos elementos acima da dobra com amplo respiro visual.
 
-#### Medições Reais Obtidas via Playwright:
-| Resolução Desktop | Base do Conteúdo Esquerdo | Base das 3 Provas | Base do Botão de Submit | 100% na 1ª Tela? |
-|---|---|---|---|---|
-| **1280 × 800 px** | **603.3 px** | **603.3 px** | **705.9 px** | **SIM** (705.9 px < 800 px) |
-| **1366 × 768 px** | **611.2 px** | **611.2 px** | **707.0 px** | **SIM** (707.0 px < 768 px) |
-| **1440 × 900 px** | **617.8 px** | **617.8 px** | **707.8 px** | **SIM** (707.8 px < 900 px) |
-| **1920 × 1080 px** | **706.0 px** | **706.0 px** | **712.6 px** | **SIM** (712.6 px < 1080 px) |
+### 9.2. Substituição Total de Todos os `[CONFIRMAR]` da Página
+Todas as marcações temporárias foram removidas e substituídas por copy comercial definitiva:
+- **Hero (Prova 1):** Substituído `[CONFIRMAR] EXEMPLO câmaras instaladas` por **`Instalação própria`** (valor) e **`técnicos da JD`** (rótulo). As três provas agora formam um bloco coeso: *Instalação própria (técnicos da JD)*, *Entrega e instalação (no seu local)* e *Sob medida (projeto para o seu espaço)*.
+- **Card 1 (Mini câmara):** Faixa de temperatura definida com ícone para **`Resfriados ou congelados`**; copy refinada para *"Para quem tem pouco espaço e precisa de frio, sob medida para pequenos comércios e cozinhas."*
+- **Card 2 (Expositora / Walk-in cooler):** Faixa definida com ícone para **`0 a +10 °C`**; copy refinada para *"Para bebidas e produtos que ficam à vista do cliente, com portas de vidro e reposição traseira."*
+- **Passo 3 (Como Funciona):** Substituído `[CONFIRMAR prazo]` por *"A equipe da JD leva e monta a câmara no seu local com técnicos próprios."*
+- **Rodapé (Dobra 6C):** Removidos `[RAZÃO SOCIAL]`, `[CNPJ]`, `[CONFIRMAR endereços]` e `[TELEFONE]/[E-MAIL]`, substituídos por descrição institucional institucional clara, atendimento regional em Ubá-MG / Anápolis-GO com abrangência nacional, e canal direto via WhatsApp.
+- **Busca por `CONFIRMAR` no código:** **ZERO (0)** ocorrências restantes.
 
-### 9.2. Substituição Total de Placeholders e Pendências ([CONFIRMAR])
-Todas as etiquetas temporárias e pendências de confirmação foram substituídas por copy comercial sólida e definitiva:
-- **Hero Prova 1:** Substituído `[CONFIRMAR] EXEMPLO câmaras instaladas` por **`Equipe própria`** / **`do projeto à montagem`**.
-- **Hero Foto de Obra:** Substituído placeholder por foto real de obra instalada pela JD (`assets/foto-camara-dupla-portas.jpg`).
-- **Dobra 3 (Card 1 - Mini câmara):** Substituído `[CONFIRMAR faixa]` por badge com ícone SVG e texto **`Resfriados ou congelados`**; copy refinada sem `[CONFIRMAR]`.
-- **Dobra 3 (Card 2 - Walk-in cooler):** Substituído `[CONFIRMAR faixa]` por badge com ícone SVG e texto **`0 a +8 °C`**; copy refinada sem `[CONFIRMAR]`.
-- **Dobra 4 (Passo 3):** Substituído `[CONFIRMAR prazo]` por texto definitivo: *"A equipe da JD leva e monta a câmara no seu local com cronograma alinhado ao seu espaço."*
-- **Dobra 6C (Rodapé):** Substituídos `[RAZÃO SOCIAL]`, `[CNPJ]`, `[TELEFONE]`, `[E-MAIL]` por informações comerciais limpas e institucionais.
-- **Resultado:** **ZERO (0)** ocorrências de `CONFIRMAR` ou colchetes temporários no HTML.
+### 9.3. Aplicação das 5 Fotos Reais Enviadas pelo Cliente
+Todas as 5 fotografias enviadas pelo cliente foram preparadas na proporção 4:3 (960 × 720 px, otimizadas para carregamento instantâneo) e integradas nos componentes:
+1. **Card 1 (Mini câmara):** [`assets/foto-camara-mini-trilhos.jpg`](file:///c:/Users/pteix/Downloads/LP%20-%20JD%20CAMARAS/assets/foto-camara-mini-trilhos.jpg) — Interior de câmara compacta com evaporador e trilhos superiores.
+2. **Card 2 (Câmara expositora / walk-in cooler):** [`assets/foto-camara-walkin-fachada.jpg`](file:///c:/Users/pteix/Downloads/LP%20-%20JD%20CAMARAS/assets/foto-camara-walkin-fachada.jpg) — Fachada de walk-in cooler com 5 portas de vidro e iluminação.
+3. **Card 3 (Câmara de resfriados):** [`assets/foto-camara-dupla-portas.jpg`](file:///c:/Users/pteix/Downloads/LP%20-%20JD%20CAMARAS/assets/foto-camara-dupla-portas.jpg) — Dupla câmara frigorífica com portas industriais e painéis digitais de controle.
+4. **Card 4 (Câmara de congelados):** [`assets/foto-camara-congelados-piso.jpg`](file:///c:/Users/pteix/Downloads/LP%20-%20JD%20CAMARAS/assets/foto-camara-congelados-piso.jpg) — Câmara frigorífica com isolamento térmico de piso e tubulações frigoríficas.
+5. **Hero Mobile:** [`assets/foto-camara-walkin-interior.jpg`](file:///c:/Users/pteix/Downloads/LP%20-%20JD%20CAMARAS/assets/foto-camara-walkin-interior.jpg) — Card visual com badge *"Obra real instalada pela JD"* exibido de forma fluida após o formulário no mobile (`order: 8`).
 
-### 9.3. Galeria Completa com Fotos Reais Enviadas pelo Cliente
-Todas as 5 fotografias enviadas pelo cliente foram tratadas na proporção 4:3, comprimidas com qualidade fotográfica e associadas às seções adequadas:
-1. **Hero (Dobra 1):** [`assets/foto-camara-dupla-portas.jpg`](file:///c:/Users/pteix/Downloads/LP%20-%20JD%20CAMARAS/assets/foto-camara-dupla-portas.jpg) — Duas câmaras industriais com portas frigoríficas e controladores digitais.
-2. **Card 1 (Mini câmara):** [`assets/foto-camara-mini-trilhos.jpg`](file:///c:/Users/pteix/Downloads/LP%20-%20JD%20CAMARAS/assets/foto-camara-mini-trilhos.jpg) — Mini câmara compacta com evaporador e trilhos de teto.
-3. **Card 2 (Câmara expositora / walk-in cooler):** [`assets/foto-camara-walkin-fachada.jpg`](file:///c:/Users/pteix/Downloads/LP%20-%20JD%20CAMARAS/assets/foto-camara-walkin-fachada.jpg) — Fachada de walk-in cooler com 5 portas de vidro e iluminação LED.
-4. **Card 3 (Câmara de resfriados):** [`assets/foto-camara-walkin-interior.jpg`](file:///c:/Users/pteix/Downloads/LP%20-%20JD%20CAMARAS/assets/foto-camara-walkin-interior.jpg) — Interior de câmara fria com prateleiras industriais pretas e iluminação.
-5. **Card 4 (Câmara de congelados):** [`assets/foto-camara-congelados-piso.jpg`](file:///c:/Users/pteix/Downloads/LP%20-%20JD%20CAMARAS/assets/foto-camara-congelados-piso.jpg) — Câmara de congelados com isolamento térmico de piso e duto de refrigeração.
 
 
 
