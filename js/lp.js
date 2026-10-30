@@ -363,6 +363,30 @@ const WHATSAPP_NUMBER = ''; // TODO: preencher com DDI+DDD+número (ex.: 5532999
         return;
       }
 
+      function triggerSubmitError(err) {
+        console.error('[LP Form Submit Error]', err);
+        if (btnSubmit) {
+          btnSubmit.disabled = false;
+          btnSubmit.classList.remove('is-loading');
+        }
+        if (submitErrorWrap) {
+          submitErrorWrap.style.display = 'block';
+          const errorTextEl = document.getElementById('lp-submit-error-text');
+          if (errorTextEl) {
+            const errMsg = err && err.message ? String(err.message) : '';
+            if (errMsg.indexOf('404') !== -1 || errMsg.indexOf('Failed to fetch') !== -1) {
+              if (LEAD_ENDPOINT.indexOf('webhook-test') !== -1) {
+                errorTextEl.innerHTML = 'O webhook de teste do n8n retornou erro (404/CORS). No n8n, certifique-se de clicar em <strong>"Listen for test event"</strong> (ou "Test step") antes de enviar. E nas Opções do nó Webhook, adicione <strong>"Allowed Origins (CORS): *"</strong>.';
+              } else {
+                errorTextEl.innerHTML = 'O webhook do n8n retornou erro (HTTP 404). O fluxo precisa estar com o interruptor <strong>"Active" (Ativo)</strong> ligado no canto superior direito do n8n. Você também pode enviar o orçamento diretamente pelo WhatsApp:';
+              }
+            } else {
+              errorTextEl.innerHTML = 'Não foi possível conectar ao webhook (' + (errMsg || 'Erro de rede') + '). Verifique se o n8n está ativo ou envie o orçamento direto pelo WhatsApp:';
+            }
+          }
+        }
+      }
+
       fetch(LEAD_ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -370,32 +394,25 @@ const WHATSAPP_NUMBER = ''; // TODO: preencher com DDI+DDD+número (ex.: 5532999
       })
         .then(function (res) {
           if (!res.ok) throw new Error('HTTP ' + res.status);
-          return res.text().catch(function () { return ''; });
-        })
-        .then(function () {
           showSuccessView();
         })
         .catch(function (err) {
-          console.error('[LP Form Submit Error]', err);
-          if (btnSubmit) {
-            btnSubmit.disabled = false;
-            btnSubmit.classList.remove('is-loading');
-          }
-          if (submitErrorWrap) {
-            submitErrorWrap.style.display = 'block';
-            const errorTextEl = document.getElementById('lp-submit-error-text');
-            if (errorTextEl) {
-              const errMsg = err && err.message ? String(err.message) : '';
-              if (errMsg.indexOf('404') !== -1 || errMsg.indexOf('Failed to fetch') !== -1) {
-                if (LEAD_ENDPOINT.indexOf('webhook-test') !== -1) {
-                  errorTextEl.innerHTML = 'O webhook de teste do n8n retornou erro 404. No n8n, você precisa clicar no botão <strong>"Execute workflow"</strong> (ou "Test step") antes de enviar o formulário para ele escutar o evento.';
-                } else {
-                  errorTextEl.innerHTML = 'O webhook do n8n retornou erro (HTTP 404). O fluxo precisa estar com o interruptor <strong>"Active" (Ativo)</strong> ligado no canto superior direito do n8n. Você também pode enviar o orçamento diretamente pelo WhatsApp:';
-                }
-              } else {
-                errorTextEl.innerHTML = 'Não foi possível conectar ao webhook (' + (errMsg || 'Erro de rede') + '). Verifique se o n8n está ativo ou envie o orçamento direto pelo WhatsApp:';
-              }
-            }
+          // Se falhou por bloqueio CORS do navegador (Failed to fetch), tenta envio direto sem preflight (mode: no-cors)
+          if (err && String(err).indexOf('Failed to fetch') !== -1) {
+            fetch(LEAD_ENDPOINT, {
+              method: 'POST',
+              mode: 'no-cors',
+              headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+              body: JSON.stringify(payload)
+            })
+              .then(function () {
+                showSuccessView();
+              })
+              .catch(function () {
+                triggerSubmitError(err);
+              });
+          } else {
+            triggerSubmitError(err);
           }
         });
     }
