@@ -371,25 +371,11 @@ const WHATSAPP_NUMBER = '5562999940769';
       return false;
     }
 
-    // Validação de medidas opcionais se preenchidas
-    if (field.id === 'lp-field-comprimento' && val) {
-      const c = parseFloat(val);
-      if (isNaN(c) || c < 1.0 || c > 30.0) {
-        setFieldError(field, true, 'Comprimento entre 1m e 30m.');
-        return false;
-      }
-    }
-    if (field.id === 'lp-field-largura' && val) {
-      const l = parseFloat(val);
-      if (isNaN(l) || l < 1.0 || l > 25.0) {
-        setFieldError(field, true, 'Largura entre 1m e 25m.');
-        return false;
-      }
-    }
-    if (field.id === 'lp-field-altura' && val) {
-      const a = parseFloat(val);
-      if (isNaN(a) || a < 1.5 || a > 8.0) {
-        setFieldError(field, true, 'Altura entre 1.5m e 8m.');
+    // Validação de medidas opcionais se preenchidas (aceita qualquer medida positiva)
+    if ((field.id === 'lp-field-comprimento' || field.id === 'lp-field-largura' || field.id === 'lp-field-altura') && val) {
+      const num = parseFloat(val.replace(',', '.'));
+      if (isNaN(num) || num <= 0) {
+        setFieldError(field, true, 'Informe uma medida válida maior que zero.');
         return false;
       }
     }
