@@ -1057,6 +1057,24 @@ const WHATSAPP_NUMBER = '5562999940769';
     });
   }
 
+  // 18. SUPORTE A SITELINKS DO GOOGLE ADS VIA HASH NA URL
+  function initHashScroll() {
+    function scrollToHash() {
+      if (window.location.hash) {
+        var hash = window.location.hash.substring(1).toLowerCase();
+        var target = document.getElementById(hash);
+        if (target) {
+          setTimeout(function () {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 80);
+        }
+      }
+    }
+
+    scrollToHash();
+    window.addEventListener('hashchange', scrollToHash);
+  }
+
   // INICIALIZAÇÃO
   function init() {
     applyDynamicHeadline();
@@ -1067,6 +1085,7 @@ const WHATSAPP_NUMBER = '5562999940769';
     initFAQ();
     initSpotlight();
     initCookieBanner();
+    initHashScroll();
   }
 
   if (document.readyState === 'loading') {

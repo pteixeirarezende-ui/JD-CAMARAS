@@ -11,13 +11,75 @@
    100% tokens do DS, GPU-accelerated, ultra-leve e mobile-first.
    ============================================================================ */
 
-/* Compensação do cabeçalho fixo na rolagem até o formulário */
-#lp-form-lead {
+/* ====================================================================
+   COMPENSAÇÃO DO CABEÇALHO FIXO (SITELINKS & ÂNCORAS GOOGLE ADS)
+   ==================================================================== */
+.lp-anchor-target {
+  display: block;
+  position: relative;
+  visibility: hidden;
+  pointer-events: none;
+  height: 0;
+  margin: 0;
+  padding: 0;
+}
+
+#lp-form-lead,
+#form-lead,
+#orcamento,
+#pedir-orcamento,
+#formulario,
+#porque-jd,
+#porquejd,
+#diferenciais,
+#vantagens,
+#produtos,
+#nossascamaras,
+#nossas-camaras,
+#camaras,
+#modelos,
+#como-funciona,
+#comofunciona,
+#instalacao,
+#montagem,
+#faq,
+#duvidas,
+#perguntas-frequentes,
+#cta-final,
+#whatsapp,
+#contato,
+#atendimento,
+.lp-anchor-target {
   scroll-margin-top: calc(72px + var(--jd-space-4));
 }
 
 @media (max-width: 768px) {
-  #lp-form-lead {
+  #lp-form-lead,
+  #form-lead,
+  #orcamento,
+  #pedir-orcamento,
+  #formulario,
+  #porque-jd,
+  #porquejd,
+  #diferenciais,
+  #vantagens,
+  #produtos,
+  #nossascamaras,
+  #nossas-camaras,
+  #camaras,
+  #modelos,
+  #como-funciona,
+  #comofunciona,
+  #instalacao,
+  #montagem,
+  #faq,
+  #duvidas,
+  #perguntas-frequentes,
+  #cta-final,
+  #whatsapp,
+  #contato,
+  #atendimento,
+  .lp-anchor-target {
     scroll-margin-top: calc(64px + var(--jd-space-3));
   }
 }
