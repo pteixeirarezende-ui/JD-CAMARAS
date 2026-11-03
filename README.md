@@ -124,8 +124,8 @@ Verificação automatizada realizada no HTML e nos scripts:
 | `?h=preco` | Quanto custa a sua câmara fria? Informe as medidas e receba o orçamento da JD | Cada câmara é projetada sob medida, então o valor depende do tamanho, da temperatura e do uso. Conte o que você precisa e a JD envia o orçamento. | `preco` |
 | `?h=mini` | Mini câmara fria sob medida para o seu espaço | Para quem tem pouco espaço e precisa de frio. Informe o que vai armazenar e as medidas e receba o orçamento da JD. | `mini` |
 | `?h=walkin` | Câmara fria para bebidas: walk-in cooler sob medida, entregue e instalada | Informe o que vai armazenar e as medidas do espaço e receba o orçamento da JD. | `walkin` |
-| `?h=congelados` | Câmara de congelados (-18 °C) sob medida, com instalação pela JD | Informe o que vai armazenar e as medidas do espaço e receba o orçamento da JD. | `congelados` |
-| `?h=resfriados` | Câmara de resfriados (0 a +15 °C) sob medida, com instalação pela JD | Informe o que vai armazenar e as medidas do espaço e receba o orçamento da JD. | `resfriados` |
+| `?h=congelados` | Câmara de congelados (-10 a -18 °C) sob medida, com instalação pela JD | Informe o que vai armazenar e as medidas do espaço e receba o orçamento da JD. | `congelados` |
+| `?h=resfriados` | Câmara de resfriados (+10 a 0 °C) sob medida, com instalação pela JD | Informe o que vai armazenar e as medidas do espaço e receba o orçamento da JD. | `resfriados` |
 | `?h=<script>alert(1)</script>` | *(Fallback seguro para título padrão)* | *(Fallback seguro para subtítulo padrão)* | `padrao` (Sanitizado via `textContent`, sem XSS) |
 
 ---
@@ -264,8 +264,8 @@ Verificação automatizada realizada no HTML e nos scripts:
 |---|---|---|---|
 | **1. Mini câmara** | Valor definido como `"Mini câmara"` | `{ event: 'click_cta_produto', produto: 'mini', lp_version: 'A', titulo_variante: <valor> }` | Rola suavemente até `#lp-form-lead` e foca `#lp-field-nome` |
 | **2. Câmara expositora** | Valor definido como `"Câmara expositora (walk-in cooler)"` | `{ event: 'click_cta_produto', produto: 'expositora', lp_version: 'A', titulo_variante: <valor> }` | Rola suavemente até `#lp-form-lead` e foca `#lp-field-nome` |
-| **3. Câmara de resfriados** | Valor definido como `"Câmara de resfriados (0 a +15 °C)"` | `{ event: 'click_cta_produto', produto: 'resfriados', lp_version: 'A', titulo_variante: <valor> }` | Rola suavemente até `#lp-form-lead` e foca `#lp-field-nome` |
-| **4. Câmara de congelados** | Valor definido como `"Câmara de congelados (-18 °C)"` | `{ event: 'click_cta_produto', produto: 'congelados', lp_version: 'A', titulo_variante: <valor> }` | Rola suavemente até `#lp-form-lead` e foca `#lp-field-nome` |
+| **3. Câmara de resfriados** | Valor definido como `"Câmara de resfriados (+10 a 0 °C)"` | `{ event: 'click_cta_produto', produto: 'resfriados', lp_version: 'A', titulo_variante: <valor> }` | Rola suavemente até `#lp-form-lead` e foca `#lp-field-nome` |
+| **4. Câmara de congelados** | Valor definido como `"Câmara de congelados (-10 a -18 °C)"` | `{ event: 'click_cta_produto', produto: 'congelados', lp_version: 'A', titulo_variante: <valor> }` | Rola suavemente até `#lp-form-lead` e foca `#lp-field-nome` |
 
 *(Nota: Caso o formulário já esteja na Etapa 2 ou tenha sido enviado com sucesso, o select é atualizado sem reabrir ou reiniciar o formulário).*
 
@@ -510,8 +510,8 @@ Para integração direta com Google Sheets / Webhook de CRM (`LEAD_ENDPOINT` ou 
 ### 8.5. Teste dos 4 Botões de Produto da Dobra 3
 - **Card 1 (Mini câmara):** Seleciona `"Mini câmara"`, foca `#lp-field-nome` (se vazio) ou `#lp-field-whatsapp` (se nome preenchido), dispara `click_cta_produto` com `produto: "mini"`.
 - **Card 2 (Câmara expositora / walk-in cooler):** Seleciona `"Câmara expositora (walk-in cooler)"`, foca campo correspondente, dispara `click_cta_produto` com `produto: "expositora"`.
-- **Card 3 (Câmara de resfriados):** Seleciona `"Câmara de resfriados (0 a +15 °C)"`, foca campo correspondente, dispara `click_cta_produto` com `produto: "resfriados"`.
-- **Card 4 (Câmara de congelados):** Seleciona `"Câmara de congelados (-18 °C)"`, foca campo correspondente, dispara `click_cta_produto` com `produto: "congelados"`.
+- **Card 3 (Câmara de resfriados):** Seleciona `"Câmara de resfriados (+10 a 0 °C)"`, foca campo correspondente, dispara `click_cta_produto` com `produto: "resfriados"`.
+- **Card 4 (Câmara de congelados):** Seleciona `"Câmara de congelados (-10 a -18 °C)"`, foca campo correspondente, dispara `click_cta_produto` com `produto: "congelados"`.
 
 ### 8.6. Teste de Eventos de Telemetria do Formulário
 - `lead_form_start`: disparado exatamente 1 vez na primeira interação com qualquer campo.
@@ -560,7 +560,7 @@ Para garantir que 100% da copy do Hero (Eyebrow, H1, Subtítulo, Chips de Temper
 Todas as marcações temporárias foram removidas e substituídas por copy comercial definitiva:
 - **Hero (Prova 1):** Substituído `[CONFIRMAR] EXEMPLO câmaras instaladas` por **`Instalação própria`** (valor) e **`técnicos da JD`** (rótulo). As três provas agora formam um bloco coeso: *Instalação própria (técnicos da JD)*, *Entrega e instalação (no seu local)* e *Sob medida (projeto para o seu espaço)*.
 - **Card 1 (Mini câmara):** Faixa de temperatura definida com ícone para **`Resfriados ou congelados`**; copy refinada para *"Para quem tem pouco espaço e precisa de frio, sob medida para pequenos comércios e cozinhas."*
-- **Card 2 (Expositora / Walk-in cooler):** Faixa definida com ícone para **`0 a +10 °C`**; copy refinada para *"Para bebidas e produtos que ficam à vista do cliente, com portas de vidro e reposição traseira."*
+- **Card 2 (Expositora / Walk-in cooler):** Faixa definida com ícone para **`0 a -5 °C`**; copy refinada para *"Para bebidas e produtos que ficam à vista do cliente, com portas de vidro e reposição traseira."*
 - **Passo 3 (Como Funciona):** Substituído `[CONFIRMAR prazo]` por *"A equipe da JD leva e monta a câmara no seu local com técnicos próprios."*
 - **Rodapé (Dobra 6C):** Removidos `[RAZÃO SOCIAL]`, `[CNPJ]`, `[CONFIRMAR endereços]` e `[TELEFONE]/[E-MAIL]`, substituídos por descrição institucional institucional clara, atendimento regional em Ubá-MG / Anápolis-GO com abrangência nacional, e canal direto via WhatsApp.
 - **Busca por `CONFIRMAR` no código:** **ZERO (0)** ocorrências restantes.
