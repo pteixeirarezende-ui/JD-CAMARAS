@@ -24,28 +24,43 @@
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/lp.css">
 
-  <!-- Google Tag Manager -->
-  <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-MQM9DPFR"></script>
+  <!-- Google Consent Mode v2 & Google Tag Manager -->
   <script>
-    // Inicialização do dataLayer e gtag
     window.dataLayer = window.dataLayer || [];
     function gtag(){ dataLayer.push(arguments); }
-    gtag('js', new Date());
-
-    // Inicialização do evento gtm.js para acionadores do GTM
-    dataLayer.push({
-      'gtm.start': new Date().getTime(),
-      event: 'gtm.js'
-    });
-
-    // Consent Mode v2: padrão denied (configurar junto com o banner de cookies na dobra final)
     gtag('consent', 'default', {
       'ad_storage': 'denied',
       'ad_user_data': 'denied',
       'ad_personalization': 'denied',
-      'analytics_storage': 'denied'
-    });
+      'analytics_storage': 'denied',
+      'functionality_storage': 'granted',
+      'security_storage': 'granted',
+      'wait_for_update': 500
+     });
+
+    // Leitura antecipada da decisão salva (Consent Mode v2) antes do script GTM carregar
+    (function () {
+      try {
+        var raw = localStorage.getItem('jd_consent_v1');
+        if (raw) {
+          var data = JSON.parse(raw);
+          var now = Date.now();
+          var oneYearMs = 365 * 24 * 60 * 60 * 1000;
+          if (data && typeof data.ts === 'number' && (now - data.ts) < oneYearMs) {
+            gtag('consent', 'update', {
+              'ad_storage': data.ads ? 'granted' : 'denied',
+              'ad_user_data': data.ads ? 'granted' : 'denied',
+              'ad_personalization': data.ads ? 'granted' : 'denied',
+              'analytics_storage': data.analytics ? 'granted' : 'denied'
+            });
+          }
+        }
+      } catch (e) { /* noop: fallback gracioso para modo privado */ }
+    })();
+
+    gtag('js', new Date());
   </script>
+  <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-MQM9DPFR"></script>
   <!-- End Google Tag Manager -->
 </head>
 <body class="tema-escuro">
@@ -230,7 +245,7 @@
 
               <p style="font-size:12px;color:var(--jd-cinza-texto);text-align:center;margin-top:var(--jd-space-2);">
                 Seus dados são usados só para enviar o orçamento.
-                <a href="https://www.facebook.com/privacy/policy/?locale=pt_BR" target="_blank" rel="noopener noreferrer" style="color:var(--jd-azul);text-decoration:underline;">Política de privacidade</a>
+                <a href="https://www.facebook.com/privacy/policy/?locale=pt_BR" target="_blank" rel="noopener noreferrer" data-privacy-link style="color:var(--jd-azul);text-decoration:underline;">Política de privacidade</a>
               </p>
 
               <!-- Bloco de Erro de Envio com Alto Contraste -->
@@ -244,13 +259,13 @@
                   <strong class="lp-submit-error__title">Não foi possível enviar o formulário</strong>
                 </div>
                 <p id="lp-submit-error-text" class="lp-submit-error__text">
-                  O servidor do webhook (n8n) está inacessível ou inativo (HTTP 404). O fluxo precisa estar com o interruptor <strong>"Active" (Ativo)</strong> ligado no topo do n8n.
+                  Houve uma instabilidade temporária na conexão. Você pode tentar novamente ou falar diretamente com nossos consultores no WhatsApp.
                 </p>
                 <div class="lp-submit-error__actions">
                   <button type="button" class="jd-btn jd-btn--primary lp-submit-error__btn-retry" id="lp-btn-retry">
                     Tentar de novo
                   </button>
-                  <a href="https://wa.me/?text=Ol%C3%A1!%20Tentei%20enviar%20o%20formul%C3%A1rio%20pelo%20site%20da%20JD%20mas%20deu%20erro%2C%20gostaria%20de%20pedir%20meu%20or%C3%A7amento%20por%20aqui." class="jd-btn jd-btn--whatsapp lp-submit-error__btn-wa" data-whatsapp-btn>
+                  <a href="https://wa.me/5562999940769" target="_blank" rel="noopener noreferrer" class="jd-btn jd-btn--whatsapp lp-submit-error__btn-wa" data-whatsapp-btn="erro">
                     <span>Pedir via WhatsApp</span>
                   </a>
                 </div>
@@ -263,19 +278,25 @@
               <input type="text" name="website" id="lp-field-website" tabindex="-1" autocomplete="off">
             </div>
 
-            <!-- Campos Ocultos de Rastreamento & Auditoria -->
-            <input type="hidden" name="utm_source" id="lp-field-utm_source" value="">
-            <input type="hidden" name="utm_medium" id="lp-field-utm_medium" value="">
-            <input type="hidden" name="utm_campaign" id="lp-field-utm_campaign" value="">
-            <input type="hidden" name="utm_term" id="lp-field-utm_term" value="">
-            <input type="hidden" name="utm_content" id="lp-field-utm_content" value="">
-            <input type="hidden" name="gclid" id="lp-field-gclid" value="">
-            <input type="hidden" name="gbraid" id="lp-field-gbraid" value="">
-            <input type="hidden" name="wbraid" id="lp-field-wbraid" value="">
-            <input type="hidden" name="landing_page" id="lp-field-landing-page" value="">
-            <input type="hidden" name="lp_version" id="lp-field-lp_version" value="A">
-            <input type="hidden" name="titulo_variante" id="lp-field-titulo-variante" value="padrao">
-            <input type="hidden" name="timestamp_envio" id="lp-field-timestamp_envio" value="">
+            <!-- Campos Ocultos de Rastreamento, Atribuição e Consentimento -->
+            <input type="hidden" id="lp-field-lead_id" name="lead_id" value="">
+            <input type="hidden" id="lp-field-utm_source" name="utm_source" value="">
+            <input type="hidden" id="lp-field-utm_medium" name="utm_medium" value="">
+            <input type="hidden" id="lp-field-utm_campaign" name="utm_campaign" value="">
+            <input type="hidden" id="lp-field-utm_term" name="utm_term" value="">
+            <input type="hidden" id="lp-field-utm_content" name="utm_content" value="">
+            <input type="hidden" id="lp-field-matchtype" name="matchtype" value="">
+            <input type="hidden" id="lp-field-device" name="device" value="">
+            <input type="hidden" id="lp-field-network" name="network" value="">
+            <input type="hidden" id="lp-field-gclid" name="gclid" value="">
+            <input type="hidden" id="lp-field-gbraid" name="gbraid" value="">
+            <input type="hidden" id="lp-field-wbraid" name="wbraid" value="">
+            <input type="hidden" id="lp-field-landing_page" name="landing_page" value="">
+            <input type="hidden" id="lp-field-lp_version" name="lp_version" value="A">
+            <input type="hidden" id="lp-field-titulo_variante" name="titulo_variante" value="padrao">
+            <input type="hidden" id="lp-field-timestamp_envio" name="timestamp_envio" value="">
+            <input type="hidden" id="lp-field-consent_ads" name="consent_ads" value="pending">
+            <input type="hidden" id="lp-field-consent_analytics" name="consent_analytics" value="pending">
 
             <!-- Estado de Sucesso -->
             <div class="jd-form__sucesso" id="lp-form-sucesso">
@@ -288,7 +309,7 @@
               <p style="font-size:var(--jd-text-sm);color:var(--jd-cinza-texto);margin-bottom:var(--jd-space-5);">
                 A JD vai chamar você no WhatsApp.
               </p>
-              <a href="javascript:void(0);" class="jd-btn jd-btn--whatsapp" data-whatsapp-btn data-lp-wa="true" style="width:100%;justify-content:center;">
+              <a href="https://wa.me/5562999940769" target="_blank" rel="noopener noreferrer" class="jd-btn jd-btn--whatsapp" data-whatsapp-btn="sucesso" data-lp-wa="true" style="width:100%;justify-content:center;">
                 <span class="jd-whatsapp-icon-wrap" aria-hidden="true">
                   <span class="jd-radar-ring"></span>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--jd-branco);position:relative;z-index:2;">
@@ -721,7 +742,7 @@
               <span>Pedir orçamento</span>
               <span aria-hidden="true">→</span>
             </a>
-            <a href="https://wa.me/?text=Ol%C3%A1!%20Gostaria%20de%20um%20or%C3%A7amento%20de%20c%C3%A2mara%20fria." class="jd-btn jd-btn--whatsapp" data-whatsapp-btn>
+            <a href="https://wa.me/5562999940769" target="_blank" rel="noopener noreferrer" class="jd-btn jd-btn--whatsapp" data-whatsapp-btn="cta_final">
               <span class="jd-whatsapp-icon-wrap" aria-hidden="true">
                 <span class="jd-radar-ring"></span>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--jd-branco);position:relative;z-index:2;">
@@ -763,7 +784,9 @@
 
         <!-- Coluna 2: Links e Políticas -->
         <div class="jd-footer__links">
-          <a href="https://www.facebook.com/privacy/policy/?locale=pt_BR" target="_blank" rel="noopener noreferrer">Política de privacidade</a>
+          <a href="#lp-form-lead">Pedir Orçamento</a>
+          <a href="https://www.facebook.com/privacy/policy/?locale=pt_BR" target="_blank" rel="noopener noreferrer" data-privacy-link>Política de privacidade</a>
+          <button type="button" class="lp-footer-pref-btn" id="lp-cookie-pref-btn">Preferências de cookies</button>
         </div>
       </div>
 
@@ -773,6 +796,62 @@
       </div>
     </div>
   </footer>
+
+  <!-- ==========================================================================
+       10. BANNER DE COOKIES (LGPD + CONSENT MODE V2)
+       ========================================================================== -->
+  <section class="lp-cookie-banner" id="lp-cookie-banner" role="region" aria-label="Aviso de cookies" aria-live="polite">
+    <div class="lp-cookie-banner__inner">
+      <div class="lp-cookie-banner__main">
+        <h2 class="lp-cookie-banner__title">Sua privacidade</h2>
+        <p class="lp-cookie-banner__text">
+          Usamos cookies para fazer o site funcionar, entender o uso da página e medir nossos anúncios. Você escolhe o que permitir.
+          <a href="https://www.facebook.com/privacy/policy/?locale=pt_BR" target="_blank" rel="noopener noreferrer" class="lp-cookie-banner__link" data-privacy-link>Política de privacidade</a>.
+        </p>
+        <div class="lp-cookie-banner__actions">
+          <button type="button" class="lp-cookie-btn" id="lp-cookie-accept-all">Aceitar todos</button>
+          <button type="button" class="lp-cookie-btn" id="lp-cookie-reject-all">Recusar</button>
+          <button type="button" class="lp-cookie-btn" id="lp-cookie-customize" aria-expanded="false" aria-controls="lp-cookie-panel">Personalizar</button>
+        </div>
+      </div>
+
+      <div class="lp-cookie-panel" id="lp-cookie-panel" hidden>
+        <div class="lp-cookie-panel__row">
+          <div class="lp-cookie-panel__info">
+            <span class="lp-cookie-panel__label">Necessários (sempre ativos)</span>
+            <span class="lp-cookie-panel__desc">Essenciais para o funcionamento básico e segurança da página.</span>
+          </div>
+          <button type="button" class="lp-cookie-switch is-locked" role="switch" aria-checked="true" aria-label="Cookies necessários (sempre ativos)" disabled>
+            <span class="lp-cookie-switch__thumb"></span>
+          </button>
+        </div>
+
+        <div class="lp-cookie-panel__row">
+          <div class="lp-cookie-panel__info">
+            <label class="lp-cookie-panel__label" id="lp-cookie-lbl-analytics">Estatísticas</label>
+            <span class="lp-cookie-panel__desc">Mede visualizações e interações para entendermos o uso da página.</span>
+          </div>
+          <button type="button" class="lp-cookie-switch" id="lp-cookie-switch-analytics" role="switch" aria-checked="false" aria-labelledby="lp-cookie-lbl-analytics">
+            <span class="lp-cookie-switch__thumb"></span>
+          </button>
+        </div>
+
+        <div class="lp-cookie-panel__row">
+          <div class="lp-cookie-panel__info">
+            <label class="lp-cookie-panel__label" id="lp-cookie-lbl-ads">Publicidade</label>
+            <span class="lp-cookie-panel__desc">Permite avaliar e otimizar campanhas e anúncios relevantes.</span>
+          </div>
+          <button type="button" class="lp-cookie-switch" id="lp-cookie-switch-ads" role="switch" aria-checked="false" aria-labelledby="lp-cookie-lbl-ads">
+            <span class="lp-cookie-switch__thumb"></span>
+          </button>
+        </div>
+
+        <div class="lp-cookie-panel__actions">
+          <button type="button" class="lp-cookie-btn lp-cookie-btn--save" id="lp-cookie-save">Salvar escolhas</button>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- Scripts: ds.js para utilidades core e lp.js para lógica da LP A -->
   <script src="js/ds.js"></script>

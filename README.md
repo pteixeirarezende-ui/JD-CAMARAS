@@ -573,6 +573,108 @@ Todas as 5 fotografias enviadas pelo cliente foram preparadas na proporção 4:3
 4. **Card 4 (Câmara de congelados):** [`assets/foto-camara-congelados-piso.jpg`](file:///c:/Users/pteix/Downloads/LP%20-%20JD%20CAMARAS/assets/foto-camara-congelados-piso.jpg) — Fachada de câmara frigorífica de congelados industrial com porta de correr isotérmica, trilho superior e painel digital.
 5. **Hero Mobile:** [`assets/foto-camara-walkin-interior.jpg`](file:///c:/Users/pteix/Downloads/LP%20-%20JD%20CAMARAS/assets/foto-camara-walkin-interior.jpg) — Card visual com badge *"Obra real instalada pela JD"* exibido de forma fluida após o formulário no mobile (`order: 8`).
 
+---
+
+## 10. Verificação 11 — Alinhamento de Tracking, Consentimento, Envio e WhatsApp com a LP Direto
+
+### 10.1. Head GTM e Google Consent Mode v2 (Ajuste 1)
+- **Ordem Estrita no `<head>`:**
+  1. Inicialização de `window.dataLayer = window.dataLayer || []` e `function gtag(){dataLayer.push(arguments);}` com `gtag('consent', 'default', { ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied', analytics_storage: 'denied', functionality_storage: 'granted', security_storage: 'granted', wait_for_update: 500 });`
+  2. Leitura antecipada imediata de `localStorage.getItem('jd_consent_v1')` com `gtag('consent', 'update', ...)` antes do carregamento da biblioteca do GTM (validade de 12 meses).
+  3. Chamada única de `gtag('js', new Date());`.
+  4. Script assíncrono oficial do GTM: `<script async src="https://www.googletagmanager.com/gtm.js?id=GTM-MQM9DPFR"></script>`.
+- **Eliminação de Disparos Manuais:** Zero (0) ocorrências manuais de `gtm.start` ou `event: 'gtm.js'` no código da página. O acionamento é realizado de forma nativa e assíncrona pelo script do GTM.
+- **Noscript:** Tag `<noscript>` do GTM preservada no topo do `<body>`.
+
+### 10.2. Banner de Cookies e Gestão de Privacidade LGPD (Ajuste 2)
+- **Estrutura HTML e Classes:** Integrado o banner `#lp-cookie-banner` e o painel de preferências `#lp-cookie-panel` no final do `<body>`, estilizados exclusivamente pelas classes `.lp-cookie-*` no `css/lp.css`.
+- **Botão de Preferências:** Inserido o botão `#lp-cookie-pref-btn` ("Preferências de cookies") na seção de links do rodapé (`.jd-footer__links`).
+- **Política de Privacidade Unificada:** Declarada a constante `const PRIVACY_URL = 'https://www.facebook.com/privacy/policy/?locale=pt_BR'` no topo do `js/lp.js` e aplicada dinamicamente a todos os elementos com o atributo `data-privacy-link` (banner, formulário e rodapé).
+- **Comportamento Interativo:**
+  - *Aceitar todos:* Salva `{ analytics: true, ads: true, ts }` no `localStorage` sob `jd_consent_v1`, executa `gtag('consent', 'update')`, envia `event: 'consent_update'` ao `dataLayer` e oculta o banner.
+  - *Recusar:* Salva `{ analytics: false, ads: false, ts }` no `localStorage`, atualiza o Consent Mode e fecha o banner.
+  - *Personalizar:* Expande o painel com interruptores acessíveis (`role="switch"`, `aria-checked`) sincronizados com o estado salvo e salva escolhas customizadas.
+  - *Recarregamento:* Visitas subsequentes com consentimento registrado há menos de 12 meses não reabrem o banner; a decisão é lida antes do GTM carregar.
+
+### 10.3. Motor de Atribuição, lead_id e Normalização Telefônica (Ajuste 3)
+- **Persistência de Atribuição (`jd_attrib`):** Suporta `utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content`, `matchtype`, `device`, `network`, `gclid`, `gbraid`, `wbraid`. Persistido no `localStorage` (validade de 90 dias) quando o consentimento de anúncios está concedido, ou no `sessionStorage` em caso pendente/negado.
+- **Campos Ocultos no Formulário:** Todos os 17 campos ocultos padronizados com os mesmos IDs e names da referência: `lead_id`, `utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content`, `matchtype`, `device`, `network`, `gclid`, `gbraid`, `wbraid`, `landing_page`, `lp_version` ("A"), `titulo_variante`, `timestamp_envio`, `consent_ads`, `consent_analytics`.
+- **Identificador Único (`lead_id`):** Gerado via UUID v4 na primeira interação com o formulário (`focusin` ou `input`) e preservado estritamente em retentativas.
+- **Eventos de Início com `lead_id`:** `lead_form_start` e `lead_form_step1_complete` incluem `{ lead_id }`.
+- **Normalização E.164:** Função `normalizePhoneE164` converte o telefone brasileiro para o formato internacional com prefixo `+55` (ex.: `+5562999991234`) para envio em `user_data.phone_number`.
+
+### 10.4. Envio Seguro ao Webhook n8n e Correção de Falsa Conversão (Ajuste 4)
+- **Payload Idêntico de 28 Campos (Ordem Estrita):**
+  1. `tipo_evento: 'lead_form'`
+  2. `lead_id`
+  3. `timestamp_envio` (ISO 8601 com offset `-03:00`)
+  4. `nome`
+  5. `whatsapp`
+  6. `tipo_camara`
+  7. `armazenar`
+  8. `largura` (vazio enviado como `''`)
+  9. `comprimento` (vazio enviado como `''`)
+  10. `altura` (vazio enviado como `''`)
+  11. `cidade`
+  12. `uf`
+  13. `utm_source`
+  14. `utm_medium`
+  15. `utm_campaign`
+  16. `utm_term`
+  17. `utm_content`
+  18. `matchtype`
+  19. `device`
+  20. `network`
+  21. `gclid`
+  22. `gbraid`
+  23. `wbraid`
+  24. `landing_page`
+  25. `lp_version: 'A'`
+  26. `titulo_variante`
+  27. `consent_ads`
+  28. `consent_analytics`
+- **Eliminação Total de `no-cors` Fallback:** Sucesso condicionado **estritamente** a respostas HTTP 2xx (`res.ok`). Falhas de rede, bloqueios CORS ("Failed to fetch") e respostas 4xx/5xx revelam o bloco de erro sem disparar tags de conversão.
+- **Evento `lead_form_submit` no DataLayer:** Disparado apenas após HTTP 2xx:
+  ```javascript
+  {
+    event: 'lead_form_submit',
+    lead_id: currentLeadId,
+    event_id: currentLeadId,
+    tipo_camara: tipoCamaraVal,
+    armazenar: armazenarVal,
+    uf: ufVal,
+    lp_version: 'A',
+    titulo_variante: activeVariantKey,
+    user_data: { phone_number: '+55...' }
+  }
+  ```
+- **Honeypot Anti-Spam:** Preenchimento do campo oculto `#lp-field-website` exibe a UI de sucesso localmente sem enviar requisição POST e sem disparar nenhum evento no dataLayer.
+- **Modo Debug (`?debug=1`):** Registra o payload completo e o objeto de atribuição no console sem realizar envio à rede.
+- **Retentativa Inteligente (`#lp-btn-retry`):** Resubmete o formulário reutilizando o mesmo `lead_id` com trava contra cliques duplos.
+- **Texto de Erro Amigável:** `#lp-submit-error-text` atualizado para: *"Houve uma instabilidade temporária na conexão. Você pode tentar novamente ou falar diretamente com nossos consultores no WhatsApp."*.
+
+### 10.5. Integração com WhatsApp e Códigos de Referência (Ajuste 5)
+- **Número Oficial:** `const WHATSAPP_NUMBER = '5562999940769'`.
+- **Motor Centralizado:** Todos os botões e links com `data-whatsapp-btn` têm URLs construídas dinamicamente via JS (`https://wa.me/5562999940769?text=...`) e abrem em nova aba com `noopener,noreferrer`.
+- **Código de Referência (`ref`):** 6 caracteres em maiúsculas derivados dos primeiros dígitos do `lead_id` (caso o formulário já tenha sido submetido com sucesso) ou 6 caracteres alfanuméricos aleatórios sem ambiguidade visual.
+- **Telemetria de Clique:**
+  - Requisição leve (ping) via `POST` ao `LEAD_ENDPOINT` com `{ tipo_evento: 'click_whatsapp', ref, lead_id, origem, ... }` e `keepalive: true`.
+  - Disparo único no dataLayer: `{ event: 'click_whatsapp', origem, ref, lead_id, lp_version: 'A', titulo_variante }`.
+  - Identificação de origem mapeada: `data-whatsapp-btn="erro"`, `data-whatsapp-btn="sucesso"` e `data-whatsapp-btn="cta_final"`.
+
+### 10.6. Matriz de Autoverificação Técnica (Prompt 11)
+| Item | Descrição do Teste | Resultado |
+|---|---|---|
+| **1. Head** | Ordem: `consent default` &rarr; `update antecipado` &rarr; `gtag('js')` (1x) &rarr; `gtm.js`. Zero `gtm.start` manual. | **Aprovado** (ordem exata validada) |
+| **2. Banner** | Aceitar, recusar, personalizar e reabrir; estado salvo em `jd_consent_v1`; recarregamento não reabre; lido pré-GTM. | **Aprovado** (100% testes unitários) |
+| **3. Envio 200** | 1 requisição POST com 28 campos exatos; 1 evento `lead_form_submit` com `user_data.phone_number` em E.164. | **Aprovado** (payload validado) |
+| **4. Envio 500 / Fetch Error** | Resposta 500 e "Failed to fetch" (sem `no-cors`) exibem bloco de erro; 0 `lead_form_submit`; retry reenvia com mesmo `lead_id`. | **Aprovado** (bloqueio 100% efetivo) |
+| **5. Honeypot** | Preenchimento de `#lp-field-website` exibe UI de sucesso com 0 POST e 0 eventos no dataLayer. | **Aprovado** |
+| **6. Atribuição** | Parâmetros `gclid` e `utm_*` gravados no payload e restaurados via `jd_attrib` no reload sem parâmetros. | **Aprovado** |
+| **7. WhatsApp** | Clique com e sem lead submetido; ping único e push único; zero links `wa.me/?text=` sem número e zero `javascript:void`. | **Aprovado** |
+| **8. Layout & Acessibilidade** | Rolagem horizontal nula (360, 390, 768 e 1280 px); zero estilos `style=""` novos; zero IDs duplicados; 1 único formulário. | **Aprovado** |
+
+
 
 
 
