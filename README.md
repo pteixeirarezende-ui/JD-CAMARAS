@@ -659,7 +659,8 @@ Todas as 5 fotografias enviadas pelo cliente foram preparadas na proporção 4:3
 - **Código de Referência (`ref`):** 6 caracteres em maiúsculas derivados dos primeiros dígitos do `lead_id` (caso o formulário já tenha sido submetido com sucesso) ou 6 caracteres alfanuméricos aleatórios sem ambiguidade visual.
 - **Telemetria de Clique:**
   - Disparo único no dataLayer para Google Tag Manager / GA4 / Google Ads: `{ event: 'click_whatsapp', origem, ref, lead_id, lp_version: 'A', titulo_variante }`.
-  - Identificação de origem mapeada: `data-whatsapp-btn="erro"`, `data-whatsapp-btn="sucesso"` e `data-whatsapp-btn="cta_final"`.
+  - Identificação de origem mapeada: `data-whatsapp-btn="erro"` e `data-whatsapp-btn="sucesso"`.
+  - **Exibição Condicionada ao Cadastro:** O botão de WhatsApp no CTA final foi removido e substituído exclusivamente pelo CTA "Pedir orçamento" apontando para o formulário no topo (`#lp-form-lead`). A opção de iniciar conversa no WhatsApp só fica visível para o usuário após a submissão bem-sucedida do formulário (na tela de sucesso `#lp-form-sucesso`).
   - **Isolamento de Webhook (Zero Leads Fantasmas):** Não envia requisição POST para o `LEAD_ENDPOINT` no clique do WhatsApp. Isso garante que a planilha de leads no n8n não seja poluída com linhas vazias contendo apenas UTMs quando o visitante clica no WhatsApp sem preencher o formulário.
   - **Trava Rígida de Validação (Hard-Lock no Formulário):** Bloqueio estrito no momento do envio que impede 100% de submissões com campos obrigatórios vazios ou incompletos (Nome < 3 caracteres, WhatsApp < 10 dígitos, Tipo de câmara, Produto, Cidade < 2 caracteres e UF). Impede requisições HTTP antes de validar todos os campos e bloqueia múltiplos envios simultâneos (`isSubmitting`).
 
