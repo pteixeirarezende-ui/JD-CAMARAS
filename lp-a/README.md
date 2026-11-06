@@ -658,9 +658,10 @@ Todas as 5 fotografias enviadas pelo cliente foram preparadas na proporção 4:3
 - **Motor Centralizado:** Todos os botões e links com `data-whatsapp-btn` têm URLs construídas dinamicamente via JS (`https://wa.me/5562999940769?text=...`) e abrem em nova aba com `noopener,noreferrer`.
 - **Código de Referência (`ref`):** 6 caracteres em maiúsculas derivados dos primeiros dígitos do `lead_id` (caso o formulário já tenha sido submetido com sucesso) ou 6 caracteres alfanuméricos aleatórios sem ambiguidade visual.
 - **Telemetria de Clique:**
-  - Requisição leve (ping) via `POST` ao `LEAD_ENDPOINT` com `{ tipo_evento: 'click_whatsapp', ref, lead_id, origem, ... }` e `keepalive: true`.
-  - Disparo único no dataLayer: `{ event: 'click_whatsapp', origem, ref, lead_id, lp_version: 'A', titulo_variante }`.
+  - Disparo único no dataLayer para Google Tag Manager / GA4 / Google Ads: `{ event: 'click_whatsapp', origem, ref, lead_id, lp_version: 'A', titulo_variante }`.
   - Identificação de origem mapeada: `data-whatsapp-btn="erro"`, `data-whatsapp-btn="sucesso"` e `data-whatsapp-btn="cta_final"`.
+  - **Isolamento de Webhook (Zero Leads Fantasmas):** Não envia requisição POST para o `LEAD_ENDPOINT` no clique do WhatsApp. Isso garante que a planilha de leads no n8n não seja poluída com linhas vazias contendo apenas UTMs quando o visitante clica no WhatsApp sem preencher o formulário.
+  - **Trava Rígida de Validação (Hard-Lock no Formulário):** Bloqueio estrito no momento do envio que impede 100% de submissões com campos obrigatórios vazios ou incompletos (Nome < 3 caracteres, WhatsApp < 10 dígitos, Tipo de câmara, Produto, Cidade < 2 caracteres e UF). Impede requisições HTTP antes de validar todos os campos e bloqueia múltiplos envios simultâneos (`isSubmitting`).
 
 ### 10.6. Matriz de Autoverificação Técnica (Prompt 11)
 | Item | Descrição do Teste | Resultado |

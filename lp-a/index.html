@@ -164,7 +164,7 @@
               <!-- 1. Nome -->
               <div class="jd-form__group">
                 <label for="lp-field-nome" class="jd-form__label jd-form__label--required">Seu nome</label>
-                <input type="text" id="lp-field-nome" name="nome" class="jd-form__input" placeholder="Como podemos chamar você?" autocomplete="name" required>
+                <input type="text" id="lp-field-nome" name="nome" class="jd-form__input" placeholder="Como podemos chamar você?" autocomplete="name" required minlength="3">
               </div>
 
               <!-- 2. WhatsApp -->
@@ -225,7 +225,7 @@
                 <label class="jd-form__label jd-form__label--required">Cidade e UF</label>
                 <div style="display:grid;grid-template-columns:1fr 92px;gap:8px;">
                   <div>
-                    <input type="text" id="lp-field-cidade" name="cidade" class="jd-form__input" placeholder="Sua cidade" autocomplete="address-level2" required>
+                    <input type="text" id="lp-field-cidade" name="cidade" class="jd-form__input" placeholder="Sua cidade" autocomplete="address-level2" required minlength="2">
                   </div>
                   <div>
                     <select id="lp-field-uf" name="uf" class="jd-form__input jd-form__select" autocomplete="address-level1" required>

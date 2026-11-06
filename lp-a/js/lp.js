@@ -449,6 +449,8 @@ const WHATSAPP_NUMBER = '5562999940769';
 
     applyPhoneMask(phoneField);
 
+    let isSubmitting = false;
+
     // Tentar de novo após erro de envio: reenvia com o MESMO lead_id
     if (btnRetry) {
       btnRetry.addEventListener('click', function (e) {
@@ -502,6 +504,8 @@ const WHATSAPP_NUMBER = '5562999940769';
     }
 
     function handleFormSubmit() {
+      if (isSubmitting) return;
+
       // Honeypot anti-spam (descarte silencioso: interface de sucesso, SEM post e SEM dataLayer)
       if (honeypot && honeypot.value.trim() !== '') {
         showSuccessUI();
@@ -531,7 +535,55 @@ const WHATSAPP_NUMBER = '5562999940769';
         }
       });
 
-      if (!allValid) {
+      // Recupera dados preenchidos
+      const nomeVal = (nomeField ? nomeField.value : '').trim();
+      const whatsappVal = (phoneField ? phoneField.value : '').trim();
+      const tipoCamaraVal = (tipoCamaraField ? tipoCamaraField.value : '').trim();
+      const armazenarVal = (armazenarField ? armazenarField.value : '').trim();
+      const largVal = (larguraField && larguraField.value.trim() !== '') ? larguraField.value.trim() : '';
+      const compVal = (comprimentoField && comprimentoField.value.trim() !== '') ? comprimentoField.value.trim() : '';
+      const altVal = (alturaField && alturaField.value.trim() !== '') ? alturaField.value.trim() : '';
+      const cidadeVal = (cidadeField ? cidadeField.value : '').trim();
+      const ufVal = (ufField ? ufField.value : '').trim();
+
+      // TRAVA TOTAL DE SEGURANÇA (HARD-LOCK):
+      // Impede estritamente qualquer envio se algum campo obrigatório estiver vazio ou incompleto
+      const phoneDigits = whatsappVal.replace(/\D/g, '');
+      let hardLockFailed = false;
+
+      if (!nomeVal || nomeVal.length < 3) {
+        setFieldError(nomeField, true, 'Preencha este campo.');
+        if (!firstInvalid) firstInvalid = nomeField;
+        hardLockFailed = true;
+      }
+      if (!whatsappVal || phoneDigits.length < 10) {
+        setFieldError(phoneField, true, 'Confira o WhatsApp com DDD. Exemplo: (32) 99999-9999');
+        if (!firstInvalid) firstInvalid = phoneField;
+        hardLockFailed = true;
+      }
+      if (!tipoCamaraVal) {
+        setFieldError(tipoCamaraField, true, 'Selecione uma opção.');
+        if (!firstInvalid) firstInvalid = tipoCamaraField;
+        hardLockFailed = true;
+      }
+      if (!armazenarVal) {
+        setFieldError(armazenarField, true, 'Selecione o produto.');
+        if (!firstInvalid) firstInvalid = armazenarField;
+        hardLockFailed = true;
+      }
+      if (!cidadeVal || cidadeVal.length < 2) {
+        setFieldError(cidadeField, true, 'Preencha sua cidade.');
+        if (!firstInvalid) firstInvalid = cidadeField;
+        hardLockFailed = true;
+      }
+      if (!ufVal) {
+        setFieldError(ufField, true, 'Selecione a UF.');
+        if (!firstInvalid) firstInvalid = ufField;
+        hardLockFailed = true;
+      }
+
+      if (!allValid || hardLockFailed) {
+        console.warn('[LP Form] Submissão bloqueada: campos obrigatórios vazios ou incompletos.');
         if (firstInvalid) {
           firstInvalid.focus();
           firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -545,17 +597,6 @@ const WHATSAPP_NUMBER = '5562999940769';
       // Atualiza consentimento no momento do envio
       const consentStatus = getConsentStatus();
       updateHiddenConsentFields();
-
-      // Recupera dados preenchidos
-      const nomeVal = (nomeField ? nomeField.value : '').trim();
-      const whatsappVal = (phoneField ? phoneField.value : '').trim();
-      const tipoCamaraVal = (tipoCamaraField ? tipoCamaraField.value : '').trim();
-      const armazenarVal = (armazenarField ? armazenarField.value : '').trim();
-      const largVal = (larguraField && larguraField.value.trim() !== '') ? larguraField.value.trim() : '';
-      const compVal = (comprimentoField && comprimentoField.value.trim() !== '') ? comprimentoField.value.trim() : '';
-      const altVal = (alturaField && alturaField.value.trim() !== '') ? alturaField.value.trim() : '';
-      const cidadeVal = (cidadeField ? cidadeField.value : '').trim();
-      const ufVal = (ufField ? ufField.value : '').trim();
 
       const timestampEnvio = getIsoTimestampSaoPaulo();
       const timestampInput = document.getElementById('lp-field-timestamp_envio');
@@ -605,6 +646,7 @@ const WHATSAPP_NUMBER = '5562999940769';
       }
 
       // Bloqueio de duplo envio
+      isSubmitting = true;
       if (btnSubmit) {
         btnSubmit.disabled = true;
         btnSubmit.classList.add('is-loading');
@@ -624,11 +666,13 @@ const WHATSAPP_NUMBER = '5562999940769';
         })
         .then(function () {
           // HTTP 2xx confirmado com sucesso
+          isSubmitting = false;
           leadSubmittedSuccessfully = true;
           showSuccessView(tipoCamaraVal, armazenarVal, ufVal, whatsappVal);
         })
         .catch(function (err) {
           console.error('[LP Webhook Error]', err);
+          isSubmitting = false;
           if (btnSubmit) {
             btnSubmit.disabled = false;
             btnSubmit.classList.remove('is-loading');
@@ -703,48 +747,14 @@ const WHATSAPP_NUMBER = '5562999940769';
         baseMsg = baseMsg.replace(/\s*\(ref:\s*[A-Z0-9]+\)$/i, '');
         const fullMsg = baseMsg + ' (ref: ' + ref + ')';
 
-        // Registro leve no mesmo webhook (keepalive: true, falha em silêncio)
-        const waPayload = {
-          tipo_evento: 'click_whatsapp',
-          ref: ref,
-          lead_id: currentLeadId || '',
-          origem: origem,
-          timestamp_envio: getIsoTimestampSaoPaulo(),
-          utm_source: currentAttrib.utm_source || '',
-          utm_medium: currentAttrib.utm_medium || '',
-          utm_campaign: currentAttrib.utm_campaign || '',
-          utm_term: currentAttrib.utm_term || '',
-          utm_content: currentAttrib.utm_content || '',
-          matchtype: currentAttrib.matchtype || '',
-          device: currentAttrib.device || '',
-          network: currentAttrib.network || '',
-          gclid: currentAttrib.gclid || '',
-          gbraid: currentAttrib.gbraid || '',
-          wbraid: currentAttrib.wbraid || '',
-          landing_page: window.location.href,
-          lp_version: 'A',
-          titulo_variante: activeVariantKey,
-          consent_ads: consentStatus.ads,
-          consent_analytics: consentStatus.analytics
-        };
-
         if (isDebug) {
-          console.group('🔍 [LP Debug Mode] WhatsApp Click Webhook Ping');
-          console.log('Payload Webhook Click:', waPayload);
+          console.group('🔍 [LP Debug Mode] WhatsApp Click');
+          console.log('Origem:', origem);
           console.log('Código ref:', ref);
           console.groupEnd();
-        } else if (LEAD_ENDPOINT) {
-          try {
-            fetch(LEAD_ENDPOINT, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(waPayload),
-              keepalive: true
-            }).catch(function () { /* fail silently */ });
-          } catch (err) { /* fail silently */ }
         }
 
-        // dataLayer (1 disparo por clique)
+        // dataLayer (1 disparo por clique para GTM / GA4 / Google Ads)
         window.dataLayer.push({
           event: 'click_whatsapp',
           origem: origem,
@@ -754,7 +764,7 @@ const WHATSAPP_NUMBER = '5562999940769';
           titulo_variante: activeVariantKey
         });
 
-        // Redirecionamento
+        // Redirecionamento seguro para o WhatsApp com ref
         const waUrl = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(fullMsg);
         window.open(waUrl, '_blank', 'noopener,noreferrer');
       });
