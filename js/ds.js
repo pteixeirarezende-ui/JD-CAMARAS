@@ -212,8 +212,8 @@
       showStep(0);
     });
 
-    // Init phone masks
-    var phoneInputs = document.querySelectorAll('input[type="tel"]');
+    // Init phone masks (apenas formulários que não sejam o da LP A com motor próprio)
+    var phoneInputs = document.querySelectorAll('.jd-form:not([data-lp-form]) input[type="tel"]');
     phoneInputs.forEach(maskPhone);
   }
 

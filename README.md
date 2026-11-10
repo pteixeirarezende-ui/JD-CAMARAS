@@ -601,7 +601,12 @@ Todas as 5 fotografias enviadas pelo cliente foram preparadas na proporção 4:3
 - **Campos Ocultos no Formulário:** Todos os 17 campos ocultos padronizados com os mesmos IDs e names da referência: `lead_id`, `utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content`, `matchtype`, `device`, `network`, `gclid`, `gbraid`, `wbraid`, `landing_page`, `lp_version` ("A"), `titulo_variante`, `timestamp_envio`, `consent_ads`, `consent_analytics`.
 - **Identificador Único (`lead_id`):** Gerado via UUID v4 na primeira interação com o formulário (`focusin` ou `input`) e preservado estritamente em retentativas.
 - **Eventos de Início com `lead_id`:** `lead_form_start` e `lead_form_step1_complete` incluem `{ lead_id }`.
-- **Normalização E.164:** Função `normalizePhoneE164` converte o telefone brasileiro para o formato internacional com prefixo `+55` (ex.: `+5562999991234`) para envio em `user_data.phone_number`.
+- **Padronização e Formatação Canônica de WhatsApp:**
+  - Extração inteligente de dígitos nacionais (`extractBrazilianPhoneDigits`) imune a colagens com `+55`, `55` internacional ou zeros à esquerda no DDD, preservando DDD 55 legítimo (RS).
+  - Máscara dinâmica e fluida: `(XX) XXXXX-XXXX` (celular de 11 dígitos) e `(XX) XXXX-XXXX` (fixo de 10 dígitos).
+  - Validação rigorosa segundo o plano de numeração da Anatel (`isValidBrazilianPhone`): valida DDDs existentes (11 a 99), exige o dígito 9 em celulares de 11 dígitos e bloqueia números fakes repetidos (`11111111111`).
+  - **Garantia de Formato no Webhook:** O campo `whatsapp` no payload de 28 colunas é **sempre** enviado no formato canônico padronizado `(XX) XXXXX-XXXX` (ou `(XX) XXXX-XXXX`).
+  - **Normalização E.164:** Função `normalizePhoneE164` converte com precisão o telefone brasileiro para o formato internacional com prefixo `+55` (ex.: `+5562999991234`) para envio em `user_data.phone_number`.
 
 ### 10.4. Envio Seguro ao Webhook n8n e Correção de Falsa Conversão (Ajuste 4)
 - **Payload Idêntico de 28 Campos (Ordem Estrita):**
