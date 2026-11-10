@@ -244,22 +244,60 @@ const WHATSAPP_NUMBER = '5562999940769';
   }
 
   // 6. TRATAMENTO, FORMATAÇÃO E NORMALIZAÇÃO DE TELEFONE (PADRÃO BRASIL & E.164)
+  const VALID_BRAZILIAN_DDDS = [
+    11, 12, 13, 14, 15, 16, 17, 18, 19,
+    21, 22, 24, 27, 28,
+    31, 32, 33, 34, 35, 37, 38,
+    41, 42, 43, 44, 45, 46, 47, 48, 49,
+    51, 53, 54, 55,
+    61, 62, 63, 64, 65, 66, 67,
+    71, 73, 74, 75, 77, 79,
+    81, 82, 83, 84, 85, 86, 87, 88, 89,
+    91, 92, 93, 94, 95, 96, 97, 98, 99
+  ];
+
+  function isBrazilianDDD(dddNum) {
+    return VALID_BRAZILIAN_DDDS.indexOf(Number(dddNum)) !== -1;
+  }
+
   function extractBrazilianPhoneDigits(rawPhone) {
     if (!rawPhone) return '';
     let digits = String(rawPhone).replace(/\D/g, '');
 
-    // Se o usuário digitou/colou com +55 no início (ex.: +5562999940769)
+    // 1. Remove prefixo internacional explícito "+55"
     if (String(rawPhone).trim().startsWith('+55')) {
-      digits = digits.slice(2);
-    } else if (digits.length > 11 && digits.startsWith('55')) {
-      // Se tem mais de 11 dígitos e começa com 55 (ex.: 5562999940769 -> 13 dígitos),
-      // 55 é o código do país, removemos para isolar os dígitos nacionais (DDD + número)
       digits = digits.slice(2);
     }
 
-    // Se houver zero à esquerda antes do DDD (ex.: 062999940769 -> 12 dígitos)
+    // 2. Remove zeros à esquerda (ex.: 062..., 055...)
     if (digits.startsWith('0')) {
       digits = digits.replace(/^0+/, '');
+    }
+
+    // 3. Tratamento estrito do "55" inserido antes do DDD (ex.: 5562999940769)
+    if (digits.startsWith('55')) {
+      // Caso A: 12 ou 13 dígitos no total (55 + DDD + 8 ou 9 dígitos).
+      // Um número nacional brasileiro NUNCA tem 12 ou 13 dígitos; o 55 inicial é 100% código do país (DDI).
+      if (digits.length >= 12) {
+        digits = digits.slice(2);
+      }
+      // Caso B: Pelo menos 5 dígitos digitados, onde dígitos 3 e 4 formam um DDD brasileiro real e o 5º dígito é 9 (celular)
+      // Ex.: 55629... (62 é GO, 9 é celular) -> corta o 55 e isola 629...
+      // Ex.: 55329... (32 é MG, 9 é celular) -> corta o 55 e isola 329...
+      else if (digits.length >= 5 && isBrazilianDDD(digits.slice(2, 4)) && digits.charAt(4) === '9') {
+        digits = digits.slice(2);
+      }
+      // Caso C: 3 dígitos digitados (55X) e o 3º dígito não pode ser início de número local em DDD 55 (RS)
+      // Em DDD 55, celulares começam com 9 e fixos com 2, 3, 4 ou 5. Se digitou 551, 556, 557, 558,
+      // o usuário está iniciando um DDD (ex.: 556 para GO/DF, 551 para SP/RJ). Corta o 55 imediatamente.
+      else if (digits.length === 3 && [1, 6, 7, 8].indexOf(Number(digits.charAt(2))) !== -1) {
+        digits = digits.slice(2);
+      }
+      // Caso D: 4 dígitos digitados e os dígitos 3 e 4 formam um DDD diferente de 55 e não iniciam com 9
+      // Ex.: 5562 (GO), 5532 (MG), 5531 (MG), 5511 (SP), 5521 (RJ)
+      else if (digits.length === 4 && isBrazilianDDD(digits.slice(2, 4)) && digits.slice(2, 4) !== '55' && digits.charAt(2) !== '9') {
+        digits = digits.slice(2);
+      }
     }
 
     // Limita ao máximo de 11 dígitos nacionais (DDD + 9 dígitos)
@@ -709,7 +747,10 @@ const WHATSAPP_NUMBER = '5562999940769';
         lp_version: 'A',
         titulo_variante: activeVariantKey,
         consent_ads: consentStatus.ads,
-        consent_analytics: consentStatus.analytics
+        consent_analytics: consentStatus.analytics,
+        whatsapp_digits: '55' + cleanPhoneDigits,
+        whatsapp_sem_ddi: cleanPhoneDigits,
+        whatsapp_e164: e164Whatsapp
       };
 
       const isDebug = new URLSearchParams(window.location.search).get('debug') === '1';
