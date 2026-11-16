@@ -243,124 +243,18 @@ const WHATSAPP_NUMBER = '5562999940769';
     return currentLeadId;
   }
 
-  // 6. TRATAMENTO, FORMATAÇÃO E NORMALIZAÇÃO DE TELEFONE (PADRÃO BRASIL & E.164)
-  const VALID_BRAZILIAN_DDDS = [
-    11, 12, 13, 14, 15, 16, 17, 18, 19,
-    21, 22, 24, 27, 28,
-    31, 32, 33, 34, 35, 37, 38,
-    41, 42, 43, 44, 45, 46, 47, 48, 49,
-    51, 53, 54, 55,
-    61, 62, 63, 64, 65, 66, 67,
-    71, 73, 74, 75, 77, 79,
-    81, 82, 83, 84, 85, 86, 87, 88, 89,
-    91, 92, 93, 94, 95, 96, 97, 98, 99
-  ];
-
-  function isBrazilianDDD(dddNum) {
-    return VALID_BRAZILIAN_DDDS.indexOf(Number(dddNum)) !== -1;
-  }
-
-  function extractBrazilianPhoneDigits(rawPhone) {
+  // 6. NORMALIZAÇÃO DO TELEFONE (E.164 SEM PII EXTRA)
+  function normalizePhoneE164(rawPhone) {
     if (!rawPhone) return '';
     let digits = String(rawPhone).replace(/\D/g, '');
-
-    // 1. Remove prefixo internacional explícito "+55"
-    if (String(rawPhone).trim().startsWith('+55')) {
-      digits = digits.slice(2);
+    digits = digits.replace(/^0+/, '');
+    if (!digits.startsWith('55')) {
+      digits = '55' + digits;
     }
-
-    // 2. Remove zeros à esquerda (ex.: 062..., 055...)
-    if (digits.startsWith('0')) {
-      digits = digits.replace(/^0+/, '');
-    }
-
-    // 3. Tratamento estrito do "55" inserido antes do DDD (ex.: 5562999940769)
-    if (digits.startsWith('55')) {
-      // Caso A: 12 ou 13 dígitos no total (55 + DDD + 8 ou 9 dígitos).
-      // Um número nacional brasileiro NUNCA tem 12 ou 13 dígitos; o 55 inicial é 100% código do país (DDI).
-      if (digits.length >= 12) {
-        digits = digits.slice(2);
-      }
-      // Caso B: Pelo menos 5 dígitos digitados, onde dígitos 3 e 4 formam um DDD brasileiro real e o 5º dígito é 9 (celular)
-      // Ex.: 55629... (62 é GO, 9 é celular) -> corta o 55 e isola 629...
-      // Ex.: 55329... (32 é MG, 9 é celular) -> corta o 55 e isola 329...
-      else if (digits.length >= 5 && isBrazilianDDD(digits.slice(2, 4)) && digits.charAt(4) === '9') {
-        digits = digits.slice(2);
-      }
-      // Caso C: 3 dígitos digitados (55X) e o 3º dígito não pode ser início de número local em DDD 55 (RS)
-      // Em DDD 55, celulares começam com 9 e fixos com 2, 3, 4 ou 5. Se digitou 551, 556, 557, 558,
-      // o usuário está iniciando um DDD (ex.: 556 para GO/DF, 551 para SP/RJ). Corta o 55 imediatamente.
-      else if (digits.length === 3 && [1, 6, 7, 8].indexOf(Number(digits.charAt(2))) !== -1) {
-        digits = digits.slice(2);
-      }
-      // Caso D: 4 dígitos digitados e os dígitos 3 e 4 formam um DDD diferente de 55 e não iniciam com 9
-      // Ex.: 5562 (GO), 5532 (MG), 5531 (MG), 5511 (SP), 5521 (RJ)
-      else if (digits.length === 4 && isBrazilianDDD(digits.slice(2, 4)) && digits.slice(2, 4) !== '55' && digits.charAt(2) !== '9') {
-        digits = digits.slice(2);
-      }
-    }
-
-    // Limita ao máximo de 11 dígitos nacionais (DDD + 9 dígitos)
-    if (digits.length > 11) {
-      digits = digits.slice(0, 11);
-    }
-
-    return digits;
-  }
-
-  function formatBrazilianPhone(rawPhone) {
-    const digits = extractBrazilianPhoneDigits(rawPhone);
-    if (!digits) return '';
-
-    if (digits.length === 11) {
-      return '(' + digits.slice(0, 2) + ') ' + digits.slice(2, 7) + '-' + digits.slice(7);
-    }
-    if (digits.length === 10) {
-      return '(' + digits.slice(0, 2) + ') ' + digits.slice(2, 6) + '-' + digits.slice(6);
-    }
-    // Formatação parcial durante digitação fluida
-    if (digits.length > 6) {
-      return '(' + digits.slice(0, 2) + ') ' + digits.slice(2, 6) + '-' + digits.slice(6);
-    }
-    if (digits.length > 2) {
-      return '(' + digits.slice(0, 2) + ') ' + digits.slice(2);
-    }
-    if (digits.length > 0) {
-      return '(' + digits;
+    if (digits.length === 12 || digits.length === 13) {
+      return '+' + digits;
     }
     return '';
-  }
-
-  function normalizePhoneE164(rawPhone) {
-    const digits = extractBrazilianPhoneDigits(rawPhone);
-    if (digits.length === 10 || digits.length === 11) {
-      return '+55' + digits;
-    }
-    return '';
-  }
-
-  function isValidBrazilianPhone(rawPhone) {
-    const digits = extractBrazilianPhoneDigits(rawPhone);
-    if (digits.length !== 10 && digits.length !== 11) return false;
-
-    // Rejeita sequências de dígitos repetidos (ex.: 00000000000, 11111111111)
-    if (/^(\d)\1+$/.test(digits)) return false;
-
-    // DDD válido entre 11 e 99 (primeiro dígito de 1 a 9)
-    const ddd = parseInt(digits.slice(0, 2), 10);
-    if (ddd < 11 || ddd > 99) return false;
-
-    // DDDs inexistentes no plano de numeração da Anatel
-    const invalidDdds = [20, 23, 25, 26, 29, 30, 36, 39, 40, 50, 52, 56, 57, 58, 59, 70, 72, 76, 78, 80];
-    if (invalidDdds.indexOf(ddd) !== -1) return false;
-
-    // Celular (11 dígitos): o 3º dígito (primeiro do número) DEVE ser 9
-    if (digits.length === 11 && digits.charAt(2) !== '9') return false;
-
-    // Fixo (10 dígitos): o 3º dígito deve ser de 2 a 5
-    if (digits.length === 10 && !/[2-5]/.test(digits.charAt(2))) return false;
-
-    return true;
   }
 
   // 7. TIMEZONE COM FUSO HORÁRIO -03:00 (ISO 8601)
@@ -397,23 +291,20 @@ const WHATSAPP_NUMBER = '5562999940769';
     return ref;
   }
 
-  // 9. MÁSCARA INTELIGENTE DE TELEFONE (XX) XXXXX-XXXX / (XX) XXXX-XXXX
+  // 9. MÁSCARA DE TELEFONE (XX) XXXXX-XXXX
   function applyPhoneMask(input) {
     if (!input) return;
+    input.addEventListener('input', function () {
+      let v = this.value.replace(/\D/g, '');
+      if (v.length > 11) v = v.slice(0, 11);
 
-    function updateMask() {
-      const raw = input.value;
-      if (!raw) return;
-      input.value = formatBrazilianPhone(raw);
-    }
-
-    input.addEventListener('input', updateMask);
-    input.addEventListener('paste', function () {
-      setTimeout(updateMask, 0);
-    });
-    input.addEventListener('blur', function () {
-      updateMask();
-      validateInput(input);
+      if (v.length > 6) {
+        this.value = '(' + v.slice(0, 2) + ') ' + v.slice(2, 7) + '-' + v.slice(7);
+      } else if (v.length > 2) {
+        this.value = '(' + v.slice(0, 2) + ') ' + v.slice(2);
+      } else if (v.length > 0) {
+        this.value = '(' + v;
+      }
     });
 
     input.addEventListener('keypress', function (e) {
@@ -468,7 +359,8 @@ const WHATSAPP_NUMBER = '5562999940769';
     }
 
     if (field.type === 'tel' || field.id === 'lp-field-whatsapp') {
-      if (!isValidBrazilianPhone(val)) {
+      const digits = val.replace(/\D/g, '');
+      if (digits.length < 10) {
         setFieldError(field, true, 'Confira o WhatsApp com DDD. Exemplo: (32) 99999-9999');
         return false;
       }
@@ -519,7 +411,7 @@ const WHATSAPP_NUMBER = '5562999940769';
       if (step1CompletedTracked) return;
       if (!nomeField || !phoneField) return;
       const isNomeValid = (nomeField.value || '').trim().length >= 3;
-      const isPhoneValid = isValidBrazilianPhone(phoneField.value);
+      const isPhoneValid = (phoneField.value || '').replace(/\D/g, '').length >= 10;
       if (isNomeValid && isPhoneValid) {
         step1CompletedTracked = true;
         const id = getOrCreateLeadId();
@@ -643,18 +535,9 @@ const WHATSAPP_NUMBER = '5562999940769';
         }
       });
 
-      // Recupera dados preenchidos e sanitiza o WhatsApp
+      // Recupera dados preenchidos
       const nomeVal = (nomeField ? nomeField.value : '').trim();
-      const rawWhatsapp = (phoneField ? phoneField.value : '').trim();
-      const cleanPhoneDigits = extractBrazilianPhoneDigits(rawWhatsapp);
-      const formattedWhatsapp = formatBrazilianPhone(cleanPhoneDigits);
-      const e164Whatsapp = normalizePhoneE164(cleanPhoneDigits);
-
-      // Garante que o campo do formulário exiba visualmente o telefone padronizado
-      if (phoneField && formattedWhatsapp) {
-        phoneField.value = formattedWhatsapp;
-      }
-
+      const whatsappVal = (phoneField ? phoneField.value : '').trim();
       const tipoCamaraVal = (tipoCamaraField ? tipoCamaraField.value : '').trim();
       const armazenarVal = (armazenarField ? armazenarField.value : '').trim();
       const largVal = (larguraField && larguraField.value.trim() !== '') ? larguraField.value.trim() : '';
@@ -665,6 +548,7 @@ const WHATSAPP_NUMBER = '5562999940769';
 
       // TRAVA TOTAL DE SEGURANÇA (HARD-LOCK):
       // Impede estritamente qualquer envio se algum campo obrigatório estiver vazio ou incompleto
+      const phoneDigits = whatsappVal.replace(/\D/g, '');
       let hardLockFailed = false;
 
       if (!nomeVal || nomeVal.length < 3) {
@@ -672,7 +556,7 @@ const WHATSAPP_NUMBER = '5562999940769';
         if (!firstInvalid) firstInvalid = nomeField;
         hardLockFailed = true;
       }
-      if (!isValidBrazilianPhone(cleanPhoneDigits)) {
+      if (!whatsappVal || phoneDigits.length < 10) {
         setFieldError(phoneField, true, 'Confira o WhatsApp com DDD. Exemplo: (32) 99999-9999');
         if (!firstInvalid) firstInvalid = phoneField;
         hardLockFailed = true;
@@ -724,7 +608,7 @@ const WHATSAPP_NUMBER = '5562999940769';
         lead_id: leadId,
         timestamp_envio: timestampEnvio,
         nome: nomeVal,
-        whatsapp: formattedWhatsapp,
+        whatsapp: whatsappVal,
         tipo_camara: tipoCamaraVal,
         armazenar: armazenarVal,
         largura: largVal,
@@ -747,10 +631,7 @@ const WHATSAPP_NUMBER = '5562999940769';
         lp_version: 'A',
         titulo_variante: activeVariantKey,
         consent_ads: consentStatus.ads,
-        consent_analytics: consentStatus.analytics,
-        whatsapp_digits: '55' + cleanPhoneDigits,
-        whatsapp_sem_ddi: cleanPhoneDigits,
-        whatsapp_e164: e164Whatsapp
+        consent_analytics: consentStatus.analytics
       };
 
       const isDebug = new URLSearchParams(window.location.search).get('debug') === '1';
@@ -787,7 +668,7 @@ const WHATSAPP_NUMBER = '5562999940769';
           // HTTP 2xx confirmado com sucesso
           isSubmitting = false;
           leadSubmittedSuccessfully = true;
-          showSuccessView(tipoCamaraVal, armazenarVal, ufVal, e164Whatsapp);
+          showSuccessView(tipoCamaraVal, armazenarVal, ufVal, whatsappVal);
         })
         .catch(function (err) {
           console.error('[LP Webhook Error]', err);
