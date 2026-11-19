@@ -14,57 +14,46 @@ const LEAD_ENDPOINT = 'https://nazaria-n8n.swwqzp.easypanel.host/webhook/2d50463
 // Número de WhatsApp oficial da JD
 const WHATSAPP_NUMBER = '5562999940769';
 
+// TODO JD: preencher JD_FACTS com dados reais
+const JD_FACTS = {
+  anosFabrica: null,
+  camarasInstaladas: null,
+  notaGoogle: null
+};
+
 (function () {
   'use strict';
 
-  // 1. TÍTULO DINÂMICO POR PARÂMETRO ?h=
-  const VARIANTS = {
-    preco: {
-      h1: 'Receba o preço da sua câmara fria sob medida',
-      sub: 'A JD calcula pelo tamanho, pela temperatura e pelo uso e envia o orçamento pelo WhatsApp.'
-    },
-    mini: {
-      h1: 'Mini câmara fria sob medida para o seu espaço',
-      sub: 'Para quem tem pouco espaço e precisa de frio. Informe o que vai armazenar e as medidas e receba o orçamento da JD.'
-    },
-    walkin: {
-      h1: 'Câmara fria para bebidas: walk-in cooler sob medida, entregue e instalada',
-      sub: 'Informe o que vai armazenar e as medidas do espaço e receba o orçamento da JD.'
-    },
-    congelados: {
-      h1: 'Câmara de congelados (-10 a -18 °C) sob medida, com instalação pela JD',
-      sub: 'Informe o que vai armazenar e as medidas do espaço e receba o orçamento da JD.'
-    },
-    resfriados: {
-      h1: 'Câmara de resfriados (+10 a 0 °C) sob medida, com instalação pela JD',
-      sub: 'Informe o que vai armazenar e as medidas do espaço e receba o orçamento da JD.'
-    }
-  };
+  // 1. TÍTULO DINÂMICO POR PARÂMETRO ?h= (fonte única: window.JD_VARIANTS no script inline do hero)
+  const VARIANTS = (window.JD_VARIANTS && typeof window.JD_VARIANTS === 'object') ? window.JD_VARIANTS : {};
 
-  const DEFAULT_HEADLINE = {
-    h1: 'Câmara fria sob medida, projetada e instalada para o seu negócio',
-    sub: 'Mini câmaras, câmaras expositoras, resfriados e congelados. Informe o que você vai armazenar e as medidas do espaço e receba o orçamento da JD.'
-  };
-
-  let activeVariantKey = 'padrao';
+  let activeVariantKey = (typeof window.JD_ACTIVE_VARIANT === 'string' && window.JD_ACTIVE_VARIANT) ? window.JD_ACTIVE_VARIANT : 'padrao';
 
   function applyDynamicHeadline() {
-    const params = new URLSearchParams(window.location.search);
-    const hParam = (params.get('h') || '').toLowerCase().trim();
+    let hParam = '';
+    try {
+      hParam = (new URLSearchParams(window.location.search).get('h') || '').toLowerCase().trim();
+    } catch (e) {
+      hParam = '';
+    }
 
     const h1El = document.getElementById('hero-title');
     const subEl = document.getElementById('hero-subtitle');
     const variantInput = document.getElementById('lp-field-titulo_variante') || document.getElementById('lp-field-titulo-variante');
 
-    if (hParam && VARIANTS[hParam]) {
+    if (hParam && Object.prototype.hasOwnProperty.call(VARIANTS, hParam)) {
       activeVariantKey = hParam;
-      if (h1El) h1El.textContent = VARIANTS[hParam].h1;
-      if (subEl) subEl.textContent = VARIANTS[hParam].sub;
+      if (h1El && h1El.textContent !== VARIANTS[hParam].h1) {
+        h1El.textContent = VARIANTS[hParam].h1;
+      }
+      if (subEl && subEl.textContent !== VARIANTS[hParam].sub) {
+        subEl.textContent = VARIANTS[hParam].sub;
+      }
     } else {
       activeVariantKey = 'padrao';
-      if (h1El) h1El.textContent = DEFAULT_HEADLINE.h1;
-      if (subEl) subEl.textContent = DEFAULT_HEADLINE.sub;
     }
+
+    window.JD_ACTIVE_VARIANT = activeVariantKey;
 
     if (variantInput) {
       variantInput.value = activeVariantKey;
@@ -291,21 +280,39 @@ const WHATSAPP_NUMBER = '5562999940769';
     return ref;
   }
 
-  // 9. MÁSCARA DE TELEFONE (XX) XXXXX-XXXX
+  function debounce(fn, waitMs) {
+    let timer = null;
+    return function () {
+      const ctx = this;
+      const args = arguments;
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(function () {
+        timer = null;
+        fn.apply(ctx, args);
+      }, waitMs);
+    };
+  }
+
+  // 9. MÁSCARA DE TELEFONE (XX) XXXXX-XXXX (otimizada para baixo INP)
   function applyPhoneMask(input) {
     if (!input) return;
     input.addEventListener('input', function () {
       let v = this.value.replace(/\D/g, '');
       if (v.length > 11) v = v.slice(0, 11);
 
+      let formatted = '';
       if (v.length > 6) {
-        this.value = '(' + v.slice(0, 2) + ') ' + v.slice(2, 7) + '-' + v.slice(7);
+        formatted = '(' + v.slice(0, 2) + ') ' + v.slice(2, 7) + '-' + v.slice(7);
       } else if (v.length > 2) {
-        this.value = '(' + v.slice(0, 2) + ') ' + v.slice(2);
+        formatted = '(' + v.slice(0, 2) + ') ' + v.slice(2);
       } else if (v.length > 0) {
-        this.value = '(' + v;
+        formatted = '(' + v;
       }
-    });
+
+      if (this.value !== formatted) {
+        this.value = formatted;
+      }
+    }, { passive: true });
 
     input.addEventListener('keypress', function (e) {
       if (!/\d/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete' && e.key !== 'Tab') {
@@ -314,7 +321,7 @@ const WHATSAPP_NUMBER = '5562999940769';
     });
   }
 
-  // 10. VALIDAÇÃO DE CAMPOS COM ÍCONE + TEXTO
+  // 10. VALIDAÇÃO DE CAMPOS COM ÍCONE + TEXTO (sem escritas redundantes no DOM)
   const ERROR_ICON_SVG = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>';
 
   function setFieldError(field, hasError, customMessage) {
@@ -322,8 +329,16 @@ const WHATSAPP_NUMBER = '5562999940769';
     const group = field.closest('.jd-form__group');
     if (!group) return;
 
+    const currentlyError = field.classList.contains('is-error');
+    const msg = hasError ? (customMessage || 'Preencha este campo.') : '';
+
+    if (!hasError && !currentlyError) {
+      return;
+    }
+
     let errorEl = group.querySelector('.jd-form__error');
     if (!errorEl) {
+      if (!hasError) return;
       errorEl = document.createElement('div');
       errorEl.className = 'jd-form__error';
       errorEl.style.display = 'flex';
@@ -333,17 +348,21 @@ const WHATSAPP_NUMBER = '5562999940769';
     }
 
     if (hasError) {
+      if (currentlyError && errorEl.getAttribute('data-err-msg') === msg) {
+        return;
+      }
       group.classList.add('is-error');
       field.classList.add('is-error');
       field.setAttribute('aria-invalid', 'true');
-      const msg = customMessage || 'Preencha este campo.';
+      errorEl.setAttribute('data-err-msg', msg);
       errorEl.innerHTML = ERROR_ICON_SVG + '<span>' + msg + '</span>';
       errorEl.style.display = 'flex';
     } else {
       group.classList.remove('is-error');
       field.classList.remove('is-error');
       field.removeAttribute('aria-invalid');
-      errorEl.innerHTML = '';
+      errorEl.removeAttribute('data-err-msg');
+      errorEl.textContent = '';
       errorEl.style.display = 'none';
     }
   }
@@ -384,6 +403,298 @@ const WHATSAPP_NUMBER = '5562999940769';
     return true;
   }
 
+  // 10B. FILA PERSISTENTE DE LEADS COM TIMEOUT (12s), BACKOFF E DEDUPLICAÇÃO DE CONVERSÃO
+  const LEAD_QUEUE_STORAGE_KEY = 'jd_lead_queue_v1';
+  const LEAD_CONVERTED_STORAGE_KEY = 'jd_lead_converted_v1';
+  const LEAD_FETCH_TIMEOUT_MS = 12000;
+  const LEAD_MAX_ATTEMPTS = 5;
+  const LEAD_BACKOFF_MS = [5000, 30000, 120000, 300000];
+  const LEAD_QUEUE_TTL_MS = 24 * 60 * 60 * 1000;
+
+  const LeadQueue = (function () {
+    let memoryQueue = [];
+    let memoryConverted = {};
+    let inFlightIds = {};
+    let retryTimer = null;
+    let onSuccessCallback = null;
+
+    function loadConvertedMap() {
+      const map = Object.assign({}, memoryConverted);
+      try {
+        const raw = localStorage.getItem(LEAD_CONVERTED_STORAGE_KEY);
+        if (raw) {
+          const arr = JSON.parse(raw);
+          if (Array.isArray(arr)) {
+            arr.forEach(function (id) {
+              if (typeof id === 'string' && id) map[id] = true;
+            });
+          }
+        }
+      } catch (e) { /* noop */ }
+      return map;
+    }
+
+    function hasFiredConversion(leadId) {
+      if (!leadId) return false;
+      return Boolean(loadConvertedMap()[leadId]);
+    }
+
+    function markConversionFired(leadId) {
+      if (!leadId) return;
+      memoryConverted[leadId] = true;
+      try {
+        const map = loadConvertedMap();
+        map[leadId] = true;
+        const keys = Object.keys(map).slice(-50);
+        localStorage.setItem(LEAD_CONVERTED_STORAGE_KEY, JSON.stringify(keys));
+      } catch (e) { /* noop */ }
+    }
+
+    function pushLeadConversionOnce(payload) {
+      if (!payload || !payload.lead_id) return false;
+      if (hasFiredConversion(payload.lead_id)) return false;
+      markConversionFired(payload.lead_id);
+
+      const normalizedPhone = normalizePhoneE164(payload.whatsapp || '');
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: 'lead_form_submit',
+        lead_id: payload.lead_id,
+        event_id: payload.lead_id,
+        tipo_camara: payload.tipo_camara || '',
+        armazenar: payload.armazenar || '',
+        uf: payload.uf || '',
+        lp_version: payload.lp_version || 'A',
+        titulo_variante: payload.titulo_variante || activeVariantKey,
+        user_data: {
+          phone_number: normalizedPhone
+        }
+      });
+      return true;
+    }
+
+    function readQueue() {
+      try {
+        const raw = localStorage.getItem(LEAD_QUEUE_STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed)) {
+            memoryQueue = parsed;
+            return parsed;
+          }
+        } else {
+          memoryQueue = [];
+          return [];
+        }
+      } catch (e) { /* fallback memória */ }
+      return memoryQueue.slice();
+    }
+
+    function writeQueue(list) {
+      memoryQueue = list.slice();
+      try {
+        if (list.length === 0) {
+          localStorage.removeItem(LEAD_QUEUE_STORAGE_KEY);
+        } else {
+          localStorage.setItem(LEAD_QUEUE_STORAGE_KEY, JSON.stringify(list));
+        }
+      } catch (e) { /* noop */ }
+    }
+
+    function enqueue(payload) {
+      if (!payload || !payload.lead_id) return null;
+      const list = readQueue();
+      const now = Date.now();
+      let existing = null;
+
+      for (let i = 0; i < list.length; i++) {
+        if (list[i] && list[i].lead_id === payload.lead_id) {
+          existing = list[i];
+          existing.payload = payload;
+          existing.nextAttemptAt = now;
+          break;
+        }
+      }
+
+      if (!existing) {
+        existing = {
+          lead_id: payload.lead_id,
+          payload: payload,
+          attempts: 0,
+          nextAttemptAt: now,
+          createdAt: now
+        };
+        list.push(existing);
+      }
+
+      writeQueue(list);
+      return existing;
+    }
+
+    function removeFromQueue(leadId) {
+      const list = readQueue().filter(function (item) {
+        return item && item.lead_id !== leadId;
+      });
+      writeQueue(list);
+    }
+
+    function postWithTimeout(payload, retryNumber) {
+      let url = LEAD_ENDPOINT;
+      if (retryNumber > 0) {
+        url += (url.indexOf('?') === -1 ? '?' : '&') + 'retry=' + retryNumber;
+      }
+
+      const controller = typeof AbortController === 'function' ? new AbortController() : null;
+      const timer = setTimeout(function () {
+        if (controller) controller.abort();
+      }, LEAD_FETCH_TIMEOUT_MS);
+
+      const opts = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      };
+      if (controller) {
+        opts.signal = controller.signal;
+      }
+
+      return fetch(url, opts)
+        .then(function (res) {
+          clearTimeout(timer);
+          if (!res.ok || res.status < 200 || res.status >= 300) {
+            throw new Error('HTTP ' + res.status);
+          }
+          return res.json().catch(function () { return {}; });
+        })
+        .catch(function (err) {
+          clearTimeout(timer);
+          throw err;
+        });
+    }
+
+    function scheduleNextRetry() {
+      if (retryTimer) {
+        clearTimeout(retryTimer);
+        retryTimer = null;
+      }
+
+      const list = readQueue();
+      let earliest = null;
+      const now = Date.now();
+
+      for (let i = 0; i < list.length; i++) {
+        const item = list[i];
+        if (!item || !item.lead_id) continue;
+        if (item.attempts >= LEAD_MAX_ATTEMPTS) continue;
+        if (inFlightIds[item.lead_id]) continue;
+        const targetTime = typeof item.nextAttemptAt === 'number' ? item.nextAttemptAt : now;
+        if (earliest === null || targetTime < earliest) {
+          earliest = targetTime;
+        }
+      }
+
+      if (earliest !== null) {
+        const waitMs = Math.max(250, earliest - now);
+        retryTimer = setTimeout(function () {
+          retryTimer = null;
+          flush(false);
+        }, waitMs);
+      }
+    }
+
+    function sendItem(leadId, isManual) {
+      if (!leadId || inFlightIds[leadId]) {
+        return Promise.resolve({ skipped: true });
+      }
+
+      const list = readQueue();
+      let entry = null;
+      for (let i = 0; i < list.length; i++) {
+        if (list[i] && list[i].lead_id === leadId) {
+          entry = list[i];
+          break;
+        }
+      }
+      if (!entry) {
+        return Promise.resolve({ skipped: true });
+      }
+      if (!isManual && entry.attempts >= LEAD_MAX_ATTEMPTS) {
+        return Promise.resolve({ skipped: true });
+      }
+
+      const retryNumber = entry.attempts;
+      inFlightIds[leadId] = true;
+
+      return postWithTimeout(entry.payload, retryNumber)
+        .then(function () {
+          delete inFlightIds[leadId];
+          removeFromQueue(leadId);
+          pushLeadConversionOnce(entry.payload);
+          if (typeof onSuccessCallback === 'function') {
+            onSuccessCallback(entry.payload);
+          }
+          scheduleNextRetry();
+          return { ok: true, lead_id: leadId };
+        })
+        .catch(function (err) {
+          delete inFlightIds[leadId];
+          const updated = readQueue();
+          for (let i = 0; i < updated.length; i++) {
+            if (updated[i] && updated[i].lead_id === leadId) {
+              updated[i].attempts = (updated[i].attempts || 0) + 1;
+              const backoffIdx = Math.min(updated[i].attempts - 1, LEAD_BACKOFF_MS.length - 1);
+              updated[i].nextAttemptAt = Date.now() + LEAD_BACKOFF_MS[backoffIdx];
+              break;
+            }
+          }
+          writeQueue(updated);
+          scheduleNextRetry();
+          throw err;
+        });
+    }
+
+    function flush(forceImmediate) {
+      const now = Date.now();
+      const rawList = readQueue();
+      const cleaned = rawList.filter(function (item) {
+        if (!item || !item.lead_id || !item.payload) return false;
+        const age = now - (item.createdAt || now);
+        if (item.attempts >= LEAD_MAX_ATTEMPTS && age > LEAD_QUEUE_TTL_MS) return false;
+        return true;
+      });
+      if (cleaned.length !== rawList.length) {
+        writeQueue(cleaned);
+      }
+
+      cleaned.forEach(function (item) {
+        if (item.attempts >= LEAD_MAX_ATTEMPTS) return;
+        if (inFlightIds[item.lead_id]) return;
+        if (forceImmediate || !item.nextAttemptAt || item.nextAttemptAt <= now) {
+          sendItem(item.lead_id, false).catch(function (err) {
+            console.warn('[LP LeadQueue] Reenvio adiado para', item.lead_id, err && err.message ? err.message : err);
+          });
+        }
+      });
+
+      scheduleNextRetry();
+    }
+
+    function initQueue() {
+      window.addEventListener('online', function () {
+        flush(true);
+      });
+      flush(true);
+    }
+
+    return {
+      enqueue: enqueue,
+      sendNow: function (leadId) { return sendItem(leadId, true); },
+      flush: flush,
+      init: initQueue,
+      setOnSuccessCallback: function (cb) { onSuccessCallback = cb; }
+    };
+  })();
+
   // 11. MOTOR DO FORMULÁRIO EM ETAPA ÚNICA (LP A)
   function initLeadForm() {
     const form = document.getElementById('lp-form-lead');
@@ -415,36 +726,57 @@ const WHATSAPP_NUMBER = '5562999940769';
       if (isNomeValid && isPhoneValid) {
         step1CompletedTracked = true;
         const id = getOrCreateLeadId();
-        pushTrackingEvent('lead_form_step1_complete', { lead_id: id });
+        setTimeout(function () {
+          pushTrackingEvent('lead_form_step1_complete', { lead_id: id });
+        }, 0);
       }
     }
 
     function handleFirstInteraction() {
-      if (!formStartedTracked) {
-        formStartedTracked = true;
-        const id = getOrCreateLeadId();
+      if (formStartedTracked) return;
+      formStartedTracked = true;
+      form.removeEventListener('focusin', handleFirstInteraction);
+      form.removeEventListener('input', handleFirstInteraction);
+      const id = getOrCreateLeadId();
+      setTimeout(function () {
         pushTrackingEvent('lead_form_start', { lead_id: id });
-      }
+      }, 0);
     }
 
-    form.addEventListener('focusin', handleFirstInteraction);
-    form.addEventListener('input', handleFirstInteraction);
+    form.addEventListener('focusin', handleFirstInteraction, { passive: true });
+    form.addEventListener('input', handleFirstInteraction, { passive: true });
 
     const allFormInputs = form.querySelectorAll('input, select, textarea');
     allFormInputs.forEach(function (input) {
-      input.addEventListener('blur', function () {
-        if (this.hasAttribute('required') || this.value.trim().length > 0) {
-          validateInput(this);
+      const debouncedClearOrValidate = debounce(function (el) {
+        if (el.classList.contains('is-error')) {
+          validateInput(el);
         }
-        if (this === phoneField || this === nomeField) {
+      }, 180);
+
+      input.addEventListener('blur', function () {
+        const el = this;
+        if (el.hasAttribute('required') || el.value.trim().length > 0) {
+          validateInput(el);
+        }
+        if (el === phoneField || el === nomeField) {
           checkStep1Completion();
         }
       });
-      input.addEventListener('input', function () {
-        if (this.classList.contains('is-error')) {
-          setFieldError(this, false);
-        }
-      });
+
+      if (input.tagName === 'SELECT') {
+        input.addEventListener('change', function () {
+          if (this.classList.contains('is-error')) {
+            setFieldError(this, false);
+          }
+        }, { passive: true });
+      } else {
+        input.addEventListener('input', function () {
+          if (this.classList.contains('is-error')) {
+            debouncedClearOrValidate(this);
+          }
+        }, { passive: true });
+      }
     });
 
     applyPhoneMask(phoneField);
@@ -483,28 +815,22 @@ const WHATSAPP_NUMBER = '5562999940769';
       }
     }
 
-    function showSuccessView(tipoCamara, armazenar, uf, rawPhone) {
-      showSuccessUI();
-
-      // Dispara lead_form_submit SOMENTE após resposta 2xx confirmada
-      const normalizedPhone = normalizePhoneE164(rawPhone);
-      window.dataLayer.push({
-        event: 'lead_form_submit',
-        lead_id: currentLeadId,
-        event_id: currentLeadId,
-        tipo_camara: tipoCamara,
-        armazenar: armazenar,
-        uf: uf,
-        lp_version: 'A',
-        titulo_variante: activeVariantKey,
-        user_data: {
-          phone_number: normalizedPhone
+    // Se um reenvio automático em segundo plano confirmar 2xx para o lead atual, exibe sucesso na hora
+    LeadQueue.setOnSuccessCallback(function (deliveredPayload) {
+      if (deliveredPayload && deliveredPayload.lead_id === currentLeadId) {
+        isSubmitting = false;
+        leadSubmittedSuccessfully = true;
+        if (btnSubmit) {
+          btnSubmit.disabled = false;
+          btnSubmit.classList.remove('is-loading');
         }
-      });
-    }
+        if (btnRetry) btnRetry.disabled = false;
+        showSuccessUI();
+      }
+    });
 
     function handleFormSubmit() {
-      if (isSubmitting) return;
+      if (isSubmitting || leadSubmittedSuccessfully) return;
 
       // Honeypot anti-spam (descarte silencioso: interface de sucesso, SEM post e SEM dataLayer)
       if (honeypot && honeypot.value.trim() !== '') {
@@ -651,24 +977,24 @@ const WHATSAPP_NUMBER = '5562999940769';
         btnSubmit.disabled = true;
         btnSubmit.classList.add('is-loading');
       }
+      if (btnRetry) btnRetry.disabled = true;
       if (submitErrorWrap) submitErrorWrap.style.display = 'none';
 
-      fetch(LEAD_ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      })
-        .then(function (res) {
-          if (!res.ok) {
-            throw new Error('HTTP ' + res.status);
-          }
-          return res.json().catch(function () { return {}; });
-        })
-        .then(function () {
-          // HTTP 2xx confirmado com sucesso
+      // Grava na fila persistente ANTES do fetch; só remove após HTTP 2xx
+      LeadQueue.enqueue(payload);
+
+      LeadQueue.sendNow(leadId)
+        .then(function (result) {
           isSubmitting = false;
-          leadSubmittedSuccessfully = true;
-          showSuccessView(tipoCamaraVal, armazenarVal, ufVal, whatsappVal);
+          if (btnSubmit) {
+            btnSubmit.disabled = false;
+            btnSubmit.classList.remove('is-loading');
+          }
+          if (btnRetry) btnRetry.disabled = false;
+          if (result && result.ok) {
+            leadSubmittedSuccessfully = true;
+            showSuccessUI();
+          }
         })
         .catch(function (err) {
           console.error('[LP Webhook Error]', err);
@@ -677,6 +1003,7 @@ const WHATSAPP_NUMBER = '5562999940769';
             btnSubmit.disabled = false;
             btnSubmit.classList.remove('is-loading');
           }
+          if (btnRetry) btnRetry.disabled = false;
           if (submitErrorWrap) {
             submitErrorWrap.style.display = 'block';
             submitErrorWrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -801,6 +1128,40 @@ const WHATSAPP_NUMBER = '5562999940769';
       'congelados': 'Câmara de congelados (-10 a -18 °C)'
     };
 
+    // Chips de temperatura do Hero (pré-selecionam o tipo no select e rolam ao #form-lead)
+    const chipButtons = document.querySelectorAll('.chip-temperatura[data-chip-tipo]');
+    chipButtons.forEach(function (chip) {
+      chip.addEventListener('click', function () {
+        const tipoKey = chip.getAttribute('data-chip-tipo') || '';
+        const tipoValue = chip.getAttribute('data-tipo-camara') || PRODUTO_MAP[tipoKey] || '';
+
+        const selectTipo = document.getElementById('lp-field-tipo_camara');
+        if (selectTipo && tipoValue) {
+          selectTipo.value = tipoValue;
+          selectTipo.dispatchEvent(new Event('change', { bubbles: true }));
+          setFieldError(selectTipo, false);
+        }
+
+        pushTrackingEvent('chip_temperatura_click', { tipo: tipoKey });
+
+        const formSucesso = document.getElementById('lp-form-sucesso');
+        if (formSucesso && formSucesso.classList.contains('is-visible')) {
+          return;
+        }
+
+        const formCol = document.getElementById('form-lead');
+        const formEl = document.getElementById('lp-form-lead');
+        const scrollTarget = (formCol && window.getComputedStyle(formCol).display !== 'contents') ? formCol : formEl;
+        const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (scrollTarget) {
+          scrollTarget.scrollIntoView({
+            behavior: prefersReduced ? 'auto' : 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+
     const cardCtas = document.querySelectorAll('[data-cta-produto]');
     cardCtas.forEach(function (btn) {
       btn.addEventListener('click', function (e) {
@@ -919,6 +1280,47 @@ const WHATSAPP_NUMBER = '5562999940769';
       switchEl.setAttribute('aria-checked', current ? 'false' : 'true');
     }
 
+    let bannerMeasureRaf = null;
+    function syncBannerBodySpace() {
+      const isVisible = banner.classList.contains('is-visible');
+      if (isVisible) {
+        document.body.classList.add('has-cookie-banner');
+        if (bannerMeasureRaf) cancelAnimationFrame(bannerMeasureRaf);
+        bannerMeasureRaf = window.requestAnimationFrame(function () {
+          bannerMeasureRaf = null;
+          if (!banner.classList.contains('is-visible')) return;
+          const h = banner.offsetHeight;
+          if (h > 0) {
+            document.body.style.setProperty('--lp-cookie-banner-height', h + 'px');
+          }
+        });
+      } else {
+        if (bannerMeasureRaf) {
+          cancelAnimationFrame(bannerMeasureRaf);
+          bannerMeasureRaf = null;
+        }
+        document.body.classList.remove('has-cookie-banner');
+        document.body.style.removeProperty('--lp-cookie-banner-height');
+      }
+    }
+
+    function showBanner() {
+      banner.classList.add('is-visible');
+      syncBannerBodySpace();
+    }
+
+    function hideBanner() {
+      if (panel) {
+        panel.setAttribute('hidden', '');
+      }
+      if (btnCustomize) {
+        btnCustomize.setAttribute('aria-expanded', 'false');
+      }
+      banner.classList.remove('is-expanded');
+      banner.classList.remove('is-visible');
+      syncBannerBodySpace();
+    }
+
     function openCustomPanel() {
       const consent = getConsentStatus();
       const analyticsVal = consent.analytics === 'granted';
@@ -931,7 +1333,8 @@ const WHATSAPP_NUMBER = '5562999940769';
       if (btnCustomize) {
         btnCustomize.setAttribute('aria-expanded', 'true');
       }
-      banner.classList.add('is-visible');
+      banner.classList.add('is-expanded');
+      showBanner();
     }
 
     function saveConsentDecision(analyticsGranted, adsGranted) {
@@ -947,29 +1350,30 @@ const WHATSAPP_NUMBER = '5562999940769';
         /* noop: fallback gracioso para modo privado */
       }
 
-      if (typeof window.gtag === 'function') {
-        window.gtag('consent', 'update', {
-          'ad_storage': data.ads ? 'granted' : 'denied',
-          'ad_user_data': data.ads ? 'granted' : 'denied',
-          'ad_personalization': data.ads ? 'granted' : 'denied',
-          'analytics_storage': data.analytics ? 'granted' : 'denied'
-        });
-      }
-
-      if (window.dataLayer) {
-        window.dataLayer.push({
-          event: 'consent_update',
-          consent_analytics: data.analytics,
-          consent_ads: data.ads,
-          lp_version: 'A'
-        });
-      }
-
-      // Reavalia persistência da atribuição com base no novo consentimento de ads
+      // Atualiza a UI imediatamente para manter o INP baixo antes do trabalho síncrono do GTM
+      hideBanner();
       saveAttrib(currentAttrib);
       updateHiddenConsentFields();
 
-      banner.classList.remove('is-visible');
+      setTimeout(function () {
+        if (typeof window.gtag === 'function') {
+          window.gtag('consent', 'update', {
+            'ad_storage': data.ads ? 'granted' : 'denied',
+            'ad_user_data': data.ads ? 'granted' : 'denied',
+            'ad_personalization': data.ads ? 'granted' : 'denied',
+            'analytics_storage': data.analytics ? 'granted' : 'denied'
+          });
+        }
+
+        if (window.dataLayer) {
+          window.dataLayer.push({
+            event: 'consent_update',
+            consent_analytics: data.analytics,
+            consent_ads: data.ads,
+            lp_version: 'A'
+          });
+        }
+      }, 0);
     }
 
     // Se já houver decisão válida (menor que 12 meses), não exibe o banner na visita inicial
@@ -978,16 +1382,18 @@ const WHATSAPP_NUMBER = '5562999940769';
       if (raw) {
         const parsed = JSON.parse(raw);
         if (parsed && typeof parsed.ts === 'number' && (Date.now() - parsed.ts < CONSENT_EXPIRATION_MS)) {
-          banner.classList.remove('is-visible');
+          hideBanner();
         } else {
-          banner.classList.add('is-visible');
+          showBanner();
         }
       } else {
-        banner.classList.add('is-visible');
+        showBanner();
       }
     } catch (e) {
-      banner.classList.add('is-visible');
+      showBanner();
     }
+
+    window.addEventListener('resize', syncBannerBodySpace, { passive: true });
 
     if (btnAcceptAll) {
       btnAcceptAll.addEventListener('click', function () {
@@ -1009,6 +1415,8 @@ const WHATSAPP_NUMBER = '5562999940769';
         } else if (panel) {
           panel.setAttribute('hidden', '');
           btnCustomize.setAttribute('aria-expanded', 'false');
+          banner.classList.remove('is-expanded');
+          syncBannerBodySpace();
         }
       });
     }
@@ -1055,14 +1463,21 @@ const WHATSAPP_NUMBER = '5562999940769';
     }
   }
 
-  // 17. SPOTLIGHT MOUSE TRACKER
+  // 17. SPOTLIGHT MOUSE TRACKER (apenas em elementos interativos e com rAF)
   function initSpotlight() {
-    const spotlights = document.querySelectorAll('.jd-spotlight');
+    const spotlights = document.querySelectorAll('a.jd-spotlight, button.jd-spotlight');
     spotlights.forEach(function (el) {
+      let rafId = null;
       el.addEventListener('mousemove', function (e) {
-        var rect = el.getBoundingClientRect();
-        el.style.setProperty('--mouse-x', (e.clientX - rect.left) + 'px');
-        el.style.setProperty('--mouse-y', (e.clientY - rect.top) + 'px');
+        if (rafId) return;
+        const cx = e.clientX;
+        const cy = e.clientY;
+        rafId = window.requestAnimationFrame(function () {
+          rafId = null;
+          const rect = el.getBoundingClientRect();
+          el.style.setProperty('--mouse-x', (cx - rect.left) + 'px');
+          el.style.setProperty('--mouse-y', (cy - rect.top) + 'px');
+        });
       }, { passive: true });
     });
   }
@@ -1085,17 +1500,55 @@ const WHATSAPP_NUMBER = '5562999940769';
     window.addEventListener('hashchange', scrollToHash);
   }
 
+  // 19. BLOCO COMPACTO DE CONFIANÇA JUNTO AO BOTÃO DO FORMULÁRIO (JD_FACTS)
+  function initFormFacts(factsOverride) {
+    const container = document.getElementById('lp-form-facts');
+    const listEl = document.getElementById('lp-form-facts-list');
+    if (!container || !listEl) return;
+
+    const facts = factsOverride || (window.JD_FACTS && typeof window.JD_FACTS === 'object' ? window.JD_FACTS : JD_FACTS);
+    const items = [];
+
+    if (facts.anosFabrica !== null && facts.anosFabrica !== undefined && String(facts.anosFabrica).trim() !== '') {
+      items.push(String(facts.anosFabrica).trim() + ' anos de fábrica (Ubá-MG)');
+    }
+    if (facts.camarasInstaladas !== null && facts.camarasInstaladas !== undefined && String(facts.camarasInstaladas).trim() !== '') {
+      items.push(String(facts.camarasInstaladas).trim() + ' câmaras instaladas');
+    }
+    if (facts.notaGoogle !== null && facts.notaGoogle !== undefined && String(facts.notaGoogle).trim() !== '') {
+      const notaFmt = String(facts.notaGoogle).trim().replace('.', ',');
+      items.push('Nota ' + notaFmt + ' no Google');
+    }
+
+    if (items.length === 0) {
+      listEl.textContent = '';
+      container.setAttribute('hidden', '');
+      return;
+    }
+
+    listEl.textContent = '';
+    items.forEach(function (text) {
+      const li = document.createElement('li');
+      li.className = 'lp-form-facts__item';
+      li.textContent = text;
+      listEl.appendChild(li);
+    });
+    container.removeAttribute('hidden');
+  }
+
   // INICIALIZAÇÃO
   function init() {
     applyDynamicHeadline();
     initAttribution();
     initLeadForm();
+    initFormFacts();
     initWhatsAppButtons();
     initHeaderAndNavCtas();
     initFAQ();
     initSpotlight();
     initCookieBanner();
     initHashScroll();
+    LeadQueue.init();
   }
 
   if (document.readyState === 'loading') {

@@ -212,8 +212,8 @@
       showStep(0);
     });
 
-    // Init phone masks
-    var phoneInputs = document.querySelectorAll('input[type="tel"]');
+    // Init phone masks (apenas em formulários que não são gerenciados pelo lp.js)
+    var phoneInputs = document.querySelectorAll('.jd-form:not([data-lp-form]) input[type="tel"]');
     phoneInputs.forEach(maskPhone);
   }
 
@@ -227,25 +227,31 @@
 
     var lastScroll = 0;
     var threshold = 80;
+    var ticking = false;
 
     window.addEventListener('scroll', function () {
-      var currentScroll = window.pageYOffset;
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(function () {
+        var currentScroll = window.pageYOffset;
 
-      // Adiciona sombra quando scrollado
-      header.classList.toggle('is-scrolled', currentScroll > 10);
+        // Adiciona sombra quando scrollado
+        header.classList.toggle('is-scrolled', currentScroll > 10);
 
-      // Esconde/mostra no mobile
-      if (currentScroll > threshold) {
-        if (currentScroll > lastScroll) {
-          header.classList.add('is-hidden');
+        // Esconde/mostra no mobile
+        if (currentScroll > threshold) {
+          if (currentScroll > lastScroll) {
+            header.classList.add('is-hidden');
+          } else {
+            header.classList.remove('is-hidden');
+          }
         } else {
           header.classList.remove('is-hidden');
         }
-      } else {
-        header.classList.remove('is-hidden');
-      }
 
-      lastScroll = currentScroll;
+        lastScroll = currentScroll;
+        ticking = false;
+      });
     }, { passive: true });
   }
 

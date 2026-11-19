@@ -13,10 +13,10 @@
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="assets/logo-jd.png">
 
-  <!-- Google Fonts: Archivo (display) + Inter (corpo) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Preload apenas das fontes críticas locais (título + corpo 400/600) -->
+  <link rel="preload" href="assets/fonts/archivo-900.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/inter-600.woff2" as="font" type="font/woff2" crossorigin>
 
   <!-- Estilos Oficiais do Design System (Sem camada de efeitos) -->
   <link rel="stylesheet" href="css/tokens.css">
@@ -109,18 +109,57 @@
           <p class="jd-hero-a__subtitle" id="hero-subtitle">
             Mini câmaras, câmaras expositoras, resfriados e congelados. Informe o que você vai armazenar e as medidas do espaço e receba o orçamento da JD.
           </p>
+          <script>
+            (function () {
+              var V = window.JD_VARIANTS = {
+                preco: {
+                  h1: 'Receba o preço da sua câmara fria sob medida',
+                  sub: 'A JD calcula pelo tamanho, pela temperatura e pelo uso e envia o orçamento pelo WhatsApp.'
+                },
+                mini: {
+                  h1: 'Mini câmara fria sob medida para o seu espaço',
+                  sub: 'Para quem tem pouco espaço e precisa de frio. Informe o que vai armazenar e as medidas e receba o orçamento da JD.'
+                },
+                walkin: {
+                  h1: 'Câmara fria para bebidas: walk-in cooler sob medida, entregue e instalada',
+                  sub: 'Informe o que vai armazenar e as medidas do espaço e receba o orçamento da JD.'
+                },
+                congelados: {
+                  h1: 'Câmara de congelados (-10 a -18 °C) sob medida, com instalação pela JD',
+                  sub: 'Informe o que vai armazenar e as medidas do espaço e receba o orçamento da JD.'
+                },
+                resfriados: {
+                  h1: 'Câmara de resfriados (+10 a 0 °C) sob medida, com instalação pela JD',
+                  sub: 'Informe o que vai armazenar e as medidas do espaço e receba o orçamento da JD.'
+                }
+              };
+              var key = 'padrao';
+              try {
+                var p = new URLSearchParams(window.location.search).get('h');
+                var k = p ? p.toLowerCase().trim() : '';
+                if (k && Object.prototype.hasOwnProperty.call(V, k)) {
+                  key = k;
+                  var h1 = document.getElementById('hero-title');
+                  var sub = document.getElementById('hero-subtitle');
+                  if (h1) h1.textContent = V[k].h1;
+                  if (sub) sub.textContent = V[k].sub;
+                }
+              } catch (e) {}
+              window.JD_ACTIVE_VARIANT = key;
+            })();
+          </script>
 
           <!-- Chips de Faixa de Temperatura (Linha rolável no mobile) -->
           <div class="jd-faixa-temperatura-wrap" aria-label="Faixas de temperatura atendidas">
             <div class="jd-faixa-temperatura">
-              <div class="chip-temperatura">
+              <button type="button" class="chip-temperatura" data-chip-tipo="congelados" data-tipo-camara="Câmara de congelados (-10 a -18 °C)">
                 <span class="chip-temperatura__icon" aria-hidden="true">❄</span>
                 <span>Congelados (-10 a -18 °C)</span>
-              </div>
-              <div class="chip-temperatura">
+              </button>
+              <button type="button" class="chip-temperatura" data-chip-tipo="resfriados" data-tipo-camara="Câmara de resfriados (+10 a 0 °C)">
                 <span class="chip-temperatura__icon" aria-hidden="true">🌡</span>
                 <span>Resfriados (+10 a 0 °C)</span>
-              </div>
+              </button>
             </div>
           </div>
 
@@ -241,6 +280,12 @@
                 <span>Pedir orçamento</span>
                 <span aria-hidden="true">→</span>
               </button>
+
+              <!-- Bloco Compacto de Confiança (só renderiza se JD_FACTS tiver dados reais) -->
+              <div class="lp-form-facts" id="lp-form-facts" aria-label="Dados da JD Câmaras Frias" hidden>
+                <img src="assets/foto-camara-walkin-interior.jpg" alt="Obra real instalada pela JD Câmaras" class="lp-form-facts__thumb" width="52" height="39" loading="lazy" decoding="async">
+                <ul class="lp-form-facts__list" id="lp-form-facts-list"></ul>
+              </div>
 
               <p style="font-size:12px;color:var(--jd-cinza-texto);text-align:center;margin-top:var(--jd-space-3);line-height:1.4;">
                 Sem compromisso. A JD chama você no WhatsApp para entender o seu projeto.
@@ -442,8 +487,8 @@
         <div class="lp-produtos__grid">
           
           <!-- Card 1: Mini câmara -->
-          <article class="jd-card-produto jd-spotlight" aria-labelledby="card-prod-mini-title">
-            <div class="jd-card-produto__image">
+          <article class="jd-card-produto" aria-labelledby="card-prod-mini-title">
+            <a href="#lp-form-lead" class="jd-card-produto__image" data-cta-produto="mini" aria-label="Pedir orçamento: Mini câmara">
               <img src="assets/foto-camara-mini-trilhos.jpg" alt="Mini câmara fria compacta sob medida para pequenos espaços instalada pela JD" width="960" height="720" loading="lazy">
               <div class="jd-card-produto__temp" aria-label="Temperatura sob medida">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -451,7 +496,7 @@
                 </svg>
                 <span>Resfriados ou congelados</span>
               </div>
-            </div>
+            </a>
             <div class="jd-card-produto__body">
               <div class="jd-card-produto__tipo">Para espaço pequeno</div>
               <h3 class="jd-card-produto__nome" id="card-prod-mini-title">Mini câmara</h3>
@@ -468,8 +513,8 @@
           </article>
 
           <!-- Card 2: Câmara expositora (walk-in cooler) -->
-          <article class="jd-card-produto jd-spotlight" aria-labelledby="card-prod-walkin-title">
-            <div class="jd-card-produto__image">
+          <article class="jd-card-produto" aria-labelledby="card-prod-walkin-title">
+            <a href="#lp-form-lead" class="jd-card-produto__image" data-cta-produto="expositora" aria-label="Pedir orçamento: Câmara expositora (walk-in cooler)">
               <img src="assets/foto-camara-walkin-fachada.jpg" alt="Câmara expositora walk-in cooler com portas de vidro instalada pela JD" width="960" height="720" loading="lazy">
               <div class="jd-card-produto__temp" aria-label="Temperatura de 0 a -5 °C">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -477,7 +522,7 @@
                 </svg>
                 <span>0 a -5 °C</span>
               </div>
-            </div>
+            </a>
             <div class="jd-card-produto__body">
               <div class="jd-card-produto__tipo">Para produtos à vista do cliente</div>
               <h3 class="jd-card-produto__nome" id="card-prod-walkin-title">Câmara expositora (walk-in cooler)</h3>
@@ -494,8 +539,8 @@
           </article>
 
           <!-- Card 3: Câmara de resfriados -->
-          <article class="jd-card-produto jd-spotlight" aria-labelledby="card-prod-resfriados-title">
-            <div class="jd-card-produto__image">
+          <article class="jd-card-produto" aria-labelledby="card-prod-resfriados-title">
+            <a href="#lp-form-lead" class="jd-card-produto__image" data-cta-produto="resfriados" aria-label="Pedir orçamento: Câmara de resfriados">
               <img src="assets/foto-camara-dupla-portas.jpg" alt="Câmara frigorífica de resfriados com porta giratória isotérmica e painel digital instalada pela JD" width="960" height="720" loading="lazy">
               <div class="jd-card-produto__temp" aria-label="Temperatura de +10 a 0 °C">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -503,7 +548,7 @@
                 </svg>
                 <span>+10 a 0 °C</span>
               </div>
-            </div>
+            </a>
             <div class="jd-card-produto__body">
               <div class="jd-card-produto__tipo">Produtos que não podem congelar</div>
               <h3 class="jd-card-produto__nome" id="card-prod-resfriados-title">Câmara de resfriados</h3>
@@ -520,8 +565,8 @@
           </article>
 
           <!-- Card 4: Câmara de congelados -->
-          <article class="jd-card-produto jd-spotlight" aria-labelledby="card-prod-congelados-title">
-            <div class="jd-card-produto__image">
+          <article class="jd-card-produto" aria-labelledby="card-prod-congelados-title">
+            <a href="#lp-form-lead" class="jd-card-produto__image" data-cta-produto="congelados" aria-label="Pedir orçamento: Câmara de congelados">
               <img src="assets/foto-camara-congelados-piso.jpg" alt="Câmara frigorífica de congelados com porta de correr industrial instalada pela JD" width="960" height="720" loading="lazy">
               <div class="jd-card-produto__temp" aria-label="Temperatura de -10 a -18 °C">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -529,7 +574,7 @@
                 </svg>
                 <span>-10 a -18 °C</span>
               </div>
-            </div>
+            </a>
             <div class="jd-card-produto__body">
               <div class="jd-card-produto__tipo">Alimentos congelados</div>
               <h3 class="jd-card-produto__nome" id="card-prod-congelados-title">Câmara de congelados</h3>
@@ -817,19 +862,19 @@
   <section class="lp-cookie-banner" id="lp-cookie-banner" role="region" aria-label="Aviso de cookies" aria-live="polite">
     <div class="lp-cookie-banner__inner">
       <div class="lp-cookie-banner__main">
-        <h2 class="lp-cookie-banner__title">Sua privacidade</h2>
         <p class="lp-cookie-banner__text">
-          Usamos cookies para fazer o site funcionar, entender o uso da página e medir nossos anúncios. Você escolhe o que permitir.
+          Usamos cookies para melhorar sua experiência e medir anúncios.
           <a href="https://www.facebook.com/privacy/policy/?locale=pt_BR" target="_blank" rel="noopener noreferrer" class="lp-cookie-banner__link" data-privacy-link>Política de privacidade</a>.
         </p>
         <div class="lp-cookie-banner__actions">
-          <button type="button" class="lp-cookie-btn" id="lp-cookie-accept-all">Aceitar todos</button>
+          <button type="button" class="lp-cookie-btn" id="lp-cookie-accept-all">Aceitar</button>
           <button type="button" class="lp-cookie-btn" id="lp-cookie-reject-all">Recusar</button>
           <button type="button" class="lp-cookie-btn" id="lp-cookie-customize" aria-expanded="false" aria-controls="lp-cookie-panel">Personalizar</button>
         </div>
       </div>
 
       <div class="lp-cookie-panel" id="lp-cookie-panel" hidden>
+        <h2 class="lp-cookie-banner__title">Sua privacidade</h2>
         <div class="lp-cookie-panel__row">
           <div class="lp-cookie-panel__info">
             <span class="lp-cookie-panel__label">Necessários (sempre ativos)</span>
@@ -868,7 +913,7 @@
   </section>
 
   <!-- Scripts: ds.js para utilidades core e lp.js para lógica da LP A -->
-  <script src="js/ds.js"></script>
-  <script src="js/lp.js"></script>
+  <script src="js/ds.js" defer></script>
+  <script src="js/lp.js" defer></script>
 </body>
 </html>
